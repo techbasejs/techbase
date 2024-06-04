@@ -1,0 +1,5 @@
+node_modules
+!test/fixture/package/node_modules
+dist
+*.log
+.next

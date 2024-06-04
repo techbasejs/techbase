@@ -1,0 +1,14 @@
+{
+  "name": "techbase",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "pnpm --filter './packages/**' build",
+    "test": "pnpm --filter './packages/**' test",
+    "lint": "pnpm --filter './packages/**' lint"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
