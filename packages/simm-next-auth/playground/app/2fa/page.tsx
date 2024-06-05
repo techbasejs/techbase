@@ -1,10 +1,15 @@
 "use client";
 
-import { signIn } from "../../../src/react";
+import { useRouter } from "next/navigation";
+import { signIn, useSession } from "../../../src/react";
 
 export default function TwoFactorPage() {
-  const submitHandler = () => {
-    signIn("2fa");
+  const router = useRouter()
+  const { update } = useSession()
+  const submitHandler = async () => {
+    await signIn("2fa");
+    await update();
+    router.push('/')
   };
   return (
     <div>
