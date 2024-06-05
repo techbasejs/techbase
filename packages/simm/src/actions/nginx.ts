@@ -17,7 +17,6 @@ export const NginxAction = (options?: NginxActionOptions) => {
       if (configFile) {
         const workDirPath = resolve(workDir);
         const includePath = resolve(workDir, ".simm/nginx/*.conf");
-        // eslint-disable-next-line n/handle-callback-err
         addInclude();
 
         fs.mkdirSync(resolve(workDirPath, ".simm/nginx"), { recursive: true });
@@ -28,17 +27,17 @@ export const NginxAction = (options?: NginxActionOptions) => {
   };
 };
 
-async function addInclude() {
+function addInclude() {
   const path = "/etc/nginx/nginx.conf";
   const newInclude = "include /etc/nginx/extra.conf;\n";
 
   // Read the current Nginx configuration file
   try {
     // Read the current Nginx configuration file
-    const data = shell.cat(path)
+    const data = shell.cat(path);
 
     const modifiedData = data.replace(/(http\s*{)/, `$1\n    ${newInclude}`);
-    console.log(modifiedData)
+    console.log(modifiedData);
   } catch (error) {
     console.error("Error modifying Nginx configuration:", error);
   }

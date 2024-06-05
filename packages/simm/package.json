@@ -30,8 +30,6 @@
   "scripts": {
     "build": "unbuild",
     "dev": "vitest",
-    "lint": "eslint --ext .ts . && prettier -c src",
-    "lint:fix": "eslint --fix --ext .ts . && prettier -w src",
     "play": "node ./scripts/simm.mjs",
     "release": "pnpm build && changelogen --release && pnpm publish && git push --follow-tags",
     "test": "pnpm lint && vitest run --coverage"

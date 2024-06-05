@@ -1,15 +1,13 @@
 import { NextResponse } from "next/server";
 import { withAuth } from "../src/auth";
 
-const auth = withAuth(
-  function middleware(request) {
-    const pathname = request.nextUrl.pathname
-    if (pathname === "/") {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
-    return NextResponse.next();
+const auth = withAuth(function middleware(request) {
+  const pathname = request.nextUrl.pathname;
+  if (pathname === "/") {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
-);
+  return NextResponse.next();
+});
 
 export default auth;
 

@@ -26,8 +26,11 @@ export default defineCommand({
     const configPath = resolve(workDir, `simm.config.ts`);
     const simmConfig: SimmConfig = await resolver.import(configPath);
 
-    const sourcePath = resolve(workDir, simmConfig.servers[environment].sftp?.source as string);
-    
+    const sourcePath = resolve(
+      workDir,
+      simmConfig.servers[environment].sftp?.source as string,
+    );
+
     const destPath = simmConfig.servers[environment].sftp?.dest as string;
     const preSftp = simmConfig.servers[environment].sftp?.preSftp as string;
     const postSftp = simmConfig.servers[environment].sftp?.postSftp as string;
@@ -40,11 +43,11 @@ export default defineCommand({
           }
 
           if (preSftp) {
-            const cmd = [preSftp]
+            const cmd = [preSftp];
             if (workDir) {
-              cmd.unshift(`cd ${workDir}`)
+              cmd.unshift(`cd ${workDir}`);
             }
-            execSync(cmd.join(' && '), { stdio: "inherit" })
+            execSync(cmd.join(" && "), { stdio: "inherit" });
           }
 
           const readStream = fs.createReadStream(sourcePath);
@@ -76,8 +79,8 @@ export default defineCommand({
             sftp.end();
             consola.success(`File transferred successfully`);
             if (postSftp) {
-              const cmd = [postSftp]
-              client.exec(cmd.join(' && '), (err, stream) => {
+              const cmd = [postSftp];
+              client.exec(cmd.join(" && "), (err, stream) => {
                 if (err) {
                   throw err;
                 }
@@ -87,10 +90,11 @@ export default defineCommand({
                   })
                   .stderr.on("data", (data) => {
                     consola.error(data.toString());
-                  }).on('close', () => {
+                  })
+                  .on("close", () => {
                     stream.end();
                     client.end();
-                  })
+                  });
               });
             } else {
               client.end();

@@ -4,7 +4,7 @@ import { signIn } from "../../../src/react";
 
 export default function TwoFactorPage() {
   const submitHandler = () => {
-    signIn('2fa')
+    signIn("2fa");
   };
   return (
     <div>

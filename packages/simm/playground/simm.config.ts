@@ -1,8 +1,7 @@
 import fs from "node:fs";
 import { read } from "rc9";
 import { defineConfig } from "../src";
-const config = read('.conf');
-
+const config = read(".conf");
 
 export default defineConfig({
   servers: {
@@ -17,11 +16,14 @@ export default defineConfig({
       //   path: config.deploy.path,
       // },
       sftp: {
-        source: '/home/duongnt/workspace/rsdn-project/techbasejs/simm/playground/nginx.conf',
+        source:
+          "/home/duongnt/workspace/rsdn-project/techbasejs/simm/playground/nginx.conf",
         dest: config.deploy.path,
-        preSftp: 'ls -al /home/duongnt/workspace/rsdn-project/techbasejs/simm/playground',
-        postSftp: 'ls -al /mnt/chintaidx-owner-crm-frontend/source && echo XXX && echo 333'
-      }
+        preSftp:
+          "ls -al /home/duongnt/workspace/rsdn-project/techbasejs/simm/playground",
+        postSftp:
+          "ls -al /mnt/chintaidx-owner-crm-frontend/source && echo XXX && echo 333",
+      },
       // privateKey: fs.readFileSync(config.server.private_key_path, "utf8"),
     },
     fe: {
@@ -33,8 +35,7 @@ export default defineConfig({
         branch: "main",
         repo: config.github.repo,
         path: config.deploy.path,
-        postDeploy:
-          "pnpm install",
+        postDeploy: "pnpm install",
       },
     },
   },

@@ -1,6 +1,6 @@
 <template>
-    <div>
-        App
-        <my-component />
-    </div>
+  <div>
+    App
+    <my-component />
+  </div>
 </template>

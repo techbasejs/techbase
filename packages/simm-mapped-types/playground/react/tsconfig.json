@@ -1,10 +1,10 @@
 {
-    "extends": "../../tsconfig.json",
-    "compilerOptions": {
-      "paths": {
-        "vue-library": ["../src"]
-      },
-      "types": ["vite/client"]
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "vue-library": ["../src"]
     },
-    "include": ["./**/*"]
-  }
+    "types": ["vite/client"]
+  },
+  "include": ["./**/*"]
+}
