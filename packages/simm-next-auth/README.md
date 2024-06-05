@@ -29,10 +29,10 @@ Import utils:
 
 ```js
 // ESM
-import {} from "simple-next-auth";
+import {} from "@techbase/simple-next-auth";
 
 // CommonJS
-const {} = require("simple-next-auth");
+const {} = require("@techbase/simple-next-auth");
 ```
 
 ## Resolving ESM modules
@@ -45,8 +45,6 @@ Several utilities to make ESM resolution easier:
 - Supporting custom `extensions` and `/index` resolution
 - Supporting custom `conditions`
 - Support resolving from multiple paths or urls
-
-## Setup
 
 ### Setup middleware
 
@@ -131,6 +129,15 @@ const h = auth({
 
 export { h as GET, h as POST };
 ```
+
+Provider response params
+
+| Field | Default value | Type | Description
+| ------ | ------ | ------ | ------ |
+| session | {} | object | auth session data |
+| authorized | true | boolean | if `authorized` is `false`, skipped generate token |
+| jwt | object | {} |jwt config |
+
 
 ## Usage
 
