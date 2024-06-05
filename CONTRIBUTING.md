@@ -37,7 +37,7 @@ After cloning the repo run:
 pnpm install
 ```
 
-A package already exists a folder `playground` for development, you can run `pnpm play` to starting a develop a package, if develop for `react` or `vue`, you can run `pnpm play:react` or `pnpm play:vue`
+A package already exists a folder `playground` for development, you can run `pnpm play` to starting a develop a package, if develop for `react` or `vue` library, you can run `pnpm play:react` or `pnpm play:vue`
 
 Other scripts:
 

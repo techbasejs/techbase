@@ -11,16 +11,6 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
-    },
-    "./vue": {
-      "types": "./dist/vue/index.d.ts",
-      "import": "./dist/vue/index.mjs",
-      "require": "./dist/vue/index.js"
-    },
-    "./react": {
-      "types": "./dist/react/index.d.ts",
-      "import": "./dist/react/index.mjs",
-      "require": "./dist/react/index.js"
     }
   },
   "main": "./dist/index.js",
@@ -31,8 +21,7 @@
   ],
   "scripts": {
     "build": "unbuild",
-    "play:vue": "vite serve playground/vue",
-    "play:react": "vite serve playground/react",
+    "play": "jiti playground/index.ts",
     "release": "pnpm build && changelogen --release && npm publish && git push --follow-tags",
     "test": "vitest run",
     "test:types": "tsc --noEmit"
