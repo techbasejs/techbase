@@ -1,9 +1,9 @@
-# simm
+# @techbasejs/simm
 
 <!-- automd:badges -->
 
-[![npm version](https://flat.badgen.net/npm/v/simm)](https://npmjs.com/package/simm)
-[![npm downloads](https://flat.badgen.net/npm/dm/simm)](https://npmjs.com/package/simm)
+[![npm version](https://flat.badgen.net/npm/v/@techbasejs/simm)](https://npmjs.com/package/@techbasejs/simm)
+[![npm downloads](https://flat.badgen.net/npm/dm/@techbasejs/simm)](https://npmjs.com/package/@techbasejs/simm)
 
 ## Features
 
@@ -11,33 +11,33 @@
 
 ✅ Supported proxyJump
 
-✅ Supported sftp (beta)
+✅ Supported sftp
 
 ## Install
 
 ```sh
 # npm
-npm install -g simm@latest
+npm install -g @techbasejs/simm@latest
 
 # yarn
-yarn add -g simm@latest
+yarn add -g @techbasejs/simm@latest
 
 # pnpm
-pnpm install -g simm@latest
+pnpm install -g @techbasejs/simm@latest
 
 ```
 
 ## Usage CLI
 
 ```sh
-npx simm deploy [environment]
+npx @techbasejs/simm deploy [environment]
 ```
 
 ## Quick Usage
 
 ```typescript
 import fs from "node:fs";
-import { defineConfig } from "simm";
+import { defineConfig } from "@techbasejs/simm";
 
 export default defineConfig({
   servers: {
@@ -67,7 +67,7 @@ npx simm deploy production
 
 ```typescript
 import fs from "node:fs";
-import { defineConfig } from "simm";
+import { defineConfig } from "@techbasejs/simm";
 
 export default defineConfig({
   servers: {
@@ -97,7 +97,7 @@ export default defineConfig({
 ### Sftp (beta)
 
 ```typescript
-import { defineConfig } from "simm";
+import { defineConfig } from "@techbasejs/simm";
 
 export default defineConfig({
   servers: {
