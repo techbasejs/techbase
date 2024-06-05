@@ -4,10 +4,10 @@ import { useRouter } from "next/navigation";
 
 export default function HomePage() {
   const { user } = useSession<{ email: string }>();
-  const router = useRouter()
+  const router = useRouter();
   const logoutHandler = async () => {
     await signOut();
-    router.push('/login')
+    router.push("/login");
   };
   return (
     <div>

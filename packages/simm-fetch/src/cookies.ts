@@ -1,9 +1,9 @@
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
 export const setToken = (token: string) => {
-  Cookies.set('token', token);
+  Cookies.set("token", token);
 };
 
 export const getToken = (): string | undefined => {
-  return Cookies.get('token');
+  return Cookies.get("token");
 };

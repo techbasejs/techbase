@@ -1,3 +1,2 @@
-// src/index.ts
-export * from './utils';
-export * from './stringUtils';
+export * from "./utils";
+export * from "./string-utils";

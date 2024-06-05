@@ -1,8 +1,5 @@
 <template>
-    <div>Vue component</div>
+  <div>Vue component</div>
 </template>
 
-<script setup>
-</script>
-
-
+<script setup></script>

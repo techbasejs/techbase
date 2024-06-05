@@ -1,6 +1,6 @@
 module.exports = {
-    extends: './base',
-    env: {
-      browser: true,
-    },
-  };
+  extends: "./base",
+  env: {
+    browser: true,
+  },
+};

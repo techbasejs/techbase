@@ -1,6 +1,5 @@
 # Simple Generate es tsconfig
 
-
 ## Install
 
 Install package:

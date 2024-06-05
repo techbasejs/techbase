@@ -1,4 +1,3 @@
-
 /**
  * Convert full-width Katakana to full-width Hiragana.
  * @param input - The input value.
@@ -6,7 +5,7 @@
  */
 export function katakanaToHiragana(input: string): string {
   return input.replace(/[\u30A1-\u30F6]/g, (match) =>
-    String.fromCharCode(match.charCodeAt(0) - 0x60)
+    String.fromCharCode(match.charCodeAt(0) - 0x60),
   );
 }
 
@@ -17,7 +16,7 @@ export function katakanaToHiragana(input: string): string {
  */
 export function hiraganaToKatakana(input: string): string {
   return input.replace(/[\u3041-\u3096]/g, (match) =>
-    String.fromCharCode(match.charCodeAt(0) + 0x60)
+    String.fromCharCode(match.charCodeAt(0) + 0x60),
   );
 }
 
@@ -28,7 +27,7 @@ export function hiraganaToKatakana(input: string): string {
  */
 export function hiraganaToHalfWidthKatakana(input: string): string {
   return hiraganaToKatakana(input).replace(/[\u30A1-\u30F6]/g, (match) =>
-    String.fromCharCode(match.charCodeAt(0) - 0xcf_25)
+    String.fromCharCode(match.charCodeAt(0) - 0xcf_25),
   );
 }
 
@@ -39,6 +38,6 @@ export function hiraganaToHalfWidthKatakana(input: string): string {
  */
 export function katakanaToHalfWidthHiragana(input: string): string {
   return katakanaToHiragana(input).replace(/[\u3041-\u3096]/g, (match) =>
-    String.fromCharCode(match.charCodeAt(0) - 0xcf_25)
+    String.fromCharCode(match.charCodeAt(0) - 0xcf_25),
   );
 }

@@ -1,6 +1,6 @@
 // src/utils.ts
-import { DEFAULT_STRING, DEFAULT_NUMBER } from './constants';
-import _ from 'lodash';
+import { DEFAULT_STRING, DEFAULT_NUMBER } from "./constants";
+import _ from "lodash";
 
 /**
  * Convert input to string.
@@ -41,10 +41,10 @@ export function toDate(input: string | number): Date {
  * @returns The converted string or "0".
  */
 export function toStringOrEmptyToZeroString(input: any): string {
-	if (_.isNil(input) || _.isNaN(input) || input === 0) {
-		return "0";
-	}
-	return String(input);
+  if (_.isNil(input) || _.isNaN(input) || input === 0) {
+    return "0";
+  }
+  return String(input);
 }
 
 /**
@@ -53,8 +53,8 @@ export function toStringOrEmptyToZeroString(input: any): string {
  * @returns The converted string or 0.
  */
 export function toStringOrEmptyToZeroNumber(input: any): number {
-	if (_.isNil(input) || _.isNaN(input) || input === 0) {
-		return 0;
-	}
-	return Number(input);
+  if (_.isNil(input) || _.isNaN(input) || input === 0) {
+    return 0;
+  }
+  return Number(input);
 }
