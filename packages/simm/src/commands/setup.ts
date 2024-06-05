@@ -19,7 +19,7 @@ export default defineCommand({
       type: "boolean",
       required: false,
       default: false,
-      description: "force update config of an action"
+      description: "force update config of an action",
     },
   },
   async run({ args }) {
@@ -32,7 +32,7 @@ export default defineCommand({
       return;
     }
 
-    for (const action of setupConfig?.actions) {
+    for (const action of setupConfig.actions) {
       action.execute?.(workDir);
     }
   },

@@ -73,7 +73,7 @@ export default defineCommand({
           stream.on("close", () => {
             consola.success("Deploy successfully!");
             if (otherClient) {
-              otherClient.destroy()
+              otherClient.destroy();
             }
             client.destroy();
             stream.destroy();

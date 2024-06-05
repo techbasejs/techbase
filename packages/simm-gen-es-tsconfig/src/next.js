@@ -1,11 +1,10 @@
-const { JAVASCRIPT_FILES } = require('./constants');
-
+const { JAVASCRIPT_FILES } = require("./constants");
 
 const babelOptions = {
   presets: (() => {
     try {
-      require.resolve('next/babel');
-      return ['next/babel'];
+      require.resolve("next/babel");
+      return ["next/babel"];
     } catch {
       return [];
     }
@@ -13,7 +12,7 @@ const babelOptions = {
 };
 
 module.exports = {
-  extends: ['plugin:@next/next/recommended'],
+  extends: ["plugin:@next/next/recommended"],
   overrides: [
     {
       files: JAVASCRIPT_FILES,

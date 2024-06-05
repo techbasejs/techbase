@@ -5,7 +5,6 @@
 [![npm version](https://flat.badgen.net/npm/v/simm)](https://npmjs.com/package/simm)
 [![npm downloads](https://flat.badgen.net/npm/dm/simm)](https://npmjs.com/package/simm)
 
-
 ## Features
 
 ✅ Deploy to any remote server from local
@@ -15,6 +14,7 @@
 ✅ Supported sftp (beta)
 
 ## Install
+
 ```sh
 # npm
 npm install -g simm@latest
@@ -28,11 +28,13 @@ pnpm install -g simm@latest
 ```
 
 ## Usage CLI
+
 ```sh
 npx simm deploy [environment]
 ```
 
 ## Quick Usage
+
 ```typescript
 import fs from "node:fs";
 import { defineConfig } from "simm";
@@ -48,12 +50,11 @@ export default defineConfig({
         branch: "main",
         repo: `https://github.com/example/example.git`,
         path: "/home/_works/",
-        postDeploy: 'pnpm install && pnpm build',
-      }
+        postDeploy: "pnpm install && pnpm build",
+      },
     },
   },
 });
-
 ```
 
 Start deploy
@@ -81,20 +82,20 @@ export default defineConfig({
       host: "__HOST__",
       privateKey: "__PRIVATE_KEY__",
       passsword: "__PASSWORD__",
-      proxyJump: 'bastion',
+      proxyJump: "bastion",
       deploy: {
         branch: "main",
         repo: `https://github.com/example/example.git`,
         path: "/home/_works/",
-        postDeploy: 'pnpm install && pnpm build',
-      }
+        postDeploy: "pnpm install && pnpm build",
+      },
     },
   },
 });
-
 ```
 
 ### Sftp (beta)
+
 ```typescript
 import { defineConfig } from "simm";
 
@@ -106,11 +107,11 @@ export default defineConfig({
       privateKey: "__PRIVATE_KEY__",
       passsword: "__PASSWORD__",
       sftp: {
-        preSftp: 'pnpm build',
-        source: '/home/local/source',
-        dest: '/home/remote/source',
-        postSftp: 'systemctl restart nginx',
-      }
+        preSftp: "pnpm build",
+        source: "/home/local/source",
+        dest: "/home/remote/source",
+        postSftp: "systemctl restart nginx",
+      },
       // proxyJump: 'bastion', when use proxyJump to a bastion server
     },
   },

@@ -4,11 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prepare": "husky",
     "build": "pnpm --filter './packages/**' build",
     "test": "pnpm --filter './packages/**' test",
-    "lint": "pnpm --filter './packages/**' lint"
+    "lint": "eslint && prettier -w packages",
+    "lint:fix": "eslint --fix && prettier -w packages"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@commitlint/cli": "^19.3.0",
+    "eslint": "^9.4.0",
+    "eslint-config-unjs": "^0.3.2",
+    "husky": "^9.0.11"
+  }
 }

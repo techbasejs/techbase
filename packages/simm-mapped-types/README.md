@@ -1,6 +1,5 @@
 # Simple Mapped types
 
-
 ## Install
 
 Install package:

@@ -4,8 +4,8 @@ import unjs from "eslint-config-unjs";
 export default unjs({
   ignores: [],
   rules: {
-  "no-undef": 0,
-  "unicorn/consistent-destructuring": 0,
-  "unicorn/no-await-expression-member": 0
-},
+    "no-undef": 0,
+    "unicorn/consistent-destructuring": 0,
+    "unicorn/no-await-expression-member": 0,
+  },
 });

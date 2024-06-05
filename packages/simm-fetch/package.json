@@ -33,8 +33,6 @@
     "build": "unbuild",
     "play:vue": "vite serve playground/vue",
     "play:react": "vite serve playground/react",
-    "lint": "eslint src test && prettier -c src test",
-    "lint:fix": "eslint src test --fix && prettier -w src test",
     "release": "pnpm build && changelogen --release && npm publish && git push --follow-tags",
     "test": "vitest run",
     "test:types": "tsc --noEmit"

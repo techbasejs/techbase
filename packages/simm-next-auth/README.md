@@ -23,8 +23,6 @@ npm install @techbase/simm-next-auth
 pnpm install @techbase/simm-next-auth
 ```
 
-
-
 **Note:** Node.js 18+ is recommended.
 
 Import utils:
@@ -56,15 +54,13 @@ Several utilities to make ESM resolution easier:
 import { NextResponse } from "next/server";
 import { withAuth } from "simple-next-auth";
 
-const auth = withAuth(
-  function middleware(request) {
-    const pathname = request.nextUrl.pathname
-    if (pathname === "/") {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
-    return NextResponse.next();
+const auth = withAuth(function middleware(request) {
+  const pathname = request.nextUrl.pathname;
+  if (pathname === "/") {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
-);
+  return NextResponse.next();
+});
 
 export default auth;
 
@@ -75,7 +71,6 @@ export const config = {
     "/((?!api|login|_next/static|_next/image|favicon.ico).*)",
   ],
 };
-
 ```
 
 ### Setup provider
@@ -92,7 +87,9 @@ export default function App({ children }: { children: React.ReactNode }) {
 ```
 
 ### Setup auth api routes
+
 Create file /api/[...auth]/route.ts
+
 ```typescript
 import { auth, Provider, AuthRequestType } from "simple-next-auth";
 import { NextRequest } from "next/server";
@@ -123,7 +120,7 @@ const twoFactorProvider = new Provider("credentials", {
       session: session,
       jwt: {
         // Jwt options
-      }
+      },
     };
   },
 });
@@ -133,7 +130,6 @@ const h = auth({
 });
 
 export { h as GET, h as POST };
-
 ```
 
 ## Usage
@@ -143,11 +139,10 @@ export { h as GET, h as POST };
 ```typescript
 import { signIn } from "next-simple-auth/dist/react";
 
-signIn('login', {
-  email: 'EMAIL',
-  password: 'PASSWORD',
-})
-
+signIn("login", {
+  email: "EMAIL",
+  password: "PASSWORD",
+});
 ```
 
 ### signOut
@@ -155,8 +150,7 @@ signIn('login', {
 ```typescript
 import { signOut } from "next-simple-auth/dist/react";
 
-signout()
-
+signout();
 ```
 
 ### Use and update session
@@ -166,14 +160,13 @@ import { useSession } from "next-simple-auth/dist/react";
 
 export default function Login() {
     const { user, update } = useSession()
-   
+
     return <div>
         {{ user.email }}
     </div>
 }
 
 ```
-
 
 ## License
 

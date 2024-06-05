@@ -1,6 +1,5 @@
 # Simple Player
 
-
 ## Install
 
 Install package:
