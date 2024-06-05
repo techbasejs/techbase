@@ -1,6 +1,6 @@
 import { SignJWT, jwtVerify } from "jose";
 
-const SECRET_KEY = process.env.NEXT_AUTH_SECRET
+const SECRET_KEY = process.env.NEXT_AUTH_SECRET;
 
 const secret = new TextEncoder().encode(SECRET_KEY);
 

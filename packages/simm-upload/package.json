@@ -1,5 +1,5 @@
 {
-  "name": "@techbase/simm-upload",
+  "name": "@techbasejs/simm-upload",
   "version": "1.0.0",
   "description": "Missing ECMAScript module utils for Node.js",
   "repository": "techbasejs/techbasejs",

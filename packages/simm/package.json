@@ -1,5 +1,5 @@
 {
-  "name": "@techbase/simm",
+  "name": "@techbasejs/simm",
   "version": "1.0.0",
   "description": "👂 Simple deploy like pm2",
   "repository": "techbase/techbasejs",
