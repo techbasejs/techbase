@@ -25,7 +25,10 @@ const twoFactorProvider = new Provider("credentials", {
   handler: async (request: AuthRequestType<{ name?: string }>, { session }) => {
     console.log(session);
     const a = await request.json();
-    return {};
+    return {
+      session: session.user,
+      jwt: {},
+    };
   },
 });
 
