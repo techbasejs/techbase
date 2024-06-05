@@ -1,6 +1,4 @@
-
 ## v1.1.0
-
 
 ### 🚀 Enhancements
 
@@ -22,4 +20,3 @@
 - Rs-duongnt1 ([@rs-duongnt1](http://github.com/rs-duongnt1))
 - Nghiahtg ([@rs-nghiaht](http://github.com/rs-nghiaht))
 - Duongnt1 <duongnt1@runsystem.net>
-

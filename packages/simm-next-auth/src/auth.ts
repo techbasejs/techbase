@@ -13,7 +13,7 @@ export const auth = ({
   providers: Provider<AuthRequestType>[];
 }) => {
   if (!process.env.NEXT_AUTH_SECRET) {
-    console.log('\x1b[33m%s\x1b[0m', '[WARN] NEXT_AUTH_SECRET is not set');
+    console.log("\u001B[33m%s\u001B[0m", "[WARN] NEXT_AUTH_SECRET is not set");
   }
   return async (request: AuthRequestType) => {
     const method = request.method;

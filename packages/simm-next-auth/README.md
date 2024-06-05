@@ -132,12 +132,11 @@ export { h as GET, h as POST };
 
 Provider response params
 
-| Field | Default value | Type | Description
-| ------ | ------ | ------ | ------ |
-| session | {} | object | auth session data |
-| authorized | true | boolean | if `authorized` is `false`, skipped generate token |
-| jwt | object | {} |jwt config |
-
+| Field      | Default value | Type    | Description                                        |
+| ---------- | ------------- | ------- | -------------------------------------------------- |
+| session    | {}            | object  | auth session data                                  |
+| authorized | true          | boolean | if `authorized` is `false`, skipped generate token |
+| jwt        | object        | {}      | jwt config                                         |
 
 ## Usage
 
