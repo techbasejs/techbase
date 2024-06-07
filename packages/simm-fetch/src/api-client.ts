@@ -122,6 +122,14 @@ export const put = async <T>(
   return makeRequest("PUT", url, data, options);
 };
 
+export const patch = async <T>(
+  url: string,
+  data: any,
+  options?: RequestOptions,
+): Promise<ApiResponse<T>> => {
+  return makeRequest("PATCH", url, data, options);
+};
+
 export const del = async <T>(
   url: string,
   options?: RequestOptions,

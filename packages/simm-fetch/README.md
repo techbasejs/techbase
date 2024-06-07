@@ -22,7 +22,7 @@ npm i @techbase/simm-fetch
 Import the required methods and constants:
 
 ```js
-import { get, post, put, del } from "@techbase/simm-fetch";
+import { get, post, put, patch, del } from "@techbase/simm-fetch";
 ```
 
 ## ✔️ GET Request
@@ -61,6 +61,21 @@ postData();
 const updateData = async () => {
   try {
     const response = await put("/endpoint", { key: "value" });
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+updateData();
+```
+
+## ✔️ PATCH Request
+
+```js
+const updateData = async () => {
+  try {
+    const response = await patch("/endpoint", { key: "value" });
     console.log(response.data);
   } catch (error) {
     console.error(error);
