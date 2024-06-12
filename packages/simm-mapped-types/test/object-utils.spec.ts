@@ -1,12 +1,12 @@
 import { DEFAULT_NULL } from "../src/constants";
 import {
-  getValueOfKeyFirstFromObject,
+  getValueOfFirstKeyFromObject,
   getAllValueOfKeyFromObject,
-  getDataByPath,
+  getValueFromObjectByPath,
 } from "../src/object-utils";
 import { describe, expect, it } from "vitest";
 
-describe("getValueOfKeyFirstFromObject", () => {
+describe("getValueOfFirstKeyFromObject", () => {
   it("should return the value and path of the first occurrence of a given key in an object", () => {
     const object = {
       foo: {
@@ -17,7 +17,7 @@ describe("getValueOfKeyFirstFromObject", () => {
     };
     const keyWord = "baz";
 
-    const result = getValueOfKeyFirstFromObject(object, keyWord);
+    const result = getValueOfFirstKeyFromObject(object, keyWord);
 
     expect(result.value).toBe("hello");
     expect(result.path).toBe("foo.bar.baz");
@@ -33,27 +33,17 @@ describe("getValueOfKeyFirstFromObject", () => {
     };
     const keyWord = "qux";
 
-    const result = getValueOfKeyFirstFromObject(object, keyWord);
+    const result = getValueOfFirstKeyFromObject(object, keyWord);
 
     expect(result.value).toBe(DEFAULT_NULL);
     expect(result.path).toBe("");
   });
 
-  it("should handle null objects", () => {
-    const object = null;
+  it("should handle empty objects", () => {
+    const object = {};
     const keyWord = "foo";
 
-    const result = getValueOfKeyFirstFromObject(object, keyWord);
-
-    expect(result.value).toBe(DEFAULT_NULL);
-    expect(result.path).toBe("");
-  });
-
-  it("should handle non-object values", () => {
-    const object = "hello";
-    const keyWord = "foo";
-
-    const result = getValueOfKeyFirstFromObject(object, keyWord);
+    const result = getValueOfFirstKeyFromObject(object, keyWord);
 
     expect(result.value).toBe(DEFAULT_NULL);
     expect(result.path).toBe("");
@@ -61,11 +51,6 @@ describe("getValueOfKeyFirstFromObject", () => {
 });
 
 describe("getAllValueOfKeyFromObject", () => {
-  it("should return an empty array if the object is null", () => {
-    const result = getAllValueOfKeyFromObject(null, "key");
-    expect(result).toEqual([]);
-  });
-
   it("should return an empty array if the object is empty", () => {
     const result = getAllValueOfKeyFromObject({}, "key");
     expect(result).toEqual([]);
@@ -123,34 +108,27 @@ describe("getAllValueOfKeyFromObject", () => {
   });
 });
 
-describe("getDataByPath", () => {
+describe("getValueFromObjectByPath", () => {
   it("should return the value of a nested property", () => {
     const obj = { foo: { bar: "baz" } };
-    const result = getDataByPath(obj, "foo.bar");
+    const result = getValueFromObjectByPath(obj, "foo.bar");
     expect(result).toEqual("baz");
   });
 
   it("should return DEFAULT_NULL if the path is invalid", () => {
     const obj = { foo: { bar: "baz" } };
-    const result = getDataByPath(obj, "foo.qux");
+    const result = getValueFromObjectByPath(obj, "foo.qux");
     expect(result).toEqual(DEFAULT_NULL);
   });
 
   it("should return DEFAULT_NULL if the path is empty", () => {
     const obj = { foo: { bar: "baz" } };
-    const result = getDataByPath(obj, "");
+    const result = getValueFromObjectByPath(obj, "");
     expect(result).toEqual(DEFAULT_NULL);
   });
 
-  it("should handle null objects", () => {
-    const obj = null;
-    const result = getDataByPath(obj, "foo.bar");
-    expect(result).toEqual(DEFAULT_NULL);
-  });
-
-  it("should handle non-object values", () => {
-    const obj = "hello";
-    const result = getDataByPath(obj, "foo.bar");
+  it("should handle empty objects", () => {
+    const result = getValueFromObjectByPath({}, "foo.bar");
     expect(result).toEqual(DEFAULT_NULL);
   });
 });

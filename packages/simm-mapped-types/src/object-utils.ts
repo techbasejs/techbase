@@ -7,16 +7,16 @@ import { DEFAULT_NULL } from "./constants";
  * @return {{value:any, path:string}} - An object containing the value and path of the key.
  * If the key is not found, returns an object with a default value and an empty path.
  */
-export function getValueOfKeyFirstFromObject(
-  object: Record<string, any> | null | string | number | boolean,
-  keyWord: string,
+export function getValueOfFirstKeyFromObject(
+  object: Record<string | number, any>,
+  keyWord: string | number,
 ): {
   value: any;
   path: string;
 } {
   const path: string[] = [];
   function getValue(currentObj: any): { value: any; path: string } | undefined {
-    if (typeof currentObj !== "object" || currentObj === DEFAULT_NULL)
+    if (Object.prototype.toString.call(currentObj) !== "[object Object]")
       return undefined;
 
     for (const [key, value] of Object.entries(currentObj)) {
@@ -44,13 +44,16 @@ export function getValueOfKeyFirstFromObject(
  * If the key is not found, returns an empty array.
  */
 export function getAllValueOfKeyFromObject(
-  object: object | null,
+  object: Record<string | number, any>,
   keyWord: string,
 ): {
   value: any;
   path: string;
 }[] {
-  const keyValue: any = {
+  const keyValue: {
+    value: any;
+    path: string[];
+  } = {
     path: [],
     value: [],
   };
@@ -59,7 +62,7 @@ export function getAllValueOfKeyFromObject(
     currentObj: any,
     pathNew = "",
   ): { value: any; path: string } | undefined {
-    if (typeof currentObj !== "object" || currentObj === DEFAULT_NULL) {
+    if (Object.prototype.toString.call(currentObj) !== "[object Object]") {
       newPath = "";
       return undefined;
     }
@@ -72,7 +75,6 @@ export function getAllValueOfKeyFromObject(
       }
       const nestedResult = getValue(value, newPath);
       if (nestedResult) return nestedResult;
-
     }
   }
 
@@ -92,7 +94,10 @@ export function getAllValueOfKeyFromObject(
  * @param {string} path - The dot-separated path to the nested property.
  * @return {any} The value of the nested property, or DEFAULT_NULL if the path is invalid.
  */
-export function getDataByPath(obj: any, path: string) {
+export function getValueFromObjectByPath(
+  obj: Record<string | number, any>,
+  path: string,
+) {
   const pathParts = path.split(".");
   if (pathParts.length === 0) return DEFAULT_NULL;
 
