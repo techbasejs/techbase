@@ -1,7 +1,9 @@
 export const simmValidation = () => {};
 
-export const isRequired = (value: number) => {
-  if (value === 1) return true;
+import { isFullWidthChar } from "./jpValidation/is-fullwidth-char";
 
-  return false;
+const jpValidator = {
+  isFullWidthChar,
 };
+
+export default jpValidator;
