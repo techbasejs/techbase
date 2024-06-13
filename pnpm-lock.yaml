@@ -349,6 +349,9 @@ importers:
       '@types/node':
         specifier: ^20.12.11
         version: 20.14.1
+      changelogen:
+        specifier: ^0.5.5
+        version: 0.5.5
       eslint:
         specifier: ^9.2.0
         version: 9.4.0
