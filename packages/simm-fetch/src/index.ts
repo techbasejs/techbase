@@ -1,3 +1,6 @@
-export const simFetch = () => {
-  console.log("sim-fetch");
-};
+
+
+export { RequestConfig, RequestOptions, Response } from './types';
+
+
+export {default} from './api-client';
