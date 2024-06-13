@@ -1,25 +1,25 @@
-import { DEFAULT_NULL } from "./constants";
-
 /**
  * Returns the value and path of the first occurrence of a given key in an object.
- * @param {object|null} object - The object to search for the key.
- * @param {string} keyWord - The key to search for in the object.
- * @return {{value:any, path:string}} - An object containing the value and path of the key.
+ * @param {Record<string|number, T>} object - The object to search for the key.
+ * @param {string | number} keyWord - The key to search for in the object.
+ * @return {{value: T | null, path:string}} - An object containing the value and path of the key.
  * If the key is not found, returns an object with a default value and an empty path.
  */
-export function getValueOfFirstKeyFromObject(
-  object: Record<string | number, any>,
+export function getValueOfFirstKeyFromObject<T, U>(
+  object: T,
   keyWord: string | number,
 ): {
-  value: any;
+  value: U | null;
   path: string;
 } {
   const path: string[] = [];
-  function getValue(currentObj: any): { value: any; path: string } | undefined {
+  function getValue(currentObj: T): { value: U; path: string } | undefined {
     if (Object.prototype.toString.call(currentObj) !== "[object Object]")
       return undefined;
 
-    for (const [key, value] of Object.entries(currentObj)) {
+    for (const [key, value] of Object.entries(
+      currentObj as object
+    )) {
       path.push(key);
       if (key === keyWord) return { value, path: path.join(".") };
 
@@ -33,41 +33,43 @@ export function getValueOfFirstKeyFromObject(
 
   const result = getValue(object);
 
-  return result || { value: DEFAULT_NULL, path: "" };
+  return result ?? { value: null, path: "" };
 }
 
 /**
  * Returns an array of objects containing the value and path of all occurrences of a given key in an object.
- * @param {object|null} object - The object to search for the key.
- * @param {string} keyWord - The key to search for in the object.
- * @return {{value:any, path:string}[]} - An array of objects containing the value and path of the key.
+ * @param {Record<string|number, T>} object - The object to search for the key.
+ * @param {string | number} keyWord - The key to search for in the object.
+ * @return {{value: T, path:string | number}[]} - An array of objects containing the value and path of the key.
  * If the key is not found, returns an empty array.
  */
-export function getAllValueOfKeyFromObject(
-  object: Record<string | number, any>,
-  keyWord: string,
+export function getAllValueOfKeyFromObject<T, U>(
+  object: T,
+  keyWord: string | number,
 ): {
-  value: any;
+  value: U | null;
   path: string;
 }[] {
   const keyValue: {
-    value: any;
+    value: U[];
     path: string[];
   } = {
-    path: [],
     value: [],
+    path: [],
   };
   let newPath = "";
   function getValue(
-    currentObj: any,
+    currentObj: T,
     pathNew = "",
-  ): { value: any; path: string } | undefined {
+  ): { value: T; path: string } | undefined {
     if (Object.prototype.toString.call(currentObj) !== "[object Object]") {
       newPath = "";
       return undefined;
     }
 
-    for (const [key, value] of Object.entries(currentObj)) {
+    for (const [key, value] of Object.entries(
+      currentObj as object,
+    )) {
       newPath = `${pathNew ? pathNew + "." : ""}${key}`;
       if (key === keyWord) {
         keyValue.value.push(value);
@@ -78,9 +80,9 @@ export function getAllValueOfKeyFromObject(
     }
   }
 
-  getValue(object, "");
+  getValue(object as T, "");
 
-  return keyValue?.value.map((item: any, index: number) => {
+  return keyValue?.value.map((item: U, index: number) => {
     return {
       value: item,
       path: keyValue.path[index],
@@ -90,22 +92,21 @@ export function getAllValueOfKeyFromObject(
 
 /**
  * Retrieves the value of a nested property from an object using a dot-separated path.
- * @param {any} obj - The object to retrieve the nested property from.
+ * @param {T extends Record<string, any>} obj - The object to retrieve the nested property from.
  * @param {string} path - The dot-separated path to the nested property.
- * @return {any} The value of the nested property, or DEFAULT_NULL if the path is invalid.
+ * @return {T | null} The value of the nested property, or null if the path is invalid.
  */
-export function getValueFromObjectByPath(
-  obj: Record<string | number, any>,
+export function getValueFromObjectByPath<T extends Record<string|number, any>>(
+  obj: T,
   path: string,
-) {
+): T | null {
   const pathParts = path.split(".");
-  if (pathParts.length === 0) return DEFAULT_NULL;
+  if (pathParts.length === 0) return null;
 
   let currentObj = obj;
 
   for (const part of pathParts) {
-    if (currentObj === DEFAULT_NULL || typeof currentObj !== "object")
-      return DEFAULT_NULL;
+    if (Object.prototype.toString.call(currentObj) !== "[object Object]") return null;
 
     currentObj = currentObj[part];
   }
