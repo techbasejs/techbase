@@ -5,7 +5,7 @@
 
 💡 A simple fetch API Utils.
 
- Implement from ofetch
+Implement from ofetch
 
 ## 🚀 Quick Start
 
@@ -17,18 +17,20 @@ npm i @techbase/simm-fetch
 
 ```
 
-
 ## ✔️ Usage
+
 Import the required methods and constants:
+
 ```js
-import { get, post, put, del } from '@techbase/simm-fetch';
+import { get, post, put, del } from "@techbase/simm-fetch";
 ```
 
 ## ✔️ GET Request
+
 ```js
 const fetchData = async () => {
   try {
-    const response = await get('/endpoint');
+    const response = await get("/endpoint");
     console.log(response.data);
   } catch (error) {
     console.error(error);
@@ -39,10 +41,11 @@ fetchData();
 ```
 
 ## ✔️ POST Request
+
 ```js
 const postData = async () => {
   try {
-    const response = await post('/endpoint', { key: 'value' });
+    const response = await post("/endpoint", { key: "value" });
     console.log(response.data);
   } catch (error) {
     console.error(error);
@@ -53,10 +56,11 @@ postData();
 ```
 
 ## ✔️ PUT Request
+
 ```js
 const updateData = async () => {
   try {
-    const response = await put('/endpoint', { key: 'value' });
+    const response = await put("/endpoint", { key: "value" });
     console.log(response.data);
   } catch (error) {
     console.error(error);
@@ -67,10 +71,11 @@ updateData();
 ```
 
 ## ✔️ DELETE Request
+
 ```js
 const deleteData = async () => {
   try {
-    const response = await del('/endpoint');
+    const response = await del("/endpoint");
     console.log(response.data);
   } catch (error) {
     console.error(error);
@@ -87,7 +92,7 @@ Retry a request up to a specified number of times if it fails:
 ```js
 const fetchDataWithRetry = async () => {
   try {
-    const response = await get('/endpoint', { retry: 3 });
+    const response = await get("/endpoint", { retry: 3 });
     console.log(response.data);
   } catch (error) {
     console.error(error);
@@ -104,7 +109,7 @@ Set a timeout for a request. If the request takes longer than the specified time
 ```js
 const fetchDataWithTimeout = async () => {
   try {
-    const response = await get('/endpoint', { timeout: 1000 });
+    const response = await get("/endpoint", { timeout: 1000 });
     console.log(response.data);
   } catch (error) {
     console.error(error);
@@ -112,22 +117,24 @@ const fetchDataWithTimeout = async () => {
 };
 ```
 
-
-
 ## ✔️ Build Package
+
 ```js
 npm run build
 ```
 
 ## ✔️ Publish Package
+
 ```js
 npm login
 ```
+
 ```js
 npm publish
 ```
 
 # TODO
+
 - [x] Authen Token/ RefreshToken
 - [x] Retry Request
 - [x] Timeout Request
@@ -142,9 +149,6 @@ npm publish
 - [ ] Validate Payload/Body/Params
 - [ ] Cache
 - [ ] v..v..
-
-
-
 
 ## License
 

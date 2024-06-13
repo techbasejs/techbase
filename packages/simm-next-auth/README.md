@@ -8,19 +8,33 @@
 
 Next auth for next@14
 
+## Features
+
+✅ Nextjs middleware
+
+✅ Nextjs auth routing
+
+✅ Nextjs credentials provider
+
+❯ Nextjs email provider
+
+❯ Nextjs github provider
+
+❯ Nextjs facebook provider
+
 ## Usage
 
 Install npm package:
 
 ```sh
 # using yarn
-yarn add @techbase/simm-next-auth
+yarn add @techbasejs/simm-next-auth
 
 # using npm
-npm install @techbase/simm-next-auth
+npm install @techbasejs/simm-next-auth
 
 # using pnpm
-pnpm install @techbase/simm-next-auth
+pnpm install @techbasejs/simm-next-auth
 ```
 
 **Note:** Node.js 18+ is recommended.
@@ -29,10 +43,10 @@ Import utils:
 
 ```js
 // ESM
-import {} from "simple-next-auth";
+import {} from "@techbasejs/simple-next-auth";
 
 // CommonJS
-const {} = require("simple-next-auth");
+const {} = require("@techbasejs/simple-next-auth");
 ```
 
 ## Resolving ESM modules
@@ -45,8 +59,6 @@ Several utilities to make ESM resolution easier:
 - Supporting custom `extensions` and `/index` resolution
 - Supporting custom `conditions`
 - Support resolving from multiple paths or urls
-
-## Setup
 
 ### Setup middleware
 
@@ -78,7 +90,7 @@ export const config = {
 ```jsx
 "use client";
 
-import { SessionProvider } from "next-simple-auth/dist/react";
+import { SessionProvider } from "@techbasejs/next-simple-auth/dist/react";
 
 export default function App({ children }: { children: React.ReactNode }) {
   return <SessionProvider>{children}</SessionProvider>;
@@ -91,7 +103,7 @@ export default function App({ children }: { children: React.ReactNode }) {
 Create file /api/[...auth]/route.ts
 
 ```typescript
-import { auth, Provider, AuthRequestType } from "simple-next-auth";
+import { auth, Provider, AuthRequestType } from "@techbasejs/simple-next-auth";
 import { NextRequest } from "next/server";
 
 const loginProvider = new Provider("credentials", {
@@ -132,12 +144,20 @@ const h = auth({
 export { h as GET, h as POST };
 ```
 
+Provider response params
+
+| Field      | Default value | Type    | Description                                        |
+| ---------- | ------------- | ------- | -------------------------------------------------- |
+| session    | {}            | object  | auth session data                                  |
+| authorized | true          | boolean | if `authorized` is `false`, skipped generate token |
+| jwt        | object        | {}      | jwt config                                         |
+
 ## Usage
 
 ### signIn
 
 ```typescript
-import { signIn } from "next-simple-auth/dist/react";
+import { signIn } from "@techbasejs/next-simple-auth/dist/react";
 
 signIn("login", {
   email: "EMAIL",
@@ -148,7 +168,7 @@ signIn("login", {
 ### signOut
 
 ```typescript
-import { signOut } from "next-simple-auth/dist/react";
+import { signOut } from "@techbasejs/next-simple-auth/dist/react";
 
 signout();
 ```
@@ -156,7 +176,7 @@ signout();
 ### Use and update session
 
 ```jsx
-import { useSession } from "next-simple-auth/dist/react";
+import { useSession } from "@techbasejs/next-simple-auth/dist/react";
 
 export default function Login() {
     const { user, update } = useSession()
@@ -174,9 +194,9 @@ export default function Login() {
 
 <!-- Badges -->
 
-[npm-version-src]: https://img.shields.io/npm/v/simple-next-auth?style=flat&colorA=18181B&colorB=F0DB4F
-[npm-version-href]: https://npmjs.com/package/simple-next-auth
-[npm-downloads-src]: https://img.shields.io/npm/dm/simple-next-auth?style=flat&colorA=18181B&colorB=F0DB4F
-[npm-downloads-href]: https://npmjs.com/package/simple-next-auth
-[codecov-src]: https://img.shields.io/codecov/c/gh/unjs/simple-next-auth/main?style=flat&colorA=18181B&colorB=F0DB4F
-[codecov-href]: https://codecov.io/gh/unjs/simple-next-auth
+[npm-version-src]: https://img.shields.io/npm/v/@techbasejs/simple-next-auth?style=flat&colorA=18181B&colorB=F0DB4F
+[npm-version-href]: https://npmjs.com/package/@techbasejs/simple-next-auth
+[npm-downloads-src]: https://img.shields.io/npm/dm/@techbasejs/simple-next-auth?style=flat&colorA=18181B&colorB=F0DB4F
+[npm-downloads-href]: https://npmjs.com/package/@techbasejs/simple-next-auth
+[codecov-src]: https://img.shields.io/codecov/c/gh/unjs/@techbasejs/simple-next-auth/main?style=flat&colorA=18181B&colorB=F0DB4F
+[codecov-href]: https://codecov.io/gh/unjs/@techbasejs/simple-next-auth

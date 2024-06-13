@@ -12,6 +12,9 @@ export const auth = ({
 }: {
   providers: Provider<AuthRequestType>[];
 }) => {
+  if (!process.env.NEXT_AUTH_SECRET) {
+    console.log("\u001B[33m%s\u001B[0m", "[WARN] NEXT_AUTH_SECRET is not set");
+  }
   return async (request: AuthRequestType) => {
     const method = request.method;
     const pathname = request.nextUrl.pathname;
@@ -51,6 +54,7 @@ export const auth = ({
         if (typeof res.authorized === "boolean" && !res.authorized) {
           cookies.append(COOKIE_DATA_KEY, token, jwtOptions);
         } else {
+          cookies.remove(COOKIE_DATA_KEY);
           cookies.append(COOKIE_TOKEN_KEY, token, jwtOptions);
         }
       }
