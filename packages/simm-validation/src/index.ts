@@ -1,3 +1,4 @@
+export * from "./is-email";
 export const simmValidation = () => {};
 
 export const isRequired = (value: number) => {
