@@ -1,130 +1,191 @@
-import { ofetch, FetchOptions, FetchContext, FetchResponse } from "ofetch";
-import { BASE_URL_API, HTTP_STATUS_CODE } from "./constants";
-import { getToken, setToken } from "./cookies";
-import { handleErrorResponse } from "./handlers/error-handler";
-import { handleSuccessResponse } from "./handlers/success-handler";
-import { RequestOptions, ApiResponse, TokenResponse } from "./types";
-import { withRetry, withTimeout } from "./utils";
-import axios from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import qs from 'qs';
+import { RequestConfig, RequestOptions, Response, Interceptor } from './types';
+import Utils from './utils';
 
-type CustomHeadersInit = HeadersInit & {
-  Authorization?: string;
-};
+class HttpClient {
+  private instance: AxiosInstance;
+  private defaults: RequestConfig;
+  private isRefreshing: boolean;
+  private refreshTokenPromise: Promise<string> | null;
 
-const apiClient = ofetch.create({
-  baseURL: BASE_URL_API,
-  async onRequest({ options }) {
-    const token = getToken();
-    if (token) {
-      options.headers = {
-        ...(options.headers as CustomHeadersInit),
-        Authorization: `Bearer ${token}`,
-      };
-    }
-  },
-  // TODO define type
-  onResponse: async ({
-    response,
-    request,
-    options,
-  }: FetchContext<any, any>) => {
-    if (response && response.status === HTTP_STATUS_CODE.UNAUTHORIZED) {
-      try {
-        const newToken = await refreshToken();
-        setToken(newToken);
+  constructor(config: any = {}) {
+    this.defaults = config;
+    this.isRefreshing = false;
+    this.refreshTokenPromise = null;
 
-        // Retry the request with the new token
-        options.headers = {
-          ...(options.headers as CustomHeadersInit),
-          Authorization: `Bearer ${newToken}`,
-        };
+    this.instance = axios.create({
+      baseURL: config.baseURL,
+      headers: config.headers,
+      timeout: config.timeout,
+      auth: config.auth,
+      paramsSerializer: params => qs.stringify(params, { arrayFormat: 'brackets' })
+    });
 
-        // Make the original request again with new token
-        await ofetch(request, options);
-      } catch (refreshError) {
-        throw refreshError;
+    // Request interceptor
+    this.instance.interceptors.request.use((config: any) => {
+      // Set token from cookies if exists
+      if (config.useAuthorization) {
+        const token = Utils.getToken();
+        if (token) {
+          config.headers['Authorization'] = `Bearer ${token}`;
+        }
+      }
+
+      // Set Content-Type based on data
+      if (config.data && !config.headers['Content-Type']) {
+        config.headers['Content-Type'] = Utils.getContentType(config.data);
+      }
+
+      return config;
+    });
+
+    // Response interceptor
+    this.instance.interceptors.response.use(
+      response => response,
+      error => this.handleResponseError(error)
+    );
+  }
+
+  private async handleResponseError(error: any): Promise<any> {
+    const originalRequest = error.config;
+    if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
+      if (this.isRefreshing) {
+        await this.refreshTokenPromise;
+      } else {
+        originalRequest._retry = true;
+        this.isRefreshing = true;
+        this.refreshTokenPromise = this.refreshToken();
+
+        const newToken = await this.refreshTokenPromise;
+        Utils.setToken(newToken);
+
+        this.isRefreshing = false;
+        this.refreshTokenPromise = null;
+
+        originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+        return this.instance(originalRequest);
       }
     }
-    if (response) {
-      handleSuccessResponse(response);
-    }
-  },
-  onResponseError: (context: FetchContext<any, any>) => {
-    const { response } = context;
-    if (response) {
-      handleErrorResponse(response);
-    }
-  },
-});
-
-const refreshToken = async (): Promise<string> => {
-  try {
-    const response = await axios.post<ApiResponse<TokenResponse>>(
-      `${BASE_URL_API}/refresh-token`,
-    );
-    const newToken = response.data.data.token;
-    setToken(newToken);
-    return newToken;
-  } catch {
-    throw new Error("Unable to refresh token");
+    throw error;
   }
-};
 
-const makeRequest = async <T>(
-  method: string,
-  url: string,
-  data: any,
-  options?: RequestOptions,
-): Promise<ApiResponse<T>> => {
-  const requestFn = async () => {
-    const fetchOptions: FetchOptions = {
-      method,
-      ...options,
+  private async refreshToken(): Promise<string> {
+    // Implement your refresh token logic here, e.g., call refreshToken API
+    const response = await this.instance.post('/refresh-token', { token: Utils.getRefreshToken() });
+    return response.data.token;
+  }
+
+  request<T = any>(options: RequestOptions): Promise<Response<T>> {
+    const mergedOptions = { ...this.defaults, ...options };
+    return this.instance.request<T>({
+      method: mergedOptions.method,
+      url: mergedOptions.url,
+      data: mergedOptions.data,
+      params: mergedOptions.params,
+      headers: mergedOptions.headers,
+      timeout: mergedOptions.timeout
+    }).then(this.handleResponse)
+      .catch(this.handleError);
+  }
+
+  private handleResponse<T>(response: AxiosResponse<T>): Response<T> {
+    return {
+      data: response.data,
+      status: response.status,
+      statusText: response.statusText,
+      headers: response.headers,
+      config: response.config as RequestOptions
     };
+  }
 
-    return method === "GET" || method === "DELETE"
-      ? apiClient(url, fetchOptions)
-      : apiClient(url, {
-          ...fetchOptions,
-          body: data,
-        });
-  };
+  private handleError(error: any): Promise<any> {
+    return Promise.reject(error);
+  }
 
-  const requestWithRetry = options?.retry
-    ? withRetry(requestFn, options.retry)
-    : requestFn();
+  get<T = any>(url: string, config?: RequestConfig): Promise<Response<T>> {
+    return this.request({ method: 'GET', url, ...config });
+  }
 
-  return options?.timeout
-    ? withTimeout(requestWithRetry, options.timeout)
-    : requestWithRetry;
-};
+  post<T = any>(url: string, data?: any, config?: RequestConfig): Promise<Response<T>> {
+    return this.request({ method: 'POST', url, data, ...config });
+  }
 
-export const get = async <T>(
-  url: string,
-  options?: RequestOptions,
-): Promise<ApiResponse<T>> => {
-  return makeRequest("GET", url, null, options);
-};
+  put<T = any>(url: string, data?: any, config?: RequestConfig): Promise<Response<T>> {
+    return this.request({ method: 'PUT', url, data, ...config });
+  }
 
-export const post = async <T>(
-  url: string,
-  data: any,
-  options?: RequestOptions,
-): Promise<ApiResponse<T>> => {
-  return makeRequest("POST", url, data, options);
-};
+  delete<T = any>(url: string, config?: RequestConfig): Promise<Response<T>> {
+    return this.request({ method: 'DELETE', url, ...config });
+  }
+  
+  upload(url: string, files: FileList | File, config?: RequestConfig): Promise<Response<any>> {
+    const formData = new FormData();
+    if (files instanceof FileList) {
+      for (const file of files) formData.append('files', file);
+    } else {
+      formData.append('file', files);
+    }
 
-export const put = async <T>(
-  url: string,
-  data: any,
-  options?: RequestOptions,
-): Promise<ApiResponse<T>> => {
-  return makeRequest("PUT", url, data, options);
-};
+    return this.request({
+      method: 'POST',
+      url,
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        ...config?.headers
+      },
+      ...config
+    });
+  }
 
-export const del = async <T>(
-  url: string,
-  options?: RequestOptions,
-): Promise<ApiResponse<T>> => {
-  return makeRequest("DELETE", url, null, options);
-};
+  setBaseURL(baseURL: string): void {
+    this.instance.defaults.baseURL = baseURL;
+  }
+
+  setHeader(key: string, value: string): void {
+    this.instance.defaults.headers[key] = value;
+  }
+
+  getHeaders(): { [key: string]: string } {
+    return this.instance.defaults.headers;
+  }
+
+  mergeHeaders(headers: { [key: string]: string }): void {
+    this.instance.defaults.headers = {
+      ...this.instance.defaults.headers.common,
+      ...headers
+    };
+  }
+
+  interceptRequest(onFulfilled?: (value: AxiosRequestConfig) => AxiosRequestConfig | Promise<AxiosRequestConfig>, onRejected?: (error: any) => any): number {
+    return this.instance.interceptors.request.use(onFulfilled, onRejected);
+  }
+
+  interceptResponse(onFulfilled?: (value: AxiosResponse) => AxiosResponse | Promise<AxiosResponse>, onRejected?: (error: any) => any): number {
+    return this.instance.interceptors.response.use(onFulfilled, onRejected);
+  }
+
+  ejectRequestInterceptor(id: number): void {
+    this.instance.interceptors.request.eject(id);
+  }
+
+  ejectResponseInterceptor(id: number): void {
+    this.instance.interceptors.response.eject(id);
+  }
+
+  graphql<T = any>(endpoint: string, query: string, variables?: { [key: string]: any }, config?: RequestConfig): Promise<Response<T>> {
+    return this.post(endpoint, {
+      query,
+      variables
+    }, {
+      ...config,
+      headers: {
+        'Content-Type': 'application/json',
+        ...config?.headers
+      }
+    });
+  }
+}
+
+export default HttpClient;
