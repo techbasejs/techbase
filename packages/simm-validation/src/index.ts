@@ -5,3 +5,5 @@ export const isRequired = (value: number) => {
 
   return false;
 };
+
+export * from "./is-japanese-text";
