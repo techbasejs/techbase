@@ -5,12 +5,17 @@ export const isRequired = (value: number) => {
 
   return false;
 };
-export const checkMinLength = (value: string | any[], minLength: number) => {
+
+export const minLength = (value: string | any[], minLength: number) => {
   if (value.length >= minLength) return true;
   return false;
 };
 
-export const checkMaxLength = (value: string | any[], maxLength: number) => {
+export const maxLength = (value: string | any[], maxLength: number) => {
   if (value.length <= maxLength) return true;
   return false;
+};
+
+export const isInRange = (min: number, max: number) => {
+  return (value: number) => value >= min && value <= max;
 };
