@@ -9,9 +9,9 @@ describe("isImageURL", () => {
       "https://user-images.githubusercontent.com/14011726/94132137-7d4fc100-fe7c-11ea-8512-69f90cb65e48.gif",
     ];
 
-    validImageURLs.forEach((imageUrl) => {
+    for (const imageUrl of validImageURLs) {
       expect(isImageURL(imageUrl)).toBe(true);
-    });
+    }
   });
 
   test("returns false for non-image URLs", () => {
@@ -21,9 +21,9 @@ describe("isImageURL", () => {
       "https://example.com/archive.zip",
     ];
 
-    nonImageURLs.forEach((url) => {
+    for (const url of nonImageURLs) {
       expect(isImageURL(url)).toBe(false);
-    });
+    }
   });
 
   test("returns false for null or undefined input", () => {

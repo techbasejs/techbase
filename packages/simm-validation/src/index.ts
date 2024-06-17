@@ -1,5 +1,3 @@
-import { isImageURL } from "./imageUrl/is-image-url";
-
 export const simmValidation = () => {};
 
 export const isRequired = (value: number) => {
@@ -8,4 +6,4 @@ export const isRequired = (value: number) => {
   return false;
 };
 
-export { isImageURL };
+export { isImageURL } from "./imageUrl/is-image-url";
