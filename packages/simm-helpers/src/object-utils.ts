@@ -17,9 +17,7 @@ export function getValueOfFirstKeyFromObject<T, U>(
     if (Object.prototype.toString.call(currentObj) !== "[object Object]")
       return undefined;
 
-    for (const [key, value] of Object.entries(
-      currentObj as object
-    )) {
+    for (const [key, value] of Object.entries(currentObj as object)) {
       path.push(key);
       if (key === keyWord) return { value, path: path.join(".") };
 
@@ -67,9 +65,7 @@ export function getAllValueOfKeyFromObject<T, U>(
       return undefined;
     }
 
-    for (const [key, value] of Object.entries(
-      currentObj as object,
-    )) {
+    for (const [key, value] of Object.entries(currentObj as object)) {
       newPath = `${pathNew ? pathNew + "." : ""}${key}`;
       if (key === keyWord) {
         keyValue.value.push(value);
@@ -92,23 +88,24 @@ export function getAllValueOfKeyFromObject<T, U>(
 
 /**
  * Retrieves the value of a nested property from an object using a dot-separated path.
- * @param {T extends Record<string, any>} obj - The object to retrieve the nested property from.
+ * @param {T} obj - The object to retrieve the nested property from.
  * @param {string} path - The dot-separated path to the nested property.
- * @return {T | null} The value of the nested property, or null if the path is invalid.
+ * @return {T | K |null} The value of the nested property, or null if the path is invalid.
  */
-export function getValueFromObjectByPath<T extends Record<string|number, any>>(
+export function getValueFromObjectByPath<T extends object, K>(
   obj: T,
   path: string,
-): T | null {
+): K | T | null {
   const pathParts = path.split(".");
   if (pathParts.length === 0) return null;
 
-  let currentObj = obj;
+  let currentObj: T | K = obj;
 
   for (const part of pathParts) {
-    if (Object.prototype.toString.call(currentObj) !== "[object Object]") return null;
+    if (Object.prototype.toString.call(currentObj) !== "[object Object]")
+      return null;
 
-    currentObj = currentObj[part];
+    currentObj = currentObj[part as keyof typeof currentObj] as K;
   }
 
   return currentObj ?? null;
