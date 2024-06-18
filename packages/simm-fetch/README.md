@@ -168,3 +168,5 @@ UIT. Made with 💖
 [license-href]: https://github.com/unjs/simple-fetch/blob/main/LICENSE
 [jsdocs-src]: https://img.shields.io/badge/jsDocs.io-reference-18181B?style=flat&colorA=18181B&colorB=F0DB4F
 [jsdocs-href]: https://www.jsdocs.io/package/simple-fetch
+
+New line
