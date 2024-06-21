@@ -1,34 +1,46 @@
-import { get, post, put, del } from "../src/api-client";
+import HttpClient from '../src/httpClient';
 
-describe("API Client", () => {
-  test("GET request", async () => {
-    const response = await get("/endpoint");
+describe('HttpClient', () => {
+  let client: HttpClient;
+
+  beforeEach(() => {
+    client = new HttpClient({
+      baseURL: 'https://api.example.com',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+  });
+
+  test('should set base URL correctly', () => {
+    client.setBaseURL('https://api.newexample.com');
+    expect(client.getHeaders()['baseURL']).toBe('https://api.newexample.com');
+  });
+
+  test('should set header correctly', () => {
+    client.setHeader('Authorization', 'Bearer testtoken');
+    expect(client.getHeaders()['Authorization']).toBe('Bearer testtoken');
+  });
+
+  test('should merge headers correctly', () => {
+    client.mergeHeaders({ 'Custom-Header': 'customValue' });
+    expect(client.getHeaders()['Custom-Header']).toBe('customValue');
+  });
+
+  test('should handle GET request', async () => {
+    const response = await client.get('/test');
     expect(response.status).toBe(200);
   });
 
-  test("POST request", async () => {
-    const response = await post("/endpoint", { key: "value" });
+  test('should handle POST request', async () => {
+    const response = await client.post('/test', { data: 'testData' });
+    expect(response.status).toBe(201);
+  });
+
+  test('should handle GraphQL request', async () => {
+    const response = await client.graphql('/graphql', '{ testQuery }');
     expect(response.status).toBe(200);
   });
 
-  test("PUT request", async () => {
-    const response = await put("/endpoint", { key: "value" });
-    expect(response.status).toBe(200);
-  });
-
-  test("DELETE request", async () => {
-    const response = await del("/endpoint");
-    expect(response.status).toBe(200);
-  });
-
-  test("GET request with retry", async () => {
-    const response = await get("/endpoint", { retry: 3 });
-    expect(response.status).toBe(200);
-  });
-
-  test("GET request with timeout", async () => {
-    await expect(get("/endpoint", { timeout: 1000 })).rejects.toThrow(
-      "Request timed out",
-    );
-  });
+  // Add more tests as needed
 });
