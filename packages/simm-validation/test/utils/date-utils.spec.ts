@@ -1,7 +1,7 @@
-import { isDate, calcDate } from "../src/validate-utils";
+import { isDate } from "../../src/utils/date-utils";
 import { describe, expect, it } from "vitest";
 
-describe("validate-utils.ts - isDate", () => {
+describe("date-utils.ts - isDate", () => {
   // valid date string in ISO format returns true
   it("No.1: should return true when given a valid date string in ISO format", () => {
     const result = isDate("2023-10-01T00:00:00Z");
@@ -40,34 +40,8 @@ describe("validate-utils.ts - isDate", () => {
     const result = isDate("");
     expect(result).toBe(false);
   });
-});
-describe("validate-utils.ts - calcDate", () => {
-  // calculates days between two dates within the same month
-  it("No.1: should calculate days between two dates within the same month", () => {
-    const startDate = new Date(2023, 9, 1);
-    const endDate = new Date(2023, 9, 10);
-    const result = calcDate(startDate, endDate);
-    expect(result).toBe(9);
-  });
-  // calculates days between two dates across different months
-  it("No.2: should calculate days between two dates across different months", () => {
-    const startDate = new Date(2023, 9, 1);
-    const endDate = new Date(2023, 10, 10);
-    const result = calcDate(startDate, endDate);
-    expect(result).toBe(40);
-  });
-  // calculates days when startDate and endDate are the same
-  it("No.3: should calculate days when startDate and endDate are the same", () => {
-    const startDate = new Date(2023, 9, 1);
-    const endDate = new Date(2023, 9, 1);
-    const result = calcDate(startDate, endDate);
-    expect(result).toBe(0);
-  });
-  // handles dates around daylight saving time changes
-  it("No.4: should handle dates around daylight saving time changes when startDate > endDate", () => {
-    const startDate = new Date(2023, 2, 10);
-    const endDate = new Date(2023, 2, 1);
-    const result = calcDate(startDate, endDate);
-    expect(result).toBe(-9);
+  it("No.9: should return false when given an invalid date number", () => {
+    const result = isDate(8_640_000_000_000_001);
+    expect(result).toBe(false);
   });
 });
