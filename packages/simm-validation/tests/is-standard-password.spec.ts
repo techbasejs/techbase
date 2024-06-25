@@ -1,6 +1,6 @@
 import { test, expect, describe } from "vitest";
 
-import { isStandardPassword } from "../src/index";
+import { isStandardPassword } from "../src/is-standard-password";
 
 describe("isStandardPassword", () => {
   test("Password has less than 8 characters", () => {

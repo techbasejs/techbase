@@ -1,6 +1,6 @@
 import { test, expect, describe } from "vitest";
 
-import { isStandardEmail } from "../src/index";
+import { isStandardEmail } from "../src/is-standard-email";
 
 describe("isStandardEmail", () => {
   test("Email doesn't contain @", () => {
