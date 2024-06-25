@@ -39,6 +39,7 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.0",
     "@vitejs/plugin-vue": "^5.0.4",
+    "@vitest/coverage-istanbul": "^1.6.0",
     "changelogen": "^0.5.5",
     "eslint": "^9.2.0",
     "eslint-config-unjs": "0.3.1",
