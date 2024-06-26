@@ -5,13 +5,13 @@
 [![npm version](https://flat.badgen.net/npm/v/@techbasejs/simm)](https://npmjs.com/package/@techbasejs/simm)
 [![npm downloads](https://flat.badgen.net/npm/dm/@techbasejs/simm)](https://npmjs.com/package/@techbasejs/simm)
 
-## Features
+## Main Features
 
-✅ Deploy to any remote server from local
+✅ Triển khai hệ thống deployment đơn giản tiện lợi, cho phép cung cấp và cật nhật ứng dụng trong môi trường production 
 
-✅ Supported proxyJump
+✅ Hỗ trợ kết nối máy chủ từ xa thông qua proxy hoặc bastion với `proxyJump`
 
-✅ Supported sftp
+✅ Hỗ trợ truyền các tệp, các file với giao thức SFTP (Secure File Transfer Protocol)
 
 ## Install
 
