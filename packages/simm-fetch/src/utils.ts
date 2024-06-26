@@ -1,7 +1,11 @@
-const Utils = {
+import qs from "qs";
+
+export const Utils = {
   getToken(): string | null {
-    const token = document.cookie.split('; ').find(row => row.startsWith('token='));
-    return token ? token.split('=')[1] : null;
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("token="));
+    return token ? token.split("=")[1] : null;
   },
 
   setToken(token: string): void {
@@ -10,8 +14,10 @@ const Utils = {
   },
 
   getRefreshToken(): string | null {
-    const refreshToken = document.cookie.split('; ').find(row => row.startsWith('refreshToken='));
-    return refreshToken ? refreshToken.split('=')[1] : null;
+    const refreshToken = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("refreshToken="));
+    return refreshToken ? refreshToken.split("=")[1] : null;
   },
 
   setRefreshToken(refreshToken: string): void {
@@ -20,23 +26,20 @@ const Utils = {
   },
 
   getContentType(data: any): string {
-    if (typeof data === 'object' && !(data instanceof FormData)) {
-      return 'application/json';
+    if (typeof data === "object" && !(data instanceof FormData)) {
+      return "application/json";
     }
     if (data instanceof FormData) {
-      return 'multipart/form-data';
+      return "multipart/form-data";
     }
-    return 'text/plain';
+    return "text/plain";
   },
 
   buildQueryParams(params: { [key: string]: any }): string {
-    return qs.stringify(params, { arrayFormat: 'brackets' });
+    return qs.stringify(params, { arrayFormat: "brackets" });
   },
 
   isEmptyObject(obj: any): boolean {
     return Object.keys(obj).length === 0 && obj.constructor === Object;
   },
-
 };
-
-export default Utils;

@@ -1,35 +1,25 @@
 {
   "name": "@techbasejs/simm-next-auth",
-  "version": "1.1.0",
+  "version": "1.0.0",
   "description": "Missing ECMAScript module utils for Node.js",
   "repository": "techbasejs/techbase/tree/main/packages/simm-next-auth",
   "license": "MIT",
   "sideEffects": false,
   "type": "module",
+  "main": "./cjs/index.cjs",
+  "module": "./esm/index.mjs",
+  "types": "./lib/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
-    },
-    "./dist/react": {
-      "types": "./dist/react/index.d.ts",
-      "import": "./dist/react/index.mjs",
-      "require": "./dist/react/index.cjs"
+      "import": {
+        "types": "./lib/index.d.mts",
+        "default": "./esm/index.mjs"
+      },
+      "require": {
+        "types": "./lib/index.d.ts",
+        "default": "./cjs/index.cjs"
+      }
     }
-  },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "build": "unbuild",
-    "play": "next dev playground",
-    "release": "pnpm build && changelogen --release && npm publish && git push --follow-tags",
-    "test": "vitest run",
-    "test:types": "tsc --noEmit"
   },
   "dependencies": {
     "cookie": "^0.6.0",
@@ -52,7 +42,6 @@
     "unbuild": "^2.0.0",
     "vitest": "^1.6.0"
   },
-  "packageManager": "pnpm@9.1.0",
   "peerDependencies": {
     "next": "^14.2.3",
     "react": "^18.3.1"

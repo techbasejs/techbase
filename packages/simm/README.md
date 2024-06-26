@@ -5,13 +5,15 @@
 [![npm version](https://flat.badgen.net/npm/v/@techbasejs/simm)](https://npmjs.com/package/@techbasejs/simm)
 [![npm downloads](https://flat.badgen.net/npm/dm/@techbasejs/simm)](https://npmjs.com/package/@techbasejs/simm)
 
+Một tool giúp triển khai các hệ thống lên môi trường production một cách đơn giản và nhanh chống.
+
 ## Main Features
 
-✅ Triển khai hệ thống deployment đơn giản tiện lợi, cho phép cung cấp và cật nhật ứng dụng trong môi trường production 
+- [x] Triển khai ứng dụng thông qua SSH và Git
 
-✅ Hỗ trợ kết nối máy chủ từ xa thông qua proxy hoặc bastion với `proxyJump`
+- [x] Kết nối máy chủ từ xa thông qua proxy hoặc bastion với `proxyJump`
 
-✅ Hỗ trợ truyền các tệp, các file với giao thức SFTP (Secure File Transfer Protocol)
+- [x] Truyền các tệp, file thông qua giao thức SFTP (Secure File Transfer Protocol)
 
 ## Install
 

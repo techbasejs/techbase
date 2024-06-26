@@ -1,9 +1,9 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import qs from 'qs';
-import { RequestConfig, RequestOptions, Response, Interceptor } from './types';
-import Utils from './utils';
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
+import qs from "qs";
+import { RequestConfig, RequestOptions, Response, Interceptor } from "./types";
+import { Utils } from "./utils";
 
-class HttpClient {
+export class HttpClient {
   private instance: AxiosInstance;
   private defaults: RequestConfig;
   private isRefreshing: boolean;
@@ -19,7 +19,8 @@ class HttpClient {
       headers: config.headers,
       timeout: config.timeout,
       auth: config.auth,
-      paramsSerializer: params => qs.stringify(params, { arrayFormat: 'brackets' })
+      paramsSerializer: (params) =>
+        qs.stringify(params, { arrayFormat: "brackets" }),
     });
 
     // Request interceptor
@@ -28,13 +29,13 @@ class HttpClient {
       if (config.useAuthorization) {
         const token = Utils.getToken();
         if (token) {
-          config.headers['Authorization'] = `Bearer ${token}`;
+          config.headers["Authorization"] = `Bearer ${token}`;
         }
       }
 
       // Set Content-Type based on data
-      if (config.data && !config.headers['Content-Type']) {
-        config.headers['Content-Type'] = Utils.getContentType(config.data);
+      if (config.data && !config.headers["Content-Type"]) {
+        config.headers["Content-Type"] = Utils.getContentType(config.data);
       }
 
       return config;
@@ -42,14 +43,18 @@ class HttpClient {
 
     // Response interceptor
     this.instance.interceptors.response.use(
-      response => response,
-      error => this.handleResponseError(error)
+      (response) => response,
+      (error) => this.handleResponseError(error),
     );
   }
 
   private async handleResponseError(error: any): Promise<any> {
     const originalRequest = error.config;
-    if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      originalRequest &&
+      !originalRequest._retry
+    ) {
       if (this.isRefreshing) {
         await this.refreshTokenPromise;
       } else {
@@ -63,7 +68,7 @@ class HttpClient {
         this.isRefreshing = false;
         this.refreshTokenPromise = null;
 
-        originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+        originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
         return this.instance(originalRequest);
       }
     }
@@ -72,20 +77,24 @@ class HttpClient {
 
   private async refreshToken(): Promise<string> {
     // Implement your refresh token logic here, e.g., call refreshToken API
-    const response = await this.instance.post('/refresh-token', { token: Utils.getRefreshToken() });
+    const response = await this.instance.post("/refresh-token", {
+      token: Utils.getRefreshToken(),
+    });
     return response.data.token;
   }
 
   request<T = any>(options: RequestOptions): Promise<Response<T>> {
     const mergedOptions = { ...this.defaults, ...options };
-    return this.instance.request<T>({
-      method: mergedOptions.method,
-      url: mergedOptions.url,
-      data: mergedOptions.data,
-      params: mergedOptions.params,
-      headers: mergedOptions.headers,
-      timeout: mergedOptions.timeout
-    }).then(this.handleResponse)
+    return this.instance
+      .request<T>({
+        method: mergedOptions.method,
+        url: mergedOptions.url,
+        data: mergedOptions.data,
+        params: mergedOptions.params,
+        headers: mergedOptions.headers,
+        timeout: mergedOptions.timeout,
+      })
+      .then(this.handleResponse)
       .catch(this.handleError);
   }
 
@@ -95,7 +104,7 @@ class HttpClient {
       status: response.status,
       statusText: response.statusText,
       headers: response.headers,
-      config: response.config as RequestOptions
+      config: response.config as RequestOptions,
     };
   }
 
@@ -104,38 +113,50 @@ class HttpClient {
   }
 
   get<T = any>(url: string, config?: RequestConfig): Promise<Response<T>> {
-    return this.request({ method: 'GET', url, ...config });
+    return this.request({ method: "GET", url, ...config });
   }
 
-  post<T = any>(url: string, data?: any, config?: RequestConfig): Promise<Response<T>> {
-    return this.request({ method: 'POST', url, data, ...config });
+  post<T = any>(
+    url: string,
+    data?: any,
+    config?: RequestConfig,
+  ): Promise<Response<T>> {
+    return this.request({ method: "POST", url, data, ...config });
   }
 
-  put<T = any>(url: string, data?: any, config?: RequestConfig): Promise<Response<T>> {
-    return this.request({ method: 'PUT', url, data, ...config });
+  put<T = any>(
+    url: string,
+    data?: any,
+    config?: RequestConfig,
+  ): Promise<Response<T>> {
+    return this.request({ method: "PUT", url, data, ...config });
   }
 
   delete<T = any>(url: string, config?: RequestConfig): Promise<Response<T>> {
-    return this.request({ method: 'DELETE', url, ...config });
+    return this.request({ method: "DELETE", url, ...config });
   }
-  
-  upload(url: string, files: FileList | File, config?: RequestConfig): Promise<Response<any>> {
+
+  upload(
+    url: string,
+    files: FileList | File,
+    config?: RequestConfig,
+  ): Promise<Response<any>> {
     const formData = new FormData();
     if (files instanceof FileList) {
-      for (const file of files) formData.append('files', file);
+      for (const file of files) formData.append("files", file);
     } else {
-      formData.append('file', files);
+      formData.append("file", files);
     }
 
     return this.request({
-      method: 'POST',
+      method: "POST",
       url,
       data: formData,
       headers: {
-        'Content-Type': 'multipart/form-data',
-        ...config?.headers
+        "Content-Type": "multipart/form-data",
+        ...config?.headers,
       },
-      ...config
+      ...config,
     });
   }
 
@@ -154,15 +175,25 @@ class HttpClient {
   mergeHeaders(headers: { [key: string]: string }): void {
     this.instance.defaults.headers = {
       ...this.instance.defaults.headers.common,
-      ...headers
+      ...headers,
     };
   }
 
-  interceptRequest(onFulfilled?: (value: AxiosRequestConfig) => AxiosRequestConfig | Promise<AxiosRequestConfig>, onRejected?: (error: any) => any): number {
+  interceptRequest(
+    onFulfilled?: (
+      value: AxiosRequestConfig,
+    ) => AxiosRequestConfig | Promise<AxiosRequestConfig>,
+    onRejected?: (error: any) => any,
+  ): number {
     return this.instance.interceptors.request.use(onFulfilled, onRejected);
   }
 
-  interceptResponse(onFulfilled?: (value: AxiosResponse) => AxiosResponse | Promise<AxiosResponse>, onRejected?: (error: any) => any): number {
+  interceptResponse(
+    onFulfilled?: (
+      value: AxiosResponse,
+    ) => AxiosResponse | Promise<AxiosResponse>,
+    onRejected?: (error: any) => any,
+  ): number {
     return this.instance.interceptors.response.use(onFulfilled, onRejected);
   }
 
@@ -174,18 +205,25 @@ class HttpClient {
     this.instance.interceptors.response.eject(id);
   }
 
-  graphql<T = any>(endpoint: string, query: string, variables?: { [key: string]: any }, config?: RequestConfig): Promise<Response<T>> {
-    return this.post(endpoint, {
-      query,
-      variables
-    }, {
-      ...config,
-      headers: {
-        'Content-Type': 'application/json',
-        ...config?.headers
-      }
-    });
+  graphql<T = any>(
+    endpoint: string,
+    query: string,
+    variables?: { [key: string]: any },
+    config?: RequestConfig,
+  ): Promise<Response<T>> {
+    return this.post(
+      endpoint,
+      {
+        query,
+        variables,
+      },
+      {
+        ...config,
+        headers: {
+          "Content-Type": "application/json",
+          ...config?.headers,
+        },
+      },
+    );
   }
 }
-
-export default HttpClient;

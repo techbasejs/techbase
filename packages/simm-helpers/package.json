@@ -6,25 +6,20 @@
   "license": "MIT",
   "sideEffects": false,
   "type": "module",
+  "main": "./cjs/index.cjs",
+  "module": "./esm/index.mjs",
+  "types": "./lib/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "import": {
+        "types": "./lib/index.d.mts",
+        "default": "./esm/index.mjs"
+      },
+      "require": {
+        "types": "./lib/index.d.ts",
+        "default": "./cjs/index.cjs"
+      }
     }
-  },
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "build": "unbuild",
-    "play": "jiti playground/index.ts",
-    "release": "pnpm build && changelogen --release && npm publish && git push --follow-tags",
-    "test": "vitest run",
-    "test:types": "tsc --noEmit"
   },
   "dependencies": {
     "lodash": "^4.17.21"

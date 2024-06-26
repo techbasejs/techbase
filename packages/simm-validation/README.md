@@ -2,39 +2,39 @@
 
 ## Features
 
- - [ ] Basic Rules
-   - [ ] required, requiredIf
-   - [ ] email
-   - [ ] katakana
-   - [ ] hiragana
-   - [ ] japannese
-   - [ ] alphanumeric
-   - [ ] alphabet
-   - [ ] phone
-   - [ ] url
-   - [ ] lowercase
-   - [ ] uppercase
-   - [ ] datetime
-   - [ ] matches
-   - [ ] minValue
-   - [ ] maxValue
-   - [ ] lessThan
-   - [ ] moreThan
-   - [ ] maxValue
-   - [ ] positive
-   - [ ] negative
-   - [ ] integer
-   - [ ] minLength
-   - [ ] maxLength
-   - [ ] unique
- - [ ] Basic Transforms
-   - [ ] trim
-   - [ ] lowercase
-   - [ ] uppercase
-   - [ ] round
- - [ ] Form Control
-   - [ ] handle value
-   - [ ] handle error
+- [ ] Basic Rules
+  - [ ] required, requiredIf
+  - [ ] email
+  - [ ] katakana
+  - [ ] hiragana
+  - [ ] japannese
+  - [ ] alphanumeric
+  - [ ] alphabet
+  - [ ] phone
+  - [ ] url
+  - [ ] lowercase
+  - [ ] uppercase
+  - [ ] datetime
+  - [ ] matches
+  - [ ] minValue
+  - [ ] maxValue
+  - [ ] lessThan
+  - [ ] moreThan
+  - [ ] maxValue
+  - [ ] positive
+  - [ ] negative
+  - [ ] integer
+  - [ ] minLength
+  - [ ] maxLength
+  - [ ] unique
+- [ ] Basic Transforms
+  - [ ] trim
+  - [ ] lowercase
+  - [ ] uppercase
+  - [ ] round
+- [ ] Form Control
+  - [ ] handle value
+  - [ ] handle error
 
 ## Install
 
