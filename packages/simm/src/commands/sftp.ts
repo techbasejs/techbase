@@ -9,6 +9,12 @@ import { SimmConfig } from "../types";
 import { createResolver } from "../_resolver";
 import { SFTPWrapper } from "ssh2";
 
+/**
+ * Recursively counts the total number of files in a directory and its subdirectories.
+ *
+ * @param sourcePath The absolute path to the directory to start counting from.
+ * @returns The total number of files found.
+ */
 const countFiles = (sourcePath: string) => {
   let count = 0;
   const files = fs.readdirSync(sourcePath);
@@ -23,11 +29,34 @@ const countFiles = (sourcePath: string) => {
   }
 
   return count;
-}
+};
 
-const uploadFolderViaSftp = async (sftp: SFTPWrapper, sourcePath: string, destPath: string, totalFiles: number, callback?: (err?: string | null) => void) => {
+/**
+ * Uploads a folder and its contents to a remote server via SFTP.
+ *
+ * @param sftp The SFTPWrapper instance for the connection.
+ * @param sourcePath The absolute path to the local folder to upload.
+ * @param destPath The absolute path to the destination folder on the remote server.
+ * @param totalFiles The total number of files expected to be uploaded.
+ * @param callback Optional callback function to be called when the upload is complete or encounters an error.
+ * @returns A Promise that resolves to the total number of files uploaded.
+ */
+const uploadFolderViaSftp = async (
+  sftp: SFTPWrapper,
+  sourcePath: string,
+  destPath: string,
+  totalFiles: number,
+  callback?: (err?: string | null) => void,
+): Promise<number> => {
   let uploadedFilesCount = 0;
   const files = fs.readdirSync(sourcePath);
+  const checkUploadDone = () => {
+    if (uploadedFilesCount === totalFiles) {
+      consola.success(`Files transferred successfully`);
+      callback?.();
+    }
+  };
+
   for (const file of files) {
     const sourceFilePath = path.join(sourcePath, file);
     const destFilePath = path.join(destPath, file);
@@ -37,42 +66,35 @@ const uploadFolderViaSftp = async (sftp: SFTPWrapper, sourcePath: string, destPa
       await new Promise<void>((resolve, reject) => {
         const readStream = fs.createReadStream(sourceFilePath);
         const writeStream = sftp.createWriteStream(destFilePath);
-        writeStream.on('close', () => {
+        writeStream.on("close", () => {
           ++uploadedFilesCount;
-          consola.success(
-            `File ${filename} transferred successfully`,
-          );
-          resolve()
+          consola.success(`File ${filename} transferred successfully`);
+          resolve();
         });
-        writeStream.on('error', (err: any) => {
+        writeStream.on("error", (err: any) => {
           callback?.(JSON.stringify(err));
-          reject(err)
+          reject(err);
         });
         readStream.pipe(writeStream);
       });
-      if (uploadedFilesCount === totalFiles) {
-        consola.success(
-          `Files transferred successfully`,
-        );
-        callback?.();
-      }
+      checkUploadDone();
     } else if (stats.isDirectory()) {
-      sftp.mkdir(destFilePath, { mode: '0755' }, async () => {
-        const newCount = await uploadFolderViaSftp(sftp, sourceFilePath, destFilePath, totalFiles, callback); // Recurse for subfolders
+      sftp.mkdir(destFilePath, { mode: "0755" }, async () => {
+        const newCount = await uploadFolderViaSftp(
+          sftp,
+          sourceFilePath,
+          destFilePath,
+          totalFiles,
+          callback,
+        ); // Recurse for subfolders
         uploadedFilesCount = uploadedFilesCount + newCount;
-
-        if (uploadedFilesCount === totalFiles) {
-          consola.success(
-            `Files transferred successfully`,
-          );
-          callback?.();
-        }
+        checkUploadDone();
       });
     }
   }
 
   return uploadedFilesCount;
-}
+};
 
 export default defineCommand({
   args: {
@@ -146,7 +168,7 @@ export default defineCommand({
             } else {
               client.end();
             }
-          })
+          });
         } catch {
           client.end();
           client.destroy();
