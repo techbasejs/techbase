@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import path from "node:path";
 import { execSync } from "node:child_process";
 import { defineCommand } from "citty";
 import { resolve } from "pathe";
@@ -6,6 +7,72 @@ import consola from "consola";
 import { sshConnect } from "../libs/connect";
 import { SimmConfig } from "../types";
 import { createResolver } from "../_resolver";
+import { SFTPWrapper } from "ssh2";
+
+const countFiles = (sourcePath: string) => {
+  let count = 0;
+  const files = fs.readdirSync(sourcePath);
+  for (const file of files) {
+    const sourceFilePath = path.join(sourcePath, file);
+    const stats = fs.statSync(sourceFilePath);
+    if (stats.isDirectory()) {
+      count = count + countFiles(sourceFilePath);
+    } else if (stats.isFile()) {
+      count++;
+    }
+  }
+
+  return count;
+}
+
+const uploadFolderViaSftp = async (sftp: SFTPWrapper, sourcePath: string, destPath: string, totalFiles: number, callback?: (err?: string | null) => void) => {
+  let uploadedFilesCount = 0;
+  const files = fs.readdirSync(sourcePath);
+  for (const file of files) {
+    const sourceFilePath = path.join(sourcePath, file);
+    const destFilePath = path.join(destPath, file);
+    const stats = fs.statSync(sourceFilePath);
+    if (stats.isFile()) {
+      const filename = path.basename(sourceFilePath);
+      await new Promise<void>((resolve, reject) => {
+        const readStream = fs.createReadStream(sourceFilePath);
+        const writeStream = sftp.createWriteStream(destFilePath);
+        writeStream.on('close', () => {
+          ++uploadedFilesCount;
+          consola.success(
+            `File ${filename} transferred successfully`,
+          );
+          resolve()
+        });
+        writeStream.on('error', (err: any) => {
+          callback?.(JSON.stringify(err));
+          reject(err)
+        });
+        readStream.pipe(writeStream);
+      });
+      if (uploadedFilesCount === totalFiles) {
+        consola.success(
+          `Files transferred successfully`,
+        );
+        callback?.();
+      }
+    } else if (stats.isDirectory()) {
+      sftp.mkdir(destFilePath, { mode: '0755' }, async () => {
+        const newCount = await uploadFolderViaSftp(sftp, sourceFilePath, destFilePath, totalFiles, callback); // Recurse for subfolders
+        uploadedFilesCount = uploadedFilesCount + newCount;
+
+        if (uploadedFilesCount === totalFiles) {
+          consola.success(
+            `Files transferred successfully`,
+          );
+          callback?.();
+        }
+      });
+    }
+  }
+
+  return uploadedFilesCount;
+}
 
 export default defineCommand({
   args: {
@@ -34,6 +101,7 @@ export default defineCommand({
     const destPath = simmConfig.servers[environment].sftp?.dest as string;
     const preSftp = simmConfig.servers[environment].sftp?.preSftp as string;
     const postSftp = simmConfig.servers[environment].sftp?.postSftp as string;
+    const totalFiles = countFiles(sourcePath);
 
     sshConnect(simmConfig, environment, (client) => {
       client.sftp((err, sftp) => {
@@ -50,34 +118,13 @@ export default defineCommand({
             execSync(cmd.join(" && "), { stdio: "inherit" });
           }
 
-          const readStream = fs.createReadStream(sourcePath);
-          const writeStream = sftp.createWriteStream(destPath);
-          console.log("Uploading file to server");
-          writeStream.on("error", (error: Error) => {
-            console.error(`Error writing file ${destPath}:`, error);
-          });
+          execSync(`rm -rf ${destPath}`, { stdio: "inherit" });
 
-          writeStream.on("close", () => {
-            console.log(`File ${destPath} transferred successfully`);
-          });
-          let uploadedBytes = 0;
-          const totalBytes = fs.statSync(sourcePath).size;
-          readStream.on("data", (chunk) => {
-            uploadedBytes += chunk.length;
-            consola.start(
-              `File ${((uploadedBytes / totalBytes) * 100).toFixed(2)}% uploaded`,
-            );
-          });
-
-          writeStream.on("error", (error: Error) => {
+          uploadFolderViaSftp(sftp, sourcePath, destPath, totalFiles, (err) => {
             sftp.end();
-            client.end();
-            console.error(`Error writing file:`, error);
-          });
-
-          writeStream.on("close", () => {
-            sftp.end();
-            consola.success(`File transferred successfully`);
+            if (err) {
+              throw err;
+            }
             if (postSftp) {
               const cmd = [postSftp];
               client.exec(cmd.join(" && "), (err, stream) => {
@@ -99,9 +146,7 @@ export default defineCommand({
             } else {
               client.end();
             }
-          });
-
-          readStream.pipe(writeStream);
+          })
         } catch {
           client.end();
           client.destroy();
