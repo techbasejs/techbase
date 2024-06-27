@@ -1,7 +1,3 @@
-export const simmValidation = () => {};
+export * from "./is-full-width";
 
-export const isRequired = (value: number) => {
-  if (value === 1) return true;
-
-  return false;
-};
+export { isBoolean, isEmpty } from "validator";

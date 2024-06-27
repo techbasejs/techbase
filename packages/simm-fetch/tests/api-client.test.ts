@@ -1,5 +1,5 @@
-import HttpClient from "../src/httpClient";
-
+import { HttpClient } from "../src/index";
+import { describe, beforeEach, test, expect } from "vitest";
 describe("HttpClient", () => {
   let client: HttpClient;
 
