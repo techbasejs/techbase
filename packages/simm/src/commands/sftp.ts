@@ -130,8 +130,6 @@ export default defineCommand({
               })
             }
           });
-
-          readStream.pipe(writeStream);
         } catch {
           client.end();
           client.destroy();

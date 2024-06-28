@@ -22,6 +22,7 @@ const externalPackages = [
   "next",
   "next/server",
   "jose",
+  "validator"
 ];
 const plugins = [
   esbuild({

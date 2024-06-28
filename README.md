@@ -1,6 +1,23 @@
 # techbasejs
+Fully packages supports all projects
 
-### Packages
+### Usage CLI
+Testing all packages
+```sh
+npm run test all
+```
+
+Testing a specific package
+```sh
+npm run test [packageName]
+
+// examples
+npm run test simm-fetch
+npm run test simm-validation
+
+```
+
+### Techbase Packages
 
 [Simm](/packages/simm) (beta)
 
