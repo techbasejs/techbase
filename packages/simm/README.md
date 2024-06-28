@@ -44,8 +44,9 @@ import { defineConfig } from "@techbasejs/simm";
 export default defineConfig({
   servers: {
     production: {
-      user: "__USER__",
+      username: "__USER__",
       host: "__HOST__",
+      port: __PORT__, // default 22
       privateKey: "__PRIVATE_KEY__",
       passsword: "__PASSWORD__",
       deploy: {
@@ -74,14 +75,16 @@ import { defineConfig } from "@techbasejs/simm";
 export default defineConfig({
   servers: {
     bastion: {
-      user: "__USER__",
+      username: "__USER__",
       host: "__HOST__",
+      port: __PORT__, // default 22
       privateKey: "__PRIVATE_KEY__",
       passsword: "__PASSWORD__",
     },
     production: {
-      user: "__USER__",
+      username: "__USER__",
       host: "__HOST__",
+      port: __PORT__, // default 22
       privateKey: "__PRIVATE_KEY__",
       passsword: "__PASSWORD__",
       proxyJump: "bastion",
@@ -106,6 +109,7 @@ export default defineConfig({
     production: {
       user: "__USER__",
       host: "__HOST__",
+      port: __PORT__, // default 22
       privateKey: "__PRIVATE_KEY__",
       passsword: "__PASSWORD__",
       sftp: {
