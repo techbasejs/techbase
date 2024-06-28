@@ -26,17 +26,14 @@ export default defineConfig({
       },
       // privateKey: fs.readFileSync(config.server.private_key_path, "utf8"),
     },
-    fe: {
-      username: config.production.user,
+    production: {
+      username: config.production.username,
       host: config.production.host,
-      privateKey: fs.readFileSync(config.server.private_key_path, "utf8"),
-      proxyJump: "bastion",
-      deploy: {
-        branch: "main",
-        repo: config.github.repo,
-        path: config.deploy.path,
-        postDeploy: "pnpm install",
-      },
+      password: config.production.password,
+      sftp: {
+        source: config.production.sftp.source,
+        dest: config.production.sftp.dest,
+      }
     },
   },
 });
