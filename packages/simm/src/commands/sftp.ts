@@ -30,9 +30,11 @@ export default defineCommand({
       workDir,
       simmConfig.servers[environment].sftp?.source as string,
     );
-    const sourcePathWithoutLastDir = path.join(sourcePath, '..');
-    const lastDir = `${sourcePath.split('/')[sourcePath.split('/').length - 1]}`
-    const destPath = path.join(simmConfig.servers[environment].sftp?.dest as string);
+    const sourcePathWithoutLastDir = path.join(sourcePath, "..");
+    const lastDir = `${sourcePath.split("/")[sourcePath.split("/").length - 1]}`;
+    const destPath = path.join(
+      simmConfig.servers[environment].sftp?.dest as string,
+    );
     const preSftp = simmConfig.servers[environment].sftp?.preSftp as string;
     const postSftp = simmConfig.servers[environment].sftp?.postSftp as string;
 
@@ -53,20 +55,26 @@ export default defineCommand({
 
           /** zip folder / file */
           consola.start("zip folder: ", `${lastDir}.tar.gz`);
+          
           const cmdZip = [
             `cd ${sourcePathWithoutLastDir}`,
-            `tar -czvf ${lastDir}.tar.gz --exclude='**/__MACOSX' --exclude='**/.DS_Store' ${lastDir} `
+            `tar -czvf ${lastDir}.tar.gz --exclude='**/__MACOSX' --exclude='**/.DS_Store' ${lastDir} `,
+          ];
 
-          ]
-          execSync(cmdZip.join(" && "), { stdio: "inherit" });
-          const zipSourcePath = path.join(sourcePathWithoutLastDir, `${lastDir}.tar.gz`)
-          const zipDestPath = path.join(destPath, `${lastDir}.tar.gz`)
+          try {
+            execSync(cmdZip.join(" && "), { stdio: "inherit" });
+          } catch {
+            throw new Error('Could not zip. package just only support macos, linux and centos')
+          }
+          
+          const zipSourcePath = path.join(
+            sourcePathWithoutLastDir,
+            `${lastDir}.tar.gz`,
+          );
+          const zipDestPath = path.join(destPath, `${lastDir}.tar.gz`);
           const readStream = fs.createReadStream(zipSourcePath);
           const writeStream = sftp.createWriteStream(zipDestPath);
           consola.start("Uploading file to server");
-          writeStream.on("error", (error: Error) => {
-            console.error(`Error writing file ${destPath}:`, error);
-          });
 
           let uploadedBytes = 0;
           const totalBytes = fs.statSync(zipSourcePath).size;
@@ -85,51 +93,34 @@ export default defineCommand({
 
           writeStream.on("close", () => {
             sftp.end();
-            consola.success(`File transferred successfully`)
-            
+            consola.success(`File transferred successfully`);
+            const cmd = [
+              `cd ${destPath}`,
+              `tar -xvf ${lastDir}.tar.gz`,
+              `rm -rf ${lastDir}.tar.gz`,
+            ]
             if (postSftp) {
-              const cmd = [
-                `cd ${destPath}`,
-                `tar -xvf ${lastDir}.tar.gz`,
-                `rm -rf ${lastDir}.tar.gz`,
-                postSftp
-              ];
-              client.exec(cmd.join(" && "), (err, stream) => {
-                if (err) {
-                  throw err;
-                }
-                stream
-                  .on("data", (data: Buffer) => {
-                    // consola.success(data.toString());
-                  })
-                  .stderr.on("data", (data) => {
-                    consola.error(data.toString());
-                  })
-                  .on("close", () => {
-                    stream.end();
-                    client.end();
-                  });
-              });
-            } else {
-              client.exec([
-                `cd ${destPath}`,
-                `tar -xvf ${lastDir}.tar.gz`,
-                `rm -rf ${lastDir}.tar.gz`,
-              ].join(" && "), (err, stream) => {
-                if (err) {
-                  throw err;
-                }
-                stream
-                    .stderr.on("data", (data) => {
-                      consola.error(data.toString());
-                    })
-                    .on("close", () => {
-                      stream.end();
-                      client.end();
-                    });
-              })
+              cmd.push(postSftp)
             }
+            client.exec(cmd.join(" && "), (err, stream) => {
+              if (err) {
+                throw err;
+              }
+              stream
+                .on("data", (data: Buffer) => {
+                  consola.success(data.toString());
+                })
+                .stderr.on("data", (data) => {
+                  consola.error(data.toString());
+                })
+                .on("close", () => {
+                  stream.end();
+                  client.end();
+                });
+            });
           });
+
+          readStream.pipe(writeStream);
         } catch {
           client.end();
           client.destroy();
