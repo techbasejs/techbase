@@ -25,6 +25,7 @@
     "lodash": "^4.17.21"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.5",
     "@types/node": "^20.12.11",
     "eslint": "^9.2.0",
     "eslint-config-unjs": "0.3.1",
