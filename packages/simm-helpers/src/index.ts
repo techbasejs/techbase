@@ -1,1 +1,1 @@
-console.log("index.ts");
+export * from "./query-string-utils";
