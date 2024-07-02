@@ -30,7 +30,6 @@ describe("date-utils.ts - isDate", () => {
     const result = isDate(1_633_046_400_000);
     expect(result).toBe(true);
   });
-  // in
   // invalid date string returns false
   it("No.7: should return false when given an invalid date string", () => {
     const result = isDate("invalid-date");
