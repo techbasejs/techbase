@@ -1,4 +1,4 @@
-# Simple Upload
+# Simple Validation
 
 ## Features
 
@@ -50,8 +50,6 @@ npm add @techbasejs/simm-next-validation
 # using pnpm
 pnpm add @techbasejs/simm-next-validation
 ```
-
-> Note:
 
 ## Usage
 
