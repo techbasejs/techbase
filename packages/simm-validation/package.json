@@ -37,6 +37,7 @@
     "eslint": "^9.2.0",
     "eslint-config-unjs": "0.3.1",
     "jiti": "^1.21.0",
+    "jsdom": "^24.1.0",
     "next": "^14.2.3",
     "prettier": "^3.2.5",
     "react": "^18.3.1",

@@ -6,5 +6,6 @@ export default defineConfig({
     coverage: {
       provider: "istanbul",
     },
+    environment: "jsdom",
   },
 });
