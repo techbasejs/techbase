@@ -5,7 +5,7 @@
 ## Feature
 
 - [ ] Japanese
-  - [ ] convertFullwidthToHalfwidth
+  - [x] convertFullwidthToHalfwidth
   - [x] convertHalfwidthToFullwidth
   - [ ] convertFullWidthHiraganaToHalfWidthKatakana
 - [ ] String
