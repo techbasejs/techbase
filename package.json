@@ -37,6 +37,8 @@
     "yargs": "^17.7.2"
   },
   "dependencies": {
+    "@vitest/coverage-istanbul": "^1.6.0",
+    "jsdom": "^24.1.0",
     "typescript": "^5.5.2"
   }
 }

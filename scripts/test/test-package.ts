@@ -1,14 +1,21 @@
-import { createVitest } from "vitest/node";
+import { createVitest } from 'vitest/node';
 
-export async function testPackage(packageName: string) {
+export async function testPackage(packageName: string, argv: any) {
   console.log(":: starting test package", packageName);
   const vitest = await createVitest("test", {
-    watch: false,
+    watch: argv.watch,
     ui: false,
     dir: "packages/" + packageName,
+    coverage: {
+      provider: "istanbul",
+      enabled: argv.coverage
+    },
+    environment: argv.environment,
   });
 
   await vitest.start();
-
-  await vitest.close();
+  
+  if(!argv.watch) {
+    await vitest.close();    
+  }
 }
