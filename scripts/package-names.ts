@@ -7,4 +7,5 @@ export const packageNames = [
     'simm-player',
     'simm-upload',
     'simm-validation',
+    'simm-fetch'
 ]
