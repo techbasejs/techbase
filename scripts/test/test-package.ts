@@ -3,19 +3,18 @@ import { createVitest } from 'vitest/node';
 export async function testPackage(packageName: string, argv: any) {
   console.log(":: starting test package", packageName);
   const vitest = await createVitest("test", {
-    watch: argv.watch,
+    watch: false,
     ui: false,
     dir: "packages/" + packageName,
     coverage: {
       provider: "istanbul",
-      enabled: argv.coverage
+      enabled: argv.coverage,
+      include: ['**/src/**/*.ts',],
     },
     environment: argv.environment,
   });
 
   await vitest.start();
   
-  if(!argv.watch) {
-    await vitest.close();    
-  }
+  await vitest.close();
 }
