@@ -1,17 +1,34 @@
 // src/utils/dataHandlers.ts
 
-
 export function getContentType(data: any): string {
-  //Todo return Content Type by data Input
-  return 'application/json';
+  switch (typeof data) {
+    case "object": {
+      if (data === null) {
+        return "application/json";
+      }
+      return "application/json";
+    }
+    case "string": {
+      return "text/plain";
+    }
+    case "number": {
+      return "text/plain";
+    }
+    case "boolean": {
+      return "text/plain";
+    }
+    default: {
+      return "application/json";
+    }
+  }
 }
 
 export function transformRequestData(data: any, contentType: string): any {
   switch (contentType) {
-    case 'application/json': {
+    case "application/json": {
       return JSON.stringify(data);
     }
-    case 'text/plain': {
+    case "text/plain": {
       return data.toString();
     }
     default: {
@@ -21,8 +38,18 @@ export function transformRequestData(data: any, contentType: string): any {
 }
 
 export function parseResponseData(data: any, contentType: string): any {
-  if (contentType === 'application/json' && typeof data === 'string') {
-    return JSON.parse(data);
+  switch (contentType) {
+    case "application/json": {
+      if (typeof data === "string") {
+        return JSON.parse(data);
+      }
+      return data;
+    }
+    case "text/plain": {
+      return data.toString();
+    }
+    default: {
+      return data;
+    }
   }
-  return data;
 }
