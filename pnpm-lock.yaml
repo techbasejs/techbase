@@ -33,6 +33,9 @@ importers:
       '@types/yargs':
         specifier: ^17.0.32
         version: 17.0.32
+      '@vitest/coverage-istanbul':
+        specifier: ^1.6.0
+        version: 1.6.0(vitest@1.6.0(@types/node@20.14.9)(@vitest/ui@1.6.0)(jsdom@24.1.0))
       '@vitest/ui':
         specifier: ^1.6.0
         version: 1.6.0(vitest@1.6.0)
@@ -51,6 +54,9 @@ importers:
       husky:
         specifier: ^9.0.11
         version: 9.0.11
+      jsdom:
+        specifier: ^24.1.0
+        version: 24.1.0
       rimraf:
         specifier: ^5.0.7
         version: 5.0.7
