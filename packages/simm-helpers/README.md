@@ -6,7 +6,7 @@
 
 - [ ] Japanese
   - [ ] convertFullwidthToHalfwidth
-  - [ ] convertHalfwidthToFullwidth
+  - [x] convertHalfwidthToFullwidth
   - [ ] convertFullWidthHiraganaToHalfWidthKatakana
 - [ ] String
   - [ ] removeEmoji
