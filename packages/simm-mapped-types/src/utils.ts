@@ -58,3 +58,48 @@ export function toStringOrEmptyToZeroNumber(input: any): number {
   }
   return Number(input);
 }
+
+/**
+   * Method to convert the target to a string (`null` becomes an empty string).
+   * If the argument is `null`, it returns an empty string, otherwise it converts the argument to a string and returns it.
+   * If the argument is `undefined` or `NaN`, it also returns an empty string.
+   *
+   * @param data The data to be converted to a string
+   * @return The string converted from the argument
+   */
+export const toStringNullToEmpty = (data: string | number | null | undefined): string => {
+  const isNullOrUndefined = data == null;
+  const isNaN = Number.isNaN(data);
+  if (isNullOrUndefined || isNaN) return "";
+  return String(data);
+}
+
+/**
+ * Method to convert the target to a string (`null` remains `null`).
+ * If the argument is `null`, it returns `null`, otherwise it converts the argument to a string and returns it.
+ * If the argument is `undefined` or `NaN`, it also returns `null`.
+ *
+ * @param data The data to be converted to a string
+ * @return The string converted from the argument
+ */
+export const toStringNullToNull = (data: string | number | null | undefined): string | null => {
+  const isNullOrUndefined = data == null;
+  const isNaN = Number.isNaN(data);
+  if (isNullOrUndefined || isNaN) return null;
+  return String(data);
+}
+
+/**
+ * Method to convert the target to a string (`null` becomes `0`).
+ * If the argument is `null`, it returns `0`, otherwise it converts the argument to a string and returns it.
+ * If the argument is `undefined` or `NaN`, it also returns `0`.
+ *
+ * @param data The data to be converted to a string
+ * @return The string converted from the argument
+ */
+export const toStringNullToZero = (data: string | number | null | undefined): string => {
+  const isNullOrUndefined = data == null;
+  const isNaN = Number.isNaN(data);
+  if (isNullOrUndefined || isNaN) return "0";
+  return String(data);
+}
