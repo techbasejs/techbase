@@ -58,3 +58,7 @@ export function toStringOrEmptyToZeroNumber(input: any): number {
   }
   return Number(input);
 }
+
+export type PartialType<T> = {
+  [P in keyof T]?: PartialType<T[P]>;
+};
