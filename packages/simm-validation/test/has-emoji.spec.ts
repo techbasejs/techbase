@@ -1,4 +1,4 @@
-import { hasEmoji } from "../../src/utils/has-emoji";
+import { hasEmoji } from "../src/has-emoji";
 import { describe, expect, it } from "vitest";
 
 describe("has-emoji.ts - hasEmoji", () => {
@@ -32,27 +32,36 @@ describe("has-emoji.ts - hasEmoji", () => {
     const result = hasEmoji(input);
     expect(result).toBe(true);
   });
+  // returns true for icon ☺️☠️
+  it("No.6: should return true for icon ☺️☠️", () => {
+    const result = hasEmoji("☺️☠️");
+    expect(result).toBe(true);
+  });
+  // handles strings with emoji-like characters that are not actual emojis
+  it("No.7: should return false when string contains emoji-like characters that are not actual emojis", () => {
+    const input = ":-)";
+    const result = hasEmoji(input);
+    expect(result).toBe(false);
+  });
   // returns false for empty string input
-  it("No.6: should return false when input is an empty string", () => {
+  it("No.8: should return false when input is an empty string", () => {
     const input = "";
     const result = hasEmoji(input);
     expect(result).toBe(false);
   });
   // returns false for undefined input
-  it("No.7: should return false when input is undefined", () => {
+  it("No.9: should return false when input is undefined", () => {
     const result = hasEmoji();
     expect(result).toBe(false);
   });
   // handles strings with only special characters but no emojis
-  it("No.8: should return false when string contains only special characters but no emojis", () => {
+  it("No.10: should return false when string contains only special characters but no emojis", () => {
     const input = "!@#$%^&*()";
     const result = hasEmoji(input);
     expect(result).toBe(false);
   });
-  // handles strings with emoji-like characters that are not actual emojis
-  it("No.9: should return false when string contains emoji-like characters that are not actual emojis", () => {
-    const input = ":-)";
-    const result = hasEmoji(input);
-    expect(result).toBe(false);
+  // returns false for null values
+  it("No.11: should return false for null values", () => {
+    expect(hasEmoji(null)).toBe(false);
   });
 });
