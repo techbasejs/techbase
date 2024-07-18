@@ -3,7 +3,7 @@ const LAST_FULL_WIDTH_HIRAGANA = "ゖ";
 
 const REGEXP_HIRAGANA = new RegExp(
   "[" + FIRST_FULL_WIDTH_HIRAGANA + "-" + LAST_FULL_WIDTH_HIRAGANA + "　・ー]",
-  "g"
+  "g",
 );
 
 const mapFullWidthHiraganaToHalfWidthKatakana = new Map<string, string>([
@@ -103,9 +103,10 @@ const mapFullWidthHiraganaToHalfWidthKatakana = new Map<string, string>([
  * @param {string} inputStr - The input string containing full-width Hiragana characters.
  * @return {string} The string with full-width Hiragana characters replaced by half-width Katakana characters.
  */
-export const convertFullWidthHiraganaToHalfWidthKatakana = (inputStr: string): string => {
+export const convertFullWidthHiraganaToHalfWidthKatakana = (
+  inputStr: string,
+): string => {
   return inputStr.replace(REGEXP_HIRAGANA, (char) => {
     return mapFullWidthHiraganaToHalfWidthKatakana.get(char) as string;
   });
-}
-
+};
