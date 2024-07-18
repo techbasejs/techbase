@@ -24,6 +24,23 @@ const checkApiGetUser = async() => {
 checkApiGetUser();
 
 
+const checkApiGetUserWithArrayParams = async() => {
+  client.get('/user',  { 
+    username: "A",
+    id: "1",
+    list: [0,1,2],
+    address: null,
+    phone: undefined,
+  }, {
+    queryConfig: {
+      arrayFormat: 'index'
+    }
+  })
+    .then(response => {console.log(response.data)})
+    .catch(error => console.error(error));
+}
+checkApiGetUserWithArrayParams();
+
 //Test Merge Header
 newConfig.setHeader('Authorization', 'Bearer Token check')
 const client1 = createAPIClient(newConfig);
