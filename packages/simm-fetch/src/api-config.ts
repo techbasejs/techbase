@@ -1,16 +1,16 @@
-import { APIClientConfig } from './types';
-import { merge } from 'lodash'
+import { APIClientConfig } from "./types";
+import { merge } from "lodash";
 class APIConfig {
   private config: APIClientConfig = {
-    baseURL: '',
+    baseURL: "",
     headers: {},
     timeout: 10_000,
     retries: 3,
-    retryCount: 0
+    retryCount: 0,
   };
   constructor(config?: APIClientConfig) {
     if (config) {
-      this.config = merge(this.config, config)
+      this.config = merge(this.config, config);
     }
   }
   setBaseURL(url: string): void {
