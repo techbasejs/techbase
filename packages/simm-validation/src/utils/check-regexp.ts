@@ -1,22 +1,21 @@
 import { isEmpty } from "validator";
 
 /**
- * This function checks if a given string matches a specific regular expression pattern.
- * @param {string | null} str - The string to test against the regular expression pattern. Can be `null`.
- * @param {RegExp} pattern - The regular expression pattern to test the string against.
- * @returns {boolean} Returns `true` if the string matches the pattern, `false` if it doesn't or if the string is `null`.
+ * This function checks if a given string or number matches a specific regular expression pattern.
+ *
+ * @param {string | number | null} str - The input value to be tested. It can be a string, a number or null.
+ * @param {RegExp} pattern - The regular expression against which the `str` parameter will be tested.
+ * @returns {boolean} Returns true if the `str` matches the `pattern`, otherwise returns false. If `str` is null or an empty string, it will return false.
+ *
  * @example
- * ```
- * const pattern = /hello/i;
- * checkRegExp('Hello World', pattern);  // returns true
- * checkRegExp(null, pattern);  // returns false
- * ```
+ * checkRegExp('123', /^[0-9]*$/);  // returns true
+ * checkRegExp(123, /^[a-z]*$/);   // returns false
  */
 export const checkRegExp = (
   str: string | number | null,
   pattern: RegExp,
 ): boolean => {
-  if (isEmpty(str as string) || str === null) {
+  if (str === null || (typeof str == 'string' && isEmpty(str)) ) {
     return false;
   }
   return pattern.test(str.toString());

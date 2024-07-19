@@ -1,5 +1,5 @@
 import { expect, describe, test } from "vitest";
-import { isHalfWidthNumeric } from "../../src/is-halfwidth-numeric";
+import { isHalfWidthNumeric } from "../src/is-halfwidth-numeric";
 
 describe("isHalfWidthNumeric", () => {
   test("returns true when the input is only half-width numeric (including float and negative)", () => {
