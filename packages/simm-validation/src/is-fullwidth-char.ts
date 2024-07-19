@@ -1,4 +1,4 @@
-import { checkRegExp } from "./utils/simm-check-regexp";
+import { checkRegExp } from "./utils/check-regexp";
 
 /**
  * Checks if the provided string strictly contains only full-width characters.
