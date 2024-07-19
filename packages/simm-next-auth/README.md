@@ -10,17 +10,19 @@ Next auth for next@14
 
 ## Features
 
-✅ Nextjs middleware
+- [ ] Credentials provider
 
-✅ Nextjs auth routing
+- [ ] Google provider
 
-✅ Nextjs credentials provider
+- [ ] Facebook provider
 
-❯ Nextjs email provider
+- [ ] Twitter provider
 
-❯ Nextjs github provider
+- [ ] Twitter provider
 
-❯ Nextjs facebook provider
+- [ ] Session management (get session, update session, refresh session, clear session, expire session)
+
+- [ ] Protected Middleware
 
 ## Usage
 
@@ -43,10 +45,10 @@ Import utils:
 
 ```js
 // ESM
-import {} from "@techbasejs/simple-next-auth";
+import {} from "@techbasejs/simm-next-auth";
 
 // CommonJS
-const {} = require("@techbasejs/simple-next-auth");
+const {} = require("@techbasejs/simm-next-auth");
 ```
 
 ## Resolving ESM modules
@@ -64,7 +66,7 @@ Several utilities to make ESM resolution easier:
 
 ```javascript
 import { NextResponse } from "next/server";
-import { withAuth } from "simple-next-auth";
+import { withAuth } from "simm-next-auth";
 
 const auth = withAuth(function middleware(request) {
   const pathname = request.nextUrl.pathname;
@@ -90,7 +92,7 @@ export const config = {
 ```jsx
 "use client";
 
-import { SessionProvider } from "@techbasejs/next-simple-auth/dist/react";
+import { SessionProvider } from "@techbasejs/simm-next-auth/dist/react";
 
 export default function App({ children }: { children: React.ReactNode }) {
   return <SessionProvider>{children}</SessionProvider>;
@@ -103,7 +105,7 @@ export default function App({ children }: { children: React.ReactNode }) {
 Create file /api/[...auth]/route.ts
 
 ```typescript
-import { auth, Provider, AuthRequestType } from "@techbasejs/simple-next-auth";
+import { auth, Provider, AuthRequestType } from "@techbasejs/simm-next-auth";
 import { NextRequest } from "next/server";
 
 const loginProvider = new Provider("credentials", {
@@ -157,7 +159,7 @@ Provider response params
 ### signIn
 
 ```typescript
-import { signIn } from "@techbasejs/next-simple-auth/dist/react";
+import { signIn } from "@techbasejs/simm-next-auth/dist/react";
 
 signIn("login", {
   email: "EMAIL",
@@ -168,7 +170,7 @@ signIn("login", {
 ### signOut
 
 ```typescript
-import { signOut } from "@techbasejs/next-simple-auth/dist/react";
+import { signOut } from "@techbasejs/simm-next-auth/dist/react";
 
 signout();
 ```
@@ -176,7 +178,7 @@ signout();
 ### Use and update session
 
 ```jsx
-import { useSession } from "@techbasejs/next-simple-auth/dist/react";
+import { useSession } from "@techbasejs/simm-next-auth/dist/react";
 
 export default function Login() {
     const { user, update } = useSession()
@@ -194,9 +196,9 @@ export default function Login() {
 
 <!-- Badges -->
 
-[npm-version-src]: https://img.shields.io/npm/v/@techbasejs/simple-next-auth?style=flat&colorA=18181B&colorB=F0DB4F
-[npm-version-href]: https://npmjs.com/package/@techbasejs/simple-next-auth
-[npm-downloads-src]: https://img.shields.io/npm/dm/@techbasejs/simple-next-auth?style=flat&colorA=18181B&colorB=F0DB4F
-[npm-downloads-href]: https://npmjs.com/package/@techbasejs/simple-next-auth
-[codecov-src]: https://img.shields.io/codecov/c/gh/unjs/@techbasejs/simple-next-auth/main?style=flat&colorA=18181B&colorB=F0DB4F
-[codecov-href]: https://codecov.io/gh/unjs/@techbasejs/simple-next-auth
+[npm-version-src]: https://img.shields.io/npm/v/@techbasejs/simm-next-auth?style=flat&colorA=18181B&colorB=F0DB4F
+[npm-version-href]: https://npmjs.com/package/@techbasejs/simm-next-auth
+[npm-downloads-src]: https://img.shields.io/npm/dm/@techbasejs/simm-next-auth?style=flat&colorA=18181B&colorB=F0DB4F
+[npm-downloads-href]: https://npmjs.com/package/@techbasejs/simm-next-auth
+[codecov-src]: https://img.shields.io/codecov/c/gh/unjs/@techbasejs/simm-next-auth/main?style=flat&colorA=18181B&colorB=F0DB4F
+[codecov-href]: https://codecov.io/gh/unjs/@techbasejs/simm-next-auth

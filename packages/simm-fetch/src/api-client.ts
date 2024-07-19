@@ -1,130 +1,86 @@
-import { ofetch, FetchOptions, FetchContext, FetchResponse } from "ofetch";
-import { BASE_URL_API, HTTP_STATUS_CODE } from "./constants";
-import { getToken, setToken } from "./cookies";
-import { handleErrorResponse } from "./handlers/error-handler";
-import { handleSuccessResponse } from "./handlers/success-handler";
-import { RequestOptions, ApiResponse, TokenResponse } from "./types";
-import { withRetry, withTimeout } from "./utils";
-import axios from "axios";
+/* eslint-disable unicorn/no-null */
 
-type CustomHeadersInit = HeadersInit & {
-  Authorization?: string;
-};
+import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
+import { APIClientConfig, HTTPMethod} from './types';
+import { mergeConfigs}  from './utils/merge-configs';
+import { appendQueryParams } from './utils/query-params';
+import { Utils } from './utils';
+import { handleRequestError, handleRequestSuccess, handleResponseError , handleResponseSuccess} from './utils/index';
+import { handleRetry } from './utils/handle-retry';
 
-const apiClient = ofetch.create({
-  baseURL: BASE_URL_API,
-  async onRequest({ options }) {
-    const token = getToken();
-    if (token) {
-      options.headers = {
-        ...(options.headers as CustomHeadersInit),
-        Authorization: `Bearer ${token}`,
-      };
-    }
-  },
-  // TODO define type
-  onResponse: async ({
-    response,
-    request,
-    options,
-  }: FetchContext<any, any>) => {
-    if (response && response.status === HTTP_STATUS_CODE.UNAUTHORIZED) {
-      try {
-        const newToken = await refreshToken();
-        setToken(newToken);
-
-        // Retry the request with the new token
-        options.headers = {
-          ...(options.headers as CustomHeadersInit),
-          Authorization: `Bearer ${newToken}`,
-        };
-
-        // Make the original request again with new token
-        await ofetch(request, options);
-      } catch (refreshError) {
-        throw refreshError;
-      }
-    }
-    if (response) {
-      handleSuccessResponse(response);
-    }
-  },
-  onResponseError: (context: FetchContext<any, any>) => {
-    const { response } = context;
-    if (response) {
-      handleErrorResponse(response);
-    }
-  },
-});
-
-const refreshToken = async (): Promise<string> => {
-  try {
-    const response = await axios.post<ApiResponse<TokenResponse>>(
-      `${BASE_URL_API}/refresh-token`,
-    );
-    const newToken = response.data.data.token;
-    setToken(newToken);
-    return newToken;
-  } catch {
-    throw new Error("Unable to refresh token");
+class APIClient {
+  private axiosInstance: AxiosInstance;
+  private config: APIClientConfig;
+  private refreshSubscribers: Array<(token: string) => void> = [];
+  constructor(config: APIClientConfig) {
+    this.config = config;
+    this.axiosInstance = axios.create(config);
+    this.setupInterceptors();
   }
-};
 
-const makeRequest = async <T>(
-  method: string,
-  url: string,
-  data: any,
-  options?: RequestOptions,
-): Promise<ApiResponse<T>> => {
-  const requestFn = async () => {
-    const fetchOptions: FetchOptions = {
-      method,
-      ...options,
-    };
+  private setupInterceptors(): void {
+    this.axiosInstance.interceptors.request.use(
+      config => handleRequestSuccess(config, this.config), 
+      error => Promise.reject(handleRequestError(error))
+    );
+   
+    this.axiosInstance.interceptors.response.use(
+      async response => await handleResponseSuccess(response, this.config),
+      async (error: AxiosError) => await this.handleResponseCondition(error)
+    )
+  }
+  
+  private async handleResponseCondition(error: AxiosError): Promise<AxiosResponse> {
+    if (this.config.isRetry) {
+      const retryRequest =  await handleRetry(() => this.axiosInstance.request({
+        method: this.config.method,
+        url: this.config.url,
+        data: this.config.data
+      }), this.config);
+      return retryRequest
+    }
+    return handleResponseError(
+      error,
+      this.config,
+    );
+  }
 
-    return method === "GET" || method === "DELETE"
-      ? apiClient(url, fetchOptions)
-      : apiClient(url, {
-          ...fetchOptions,
-          body: data,
-        });
-  };
 
-  const requestWithRetry = options?.retry
-    ? withRetry(requestFn, options.retry)
-    : requestFn();
+  private async request<T>(method: HTTPMethod, url: string, data?: any, params?: any, config?: APIClientConfig ): Promise<AxiosResponse<T>> {
+    let modifyUrl = Utils.isValidUrl(this.config?.baseURL + url) ? this.config?.baseURL + url  : this.config?.baseURL;
+    this.config = mergeConfigs(this.config, config || {});
+    modifyUrl = params ? appendQueryParams(modifyUrl, params) : modifyUrl;
+    this.config.url = modifyUrl;
+    this.config.method = method;
+    this.config.data = data;
+ 
+    return await this.axiosInstance.request<T>({
+      method: method,
+      url: modifyUrl,
+      data: data
+    })
+  }
 
-  return options?.timeout
-    ? withTimeout(requestWithRetry, options.timeout)
-    : requestWithRetry;
-};
+  public async get<T>(url: string, params?:any, config?: APIClientConfig): Promise<AxiosResponse<T>> {
+    return await this.request<T>('GET', url, null, params, config);
+  }
 
-export const get = async <T>(
-  url: string,
-  options?: RequestOptions,
-): Promise<ApiResponse<T>> => {
-  return makeRequest("GET", url, null, options);
-};
+  public async post<T>(url: string, data: any, config?: APIClientConfig): Promise<AxiosResponse<T>> {
+    return await this.request<T>('POST', url, data, null, config);
+  }
 
-export const post = async <T>(
-  url: string,
-  data: any,
-  options?: RequestOptions,
-): Promise<ApiResponse<T>> => {
-  return makeRequest("POST", url, data, options);
-};
+  public async put<T>(url: string, data: any, config?: APIClientConfig): Promise<AxiosResponse<T>> {
+    return await this.request<T>('PUT', url, data, null, config);
+  }
 
-export const put = async <T>(
-  url: string,
-  data: any,
-  options?: RequestOptions,
-): Promise<ApiResponse<T>> => {
-  return makeRequest("PUT", url, data, options);
-};
+  public async delete<T>(url: string, config?: APIClientConfig): Promise<AxiosResponse<T>> {
+    return await this.request<T>('DELETE', url, null, null, config);
+  }
 
-export const del = async <T>(
-  url: string,
-  options?: RequestOptions,
-): Promise<ApiResponse<T>> => {
-  return makeRequest("DELETE", url, null, options);
-};
+  cancelRequests(message?: string): void {
+    this.axiosInstance.defaults.cancelToken = new axios.CancelToken(cancel => cancel(message));
+  }
+
+}
+
+export default APIClient;

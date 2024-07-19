@@ -1,3 +1,5 @@
+import { isEmpty } from "validator";
+
 /**
  * This function checks if a given string matches a specific regular expression pattern.
  * @param {string | null} str - The string to test against the regular expression pattern. Can be `null`.
@@ -14,7 +16,7 @@ export const checkRegExp = (
   str: string | number | null,
   pattern: RegExp,
 ): boolean => {
-  if (str == null) {
+  if (isEmpty(str as string) || str === null) {
     return false;
   }
   return pattern.test(str.toString());

@@ -1,0 +1,43 @@
+{
+  "name": "@techbasejs/simm-helpers",
+  "version": "1.0.0",
+  "description": "Missing ECMAScript module utils for Node.js",
+  "repository": "techbasejs/techbase/tree/main/packages/simm-helpers",
+  "license": "MIT",
+  "sideEffects": false,
+  "type": "module",
+  "main": "./cjs/index.cjs",
+  "module": "./esm/index.mjs",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/index.d.mts",
+        "default": "./esm/index.mjs"
+      },
+      "require": {
+        "types": "./lib/index.d.ts",
+        "default": "./cjs/index.cjs"
+      }
+    }
+  },
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.5",
+    "@types/node": "^20.12.11",
+    "eslint": "^9.2.0",
+    "eslint-config-unjs": "0.3.1",
+    "jiti": "^1.21.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5",
+    "unbuild": "^2.0.0",
+    "vite": "^5.2.12",
+    "vitest": "^1.6.0"
+  },
+  "peerDependencies": {
+    "lodash": "^4.17.21"
+  },
+  "packageManager": "pnpm@8.15.4"
+}
