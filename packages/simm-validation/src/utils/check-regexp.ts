@@ -15,7 +15,7 @@ export const checkRegExp = (
   str: string | number | null,
   pattern: RegExp,
 ): boolean => {
-  if (str === null || (typeof str == 'string' && isEmpty(str)) ) {
+  if (str === null || (typeof str == "string" && isEmpty(str))) {
     return false;
   }
   return pattern.test(str.toString());
