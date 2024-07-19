@@ -1,5 +1,5 @@
 import { expect, describe, test } from "vitest";
-import { isHalfWidthChar } from "../../src/jpValidation/is-halfwidth-char";
+import { isHalfWidthChar } from "../src";
 
 describe("isHalfWidthChar", () => {
   test("returns true when the string contains only half-width characters", () => {

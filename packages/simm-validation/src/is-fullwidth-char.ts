@@ -1,4 +1,4 @@
-import { simmCheckRegexp } from "../utils/simm-check-regexp";
+import { checkRegExp } from "./utils/simm-check-regexp";
 
 /**
  * Checks if the provided string strictly contains only full-width characters.
@@ -11,5 +11,5 @@ import { simmCheckRegexp } from "../utils/simm-check-regexp";
  *  console.log(result2); // prints: false
  */
 export const isFullWidthChar = (str: string | null): boolean => {
-  return simmCheckRegexp(str, /^[^ -~｡-ﾟ]+$/);
+  return checkRegExp(str, /^[^ -~｡-ﾟ]+$/);
 };

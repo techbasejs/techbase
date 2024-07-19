@@ -6,11 +6,11 @@
  * @example
  * ```
  * const pattern = /hello/i;
- * simmCheckRegexp('Hello World', pattern);  // returns true
- * simmCheckRegexp(null, pattern);  // returns false
+ * checkRegExp('Hello World', pattern);  // returns true
+ * checkRegExp(null, pattern);  // returns false
  * ```
  */
-export const simmCheckRegexp = (
+export const checkRegExp = (
   str: string | number | null,
   pattern: RegExp,
 ): boolean => {
