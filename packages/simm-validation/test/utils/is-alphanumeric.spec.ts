@@ -41,4 +41,12 @@ describe('isAlphanumeric', () => {
   it('should return true for a long alphanumeric string', () => {
     expect(isAlphanumeric('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')).toBe(true);
   });
+
+  it('should return false for a scientific notation number string', () => {
+    expect(isAlphanumeric('123e3')).toBe(false);
+  });
+
+  it('should return false for a scientific notation number string with plus sign', () => {
+    expect(isAlphanumeric('1233e+4')).toBe(false);
+  });
 });
