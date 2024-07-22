@@ -1,9 +1,10 @@
 /**
- * Check if the given string is alphanumeric.
- * @param str - The string to check.
- * @returns True if the string is alphanumeric, otherwise false.
+ * Check if the given value is alphanumeric.
+ * @param value - The value to check.
+ * @returns True if the value is alphanumeric, otherwise false.
  */
-export const isAlphanumeric = (str: string): boolean => {
+export const isAlphanumeric = (value: string | number | null | undefined): boolean => {
+  if (value === 'undefined' || value === null || value === '') return false;
   const alphanumericRegex = /^[\dA-Za-z]+$/;
-  return alphanumericRegex.test(str);
+  return alphanumericRegex.test(String(value));
 };

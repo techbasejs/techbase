@@ -11,7 +11,7 @@
   - [ ] katakana
   - [x] hiragana
   - [ ] japannese
-  - [ ] alphanumeric
+  - [x] isAlphaNumeric
   - [ ] alphabet
   - [ ] phone
   - [ ] url
