@@ -5,8 +5,8 @@ import { regexValidate } from "./config/regex";
  * @param {string} value - The string to check for emoji characters.
  * @return {boolean} Returns true if the string contains emoji characters, false otherwise.
  */
-export const hasEmoji = (value?: string | null): boolean => {
-  if(!value) return false
+export const hasEmoji = (value: string | null | undefined): boolean => {
+  if (!value) return false;
   const regexEmoji = new RegExp(regexValidate.EMOJI);
   return regexEmoji.test(value);
 };
