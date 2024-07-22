@@ -51,7 +51,7 @@ describe("has-emoji.ts - hasEmoji", () => {
   });
   // returns false for undefined input
   it("No.9: should return false when input is undefined", () => {
-    const result = hasEmoji();
+    const result = hasEmoji(undefined);
     expect(result).toBe(false);
   });
   // handles strings with only special characters but no emojis
