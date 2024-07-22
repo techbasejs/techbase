@@ -1,8 +1,10 @@
-# Simple Upload
+# Simple Validation
 
 ## Features
 
 - [ ] Basic Rules
+  - [x] isDate
+  - [x] hasEmoji
   - [ ] required, requiredIf
   - [ ] email
   - [ ] katakana
