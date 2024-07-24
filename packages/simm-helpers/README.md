@@ -1,6 +1,18 @@
 # Simple helpers
 
 > Utility methods commonly used for writing helper libraries.
+## Feature
+- [ ] Japanese
+    - [ ] convertFullwidthToHalfwidth
+    - [ ] convertHalfwidthToFullwidth
+    - [ ] convertFullWidthHiraganaToHalfWidthKatakana
+- [ ] String
+    - [ ] removeEmoji
+- [ ] Date
+    - [ ] formatDate
+    - [ ] formatTimeAgo
+- [ ] Array
+
 
 ## Install
 

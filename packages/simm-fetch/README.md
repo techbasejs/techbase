@@ -5,6 +5,23 @@
 
 💡 A simple fetch API Utils.
 
+# Main Features
+
+- [x] Authen Token/ RefreshToken
+- [x] Retry Request
+- [x] Timeout Request
+- [ ] Request Config
+- [ ] Merge Header
+- [ ] Set/Get Header
+- [ ] Handle Response Success
+- [ ] Handle Response Error
+- [ ] Error Type
+- [ ] decode JWT token Util
+- [ ] Flattern Object Payload
+- [ ] Validate Payload/Body/Params
+- [ ] Cache
+- [ ] v..v..
+
 Implement from ofetch
 
 ## 🚀 Quick Start
@@ -132,23 +149,6 @@ npm login
 ```js
 npm publish
 ```
-
-# TODO
-
-- [x] Authen Token/ RefreshToken
-- [x] Retry Request
-- [x] Timeout Request
-- [ ] Request Config
-- [ ] Merge Header
-- [ ] Set/Get Header
-- [ ] Handle Response Success
-- [ ] Handle Response Error
-- [ ] Error Type
-- [ ] decode JWT token Util
-- [ ] Flattern Object Payload
-- [ ] Validate Payload/Body/Params
-- [ ] Cache
-- [ ] v..v..
 
 ## License
 
