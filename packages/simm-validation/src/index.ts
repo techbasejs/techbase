@@ -1,3 +1,4 @@
+export * from "./utils/is-phone-number";
 export const simmValidation = () => {};
 
 export const isRequired = (value: number) => {
