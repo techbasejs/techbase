@@ -2,7 +2,7 @@ import {
   getValueOfFirstKeyFromObject,
   getAllValueOfKeyFromObject,
   getValueFromObjectByPath,
-} from "../src/object-utils";
+} from "../src/utils/object-utils";
 import { describe, expect, it } from "vitest";
 
 describe('getValueOfFirstKeyFromObject', () => {
