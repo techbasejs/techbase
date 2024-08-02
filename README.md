@@ -16,6 +16,22 @@ npm run test simm-fetch
 npm run test simm-validation
 
 ```
+Testing a specific package with option
+- With coverage
+```sh
+npm run test [packageName] -- --coverage
+
+// examples
+npm run test simm-validation -- --coverage
+```
+
+- With [environment](https://vitest.dev/guide/environment)
+```sh
+npm run test [packageName] -- --environment=jsdom
+
+// examples
+npm run test simm-validation -- --environment=jsdom
+```
 
 ### Techbase Packages
 

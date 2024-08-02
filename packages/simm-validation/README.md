@@ -5,6 +5,7 @@
 - [ ] Basic Rules
   - [x] isDate
   - [x] hasEmoji
+  - [x] isEmpty
   - [ ] required, requiredIf
   - [ ] email
   - [ ] katakana
