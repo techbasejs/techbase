@@ -1,6 +1,6 @@
 # Simple Player
 
-## Main Feature
+## Main Features
 
 1. Hỗ trợ đa định dạng: Phát được nhiều định dạng video (MP4, WebM, Ogg) và audio (MP3, WAV, AAC) phổ biến.
 2. Giao diện tùy chỉnh: Cho phép tùy chỉnh giao diện trình phát (màu sắc, nút điều khiển, thanh tiến trình,...) để phù hợp với thiết kế của ứng dụng.

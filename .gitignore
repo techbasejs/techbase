@@ -9,3 +9,10 @@ types
 .idea/
 .tmp
 *.conf
+
+# build
+lib/
+cjs/
+esm/
+tsconfig.build.tsbuildinfo
+node_modules

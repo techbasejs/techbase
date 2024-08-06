@@ -10,19 +10,19 @@ Next auth for next@14
 
 ## Features
 
- - [ ] Credentials provider
+- [ ] Credentials provider
 
- - [ ] Google provider
+- [ ] Google provider
 
- - [ ] Facebook provider
+- [ ] Facebook provider
 
- - [ ] Twitter provider
+- [ ] Twitter provider
 
- - [ ] Twitter provider
+- [ ] Twitter provider
 
- - [ ] Session management (get session, update session, refresh session, clear session, expire session)
+- [ ] Session management (get session, update session, refresh session, clear session, expire session)
 
- - [ ] Protected Middleware
+- [ ] Protected Middleware
 
 ## Usage
 
