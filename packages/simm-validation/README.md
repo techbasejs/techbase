@@ -9,7 +9,7 @@
   - [ ] required, requiredIf
   - [ ] email
   - [ ] katakana
-  - [ ] hiragana
+  - [x] hiragana
   - [ ] japannese
   - [ ] alphanumeric
   - [ ] alphabet
