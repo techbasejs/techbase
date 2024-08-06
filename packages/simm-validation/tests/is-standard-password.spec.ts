@@ -22,4 +22,12 @@ describe("isStandardPassword", () => {
   it("Password has more than 8 characters, contains number characters, contains special characters, contains uppercase characters", () => {
     expect(isStandardPassword("Qwertyu1!")).toBe(true);
   });
+
+  it("Password has more than 8 characters, contains number characters, contains special characters, contains uppercase characters", () => {
+    expect(isStandardPassword("Qwertyu1.")).toBe(true);
+  });
+
+  it("should pass for a password containing special characters like . , /", () => {
+    expect(isStandardPassword("Valid1,.")).toBe(true);
+  });
 });

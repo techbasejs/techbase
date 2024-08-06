@@ -8,7 +8,7 @@
  */
 export const isStandardPassword = (
   value: string,
-  passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!$%&()*?@^])[\d!$%&()*?@A-Z^a-z]{8,}$/,
+  passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!$%&()*+,./:;<>?@[\\\]^_`{|}~-])[\w!$%&()*+,./:;<>?@[\\\]^`{|}~-]{8,}$/,
 ) => {
   if (!passwordRegex.test(value)) {
     return false;
