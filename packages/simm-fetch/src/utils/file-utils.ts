@@ -12,11 +12,11 @@ export function transformFileData(data: any): FormData {
   const formData = new FormData();
 
   if (Array.isArray(data)) {
-    data.forEach((file: any, index) => {
+    for (const [index, file] of data.entries()) {
       if (isFile(file)) {
         formData.append(`file${index}`, file);
       }
-    });
+    }
   } else {
     if (isFile(data)) {
       formData.append('file', data);
