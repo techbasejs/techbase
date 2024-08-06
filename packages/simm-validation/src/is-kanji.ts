@@ -5,7 +5,12 @@
  * @returns {boolean} - Returns `true` if the string contains at least one Kanji character, otherwise returns `false`.
 `
  */
-export const isKanji = (text: string): boolean => {
-  const kanjiRegex = /[\u4E00-\u9FFF]/;
-  return kanjiRegex.test(text);
+ 
+import { KANJI_REGEX } from "./constants";
+
+export const isKanji = (text: string | null | undefined): boolean => {
+  if (text === null || text === undefined) {
+    return false;
+  }
+  return KANJI_REGEX.test(text);
 }
