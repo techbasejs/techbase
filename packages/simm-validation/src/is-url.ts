@@ -7,9 +7,9 @@
  *                   and optional fragment or query string.
  * @returns `true` if the URL string matches the specified format, `false` otherwise.
  */
-export const isStandardURL = (
+export const isURL = (
   url: string,
-  urlRegex = /^(https?|ftp):\/\/(?:www\.)?([\w!#$%&'()*+,./:;=?@[\]~-]+(?:\.[\w!#$&'()*+,./:;=?@[\]~-]*)*\.[a-z]{2,})(?::\d{2,5})?(?:[#/?]\S*)?$/i,
+  urlRegex = /^(https?|ftp):\/\/(?:www\.)?((?:[\d!#$%&'()*+,./:;=?@[\]a-z~-]+(?:\.[\d!#$&'()*+,./:;=?@[\]a-z~-]*)*)|(?:\d{1,3}\.){3}\d{1,3})(?::\d{2,5})?(?:[#/?]\S*)?$/i,
 ) => {
   return urlRegex.test(url);
 };
