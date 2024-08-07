@@ -2,20 +2,19 @@ import { test, expect, describe } from "vitest";
 import { isPhoneNumber } from "../src/index";
 
 describe("isPhoneNumber", () => {
-  test("returns true for valid phone numbers", () => {
-    expect(isPhoneNumber('0123456789')).toBe(true);
-    expect(isPhoneNumber('01234567890')).toBe(true);
-    expect(isPhoneNumber('012-3456-7890')).toBe(true);
-    expect(isPhoneNumber('0123-456-789')).toBe(true);
-    expect(isPhoneNumber('+1-800-555-5555')).toBe(true);
-    expect(isPhoneNumber('+44 20 7946 0958')).toBe(true);
-    expect(isPhoneNumber('0039 02 12345678')).toBe(true);
+  test("returns true for valid Japan phone numbers", () => {
+    expect(isPhoneNumber('090-1234-5678')).toBe(true); // Japan mobile number
+    expect(isPhoneNumber('080-1234-5678')).toBe(true); // Japan mobile number
+    expect(isPhoneNumber('070-1234-5678')).toBe(true); // Japan mobile number
+    expect(isPhoneNumber('050-1234-5678')).toBe(true); // Japan IP number
+    expect(isPhoneNumber('03-1234-5678')).toBe(true); // Japan landline number Tokyo
+    expect(isPhoneNumber('06-1234-5678')).toBe(true); // Japan landline number Osaka
   });
 
   test("returns true for valid phone numbers with custom regex", () => {
     const customRegex = /^\d{3}-\d{3}-\d{4}$/;
-    expect(isPhoneNumber('123-456-7890', customRegex)).toBe(true);
-    expect(isPhoneNumber('012-3456-7890', customRegex)).toBe(false);
+    expect(isPhoneNumber('123-456-7890', { customRegex })).toBe(true);
+    expect(isPhoneNumber('012-3456-7890', { customRegex })).toBe(false);
   });
 
   test("returns false for invalid phone numbers", () => {
