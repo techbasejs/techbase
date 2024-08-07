@@ -1,4 +1,4 @@
-import { isDate } from "../../src/utils/date-utils";
+import { isDate } from "../src/date-utils";
 import { describe, expect, it } from "vitest";
 
 describe("date-utils.ts - isDate", () => {
