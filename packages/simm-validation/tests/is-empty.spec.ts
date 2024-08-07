@@ -1,5 +1,4 @@
 import { test, expect, describe } from "vitest";
-
 import isEmpty from "../src/is-empty";
 
 describe("isEmpty", () => {
