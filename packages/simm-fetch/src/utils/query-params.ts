@@ -1,4 +1,3 @@
-
 import { has } from "lodash";
 import qs from "qs";
 
@@ -18,15 +17,20 @@ export function buildQueryParams(params: any): string {
 // export function buildQueryParams(params: { [key: string]: any }): string {
 //   return qs.stringify(params, { arrayFormat: "brackets" });
 // }
-  
-export function appendQueryParams(url: string | undefined, params: any): string {
+
+export function appendQueryParams(
+  url: string | undefined,
+  params: any,
+): string {
   const queryString = buildQueryParams(params);
   if (!queryString) {
     return url as string;
   }
-  return url?.toString().includes('?') ? `${url}&${queryString}` : `${url}?${queryString}`;
+  return url?.toString().includes("?")
+    ? `${url}&${queryString}`
+    : `${url}?${queryString}`;
 }
-  
+
 export function objectToQueryString(obj: {
   [key: string]:
     | string
@@ -54,8 +58,8 @@ export function objectToQueryString(obj: {
   }
   return keyValuePairs.join("&");
 }
-  
-export function serializeQueryParams <T>(
+
+export function serializeQueryParams<T>(
   queryParams: T,
   parentKey?: string,
 ): URLSearchParams {
@@ -84,4 +88,3 @@ export function serializeQueryParams <T>(
 
   return params;
 }
-  
