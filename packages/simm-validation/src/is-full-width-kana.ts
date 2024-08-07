@@ -7,7 +7,6 @@
  * characters, Japanese spaces, and Japanese punctuation marks. Otherwise, returns false.
  */
 export function isFullWidthKana(text: string): boolean {
-  // eslint-disable-next-line unicorn/better-regex, no-irregular-whitespace
-  const fullWidthKanaRegex = /^[ァ-ヺ　ー・]+$/;
+  const fullWidthKanaRegex = /^[\u3000ァ-ヺ・ー]+$/;
   return fullWidthKanaRegex.test(text);
 }
