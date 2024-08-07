@@ -5,6 +5,12 @@
  * @param max - The maximum length.
  * @returns True if the length is at most the maximum, otherwise false.
  */
-export const maxLength = (value: any[], max: number): boolean => {
-    return value.length <= max;
+export const maxLength = (value: string | number, max: number): boolean => {
+    if (typeof value === 'string') {
+        return value.length <= max;
+    } else if (typeof value === 'number') {
+        return value.toString().length <= max;
+    } else {
+        return false;
+    }
 };

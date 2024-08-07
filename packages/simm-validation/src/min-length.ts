@@ -5,6 +5,12 @@
  * @param min - The minimum length.
  * @returns True if the length is at least the minimum, otherwise false.
  */
-export const minLength = (value: any[], min: number): boolean => {
-    return value.length >= min;
+export const minLength = (value: string | number, min: number): boolean => {
+    if (typeof value === 'string') {
+        return value.length >= min;
+    } else if (typeof value === 'number') {
+        return value.toString().length >= min;
+    } else {
+        return false;
+    }
 };
