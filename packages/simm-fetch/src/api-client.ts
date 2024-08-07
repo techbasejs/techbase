@@ -1,191 +1,115 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import qs from 'qs';
-import { RequestConfig, RequestOptions, Response, Interceptor } from './types';
-import Utils from './utils';
+import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
+import { APIClientConfig, HTTPMethod } from "./types";
+import { mergeConfigs } from "./utils/merge-configs";
+import { appendQueryParams } from "./utils/query-params";
+import { Utils } from "./utils";
+import {
+  handleRequestError,
+  handleRequestSuccess,
+  handleResponseError,
+  handleResponseSuccess,
+} from "./utils/index";
+import { handleRetry } from "./utils/handle-retry";
 
-class HttpClient {
-  private instance: AxiosInstance;
-  private defaults: RequestConfig;
-  private isRefreshing: boolean;
-  private refreshTokenPromise: Promise<string> | null;
+class APIClient {
+  private axiosInstance: AxiosInstance;
+  private config: APIClientConfig;
+  private refreshSubscribers: Array<(token: string) => void> = [];
+  constructor(config: APIClientConfig) {
+    this.config = config;
+    this.axiosInstance = axios.create(config);
+    this.setupInterceptors();
+  }
 
-  constructor(config: any = {}) {
-    this.defaults = config;
-    this.isRefreshing = false;
-    this.refreshTokenPromise = null;
+  private setupInterceptors(): void {
+    this.axiosInstance.interceptors.request.use(
+      (config) => handleRequestSuccess(config, this.config),
+      (error) => Promise.reject(handleRequestError(error)),
+    );
 
-    this.instance = axios.create({
-      baseURL: config.baseURL,
-      headers: config.headers,
-      timeout: config.timeout,
-      auth: config.auth,
-      paramsSerializer: params => qs.stringify(params, { arrayFormat: 'brackets' })
-    });
-
-    // Request interceptor
-    this.instance.interceptors.request.use((config: any) => {
-      // Set token from cookies if exists
-      if (config.useAuthorization) {
-        const token = Utils.getToken();
-        if (token) {
-          config.headers['Authorization'] = `Bearer ${token}`;
-        }
-      }
-
-      // Set Content-Type based on data
-      if (config.data && !config.headers['Content-Type']) {
-        config.headers['Content-Type'] = Utils.getContentType(config.data);
-      }
-
-      return config;
-    });
-
-    // Response interceptor
-    this.instance.interceptors.response.use(
-      response => response,
-      error => this.handleResponseError(error)
+    this.axiosInstance.interceptors.response.use(
+      async (response) => await handleResponseSuccess(response, this.config),
+      async (error: AxiosError) => await this.handleResponseCondition(error),
     );
   }
 
-  private async handleResponseError(error: any): Promise<any> {
-    const originalRequest = error.config;
-    if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
-      if (this.isRefreshing) {
-        await this.refreshTokenPromise;
-      } else {
-        originalRequest._retry = true;
-        this.isRefreshing = true;
-        this.refreshTokenPromise = this.refreshToken();
-
-        const newToken = await this.refreshTokenPromise;
-        Utils.setToken(newToken);
-
-        this.isRefreshing = false;
-        this.refreshTokenPromise = null;
-
-        originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
-        return this.instance(originalRequest);
-      }
+  private async handleResponseCondition(
+    error: AxiosError,
+  ): Promise<AxiosResponse> {
+    if (this.config.isRetry) {
+      const retryRequest = await handleRetry(
+        () =>
+          this.axiosInstance.request({
+            method: this.config.method,
+            url: this.config.url,
+            data: this.config.data,
+          }),
+        this.config,
+      );
+      return retryRequest;
     }
-    throw error;
+    return handleResponseError(error, this.config);
   }
 
-  private async refreshToken(): Promise<string> {
-    // Implement your refresh token logic here, e.g., call refreshToken API
-    const response = await this.instance.post('/refresh-token', { token: Utils.getRefreshToken() });
-    return response.data.token;
-  }
+  private async request<T>(
+    method: HTTPMethod,
+    url: string,
+    data?: any,
+    params?: any,
+    config?: APIClientConfig,
+  ): Promise<AxiosResponse<T>> {
+    let modifyUrl = Utils.isValidUrl(this.config?.baseURL + url)
+      ? this.config?.baseURL + url
+      : this.config?.baseURL;
+    this.config = mergeConfigs(this.config, config || {});
+    modifyUrl = params ? appendQueryParams(modifyUrl, params) : modifyUrl;
+    this.config.url = modifyUrl;
+    this.config.method = method;
+    this.config.data = data;
 
-  request<T = any>(options: RequestOptions): Promise<Response<T>> {
-    const mergedOptions = { ...this.defaults, ...options };
-    return this.instance.request<T>({
-      method: mergedOptions.method,
-      url: mergedOptions.url,
-      data: mergedOptions.data,
-      params: mergedOptions.params,
-      headers: mergedOptions.headers,
-      timeout: mergedOptions.timeout
-    }).then(this.handleResponse)
-      .catch(this.handleError);
-  }
-
-  private handleResponse<T>(response: AxiosResponse<T>): Response<T> {
-    return {
-      data: response.data,
-      status: response.status,
-      statusText: response.statusText,
-      headers: response.headers,
-      config: response.config as RequestOptions
-    };
-  }
-
-  private handleError(error: any): Promise<any> {
-    return Promise.reject(error);
-  }
-
-  get<T = any>(url: string, config?: RequestConfig): Promise<Response<T>> {
-    return this.request({ method: 'GET', url, ...config });
-  }
-
-  post<T = any>(url: string, data?: any, config?: RequestConfig): Promise<Response<T>> {
-    return this.request({ method: 'POST', url, data, ...config });
-  }
-
-  put<T = any>(url: string, data?: any, config?: RequestConfig): Promise<Response<T>> {
-    return this.request({ method: 'PUT', url, data, ...config });
-  }
-
-  delete<T = any>(url: string, config?: RequestConfig): Promise<Response<T>> {
-    return this.request({ method: 'DELETE', url, ...config });
-  }
-  
-  upload(url: string, files: FileList | File, config?: RequestConfig): Promise<Response<any>> {
-    const formData = new FormData();
-    if (files instanceof FileList) {
-      for (const file of files) formData.append('files', file);
-    } else {
-      formData.append('file', files);
-    }
-
-    return this.request({
-      method: 'POST',
-      url,
-      data: formData,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        ...config?.headers
-      },
-      ...config
+    return await this.axiosInstance.request<T>({
+      method: method,
+      url: modifyUrl,
+      data: data,
     });
   }
 
-  setBaseURL(baseURL: string): void {
-    this.instance.defaults.baseURL = baseURL;
+  public async get<T>(
+    url: string,
+    params?: any,
+    config?: APIClientConfig,
+  ): Promise<AxiosResponse<T>> {
+    return await this.request<T>("GET", url, null, params, config);
   }
 
-  setHeader(key: string, value: string): void {
-    this.instance.defaults.headers[key] = value;
+  public async post<T>(
+    url: string,
+    data: any,
+    config?: APIClientConfig,
+  ): Promise<AxiosResponse<T>> {
+    return await this.request<T>("POST", url, data, null, config);
   }
 
-  getHeaders(): { [key: string]: string } {
-    return this.instance.defaults.headers;
+  public async put<T>(
+    url: string,
+    data: any,
+    config?: APIClientConfig,
+  ): Promise<AxiosResponse<T>> {
+    return await this.request<T>("PUT", url, data, null, config);
   }
 
-  mergeHeaders(headers: { [key: string]: string }): void {
-    this.instance.defaults.headers = {
-      ...this.instance.defaults.headers.common,
-      ...headers
-    };
+  public async delete<T>(
+    url: string,
+    config?: APIClientConfig,
+  ): Promise<AxiosResponse<T>> {
+    return await this.request<T>("DELETE", url, null, null, config);
   }
 
-  interceptRequest(onFulfilled?: (value: AxiosRequestConfig) => AxiosRequestConfig | Promise<AxiosRequestConfig>, onRejected?: (error: any) => any): number {
-    return this.instance.interceptors.request.use(onFulfilled, onRejected);
-  }
-
-  interceptResponse(onFulfilled?: (value: AxiosResponse) => AxiosResponse | Promise<AxiosResponse>, onRejected?: (error: any) => any): number {
-    return this.instance.interceptors.response.use(onFulfilled, onRejected);
-  }
-
-  ejectRequestInterceptor(id: number): void {
-    this.instance.interceptors.request.eject(id);
-  }
-
-  ejectResponseInterceptor(id: number): void {
-    this.instance.interceptors.response.eject(id);
-  }
-
-  graphql<T = any>(endpoint: string, query: string, variables?: { [key: string]: any }, config?: RequestConfig): Promise<Response<T>> {
-    return this.post(endpoint, {
-      query,
-      variables
-    }, {
-      ...config,
-      headers: {
-        'Content-Type': 'application/json',
-        ...config?.headers
-      }
-    });
+  cancelRequests(message?: string): void {
+    this.axiosInstance.defaults.cancelToken = new axios.CancelToken((cancel) =>
+      cancel(message),
+    );
   }
 }
 
-export default HttpClient;
+export default APIClient;
