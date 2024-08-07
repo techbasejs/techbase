@@ -6,12 +6,7 @@
  * @param value string
  * @returns boolean
  */
-export const isStandardPassword = (
+export const isPassword = (
   value: string,
   passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!$%&()*+,./:;<>?@[\\\]^_`{|}~-])[\w!$%&()*+,./:;<>?@[\\\]^`{|}~-]{8,}$/,
-) => {
-  if (!passwordRegex.test(value)) {
-    return false;
-  }
-  return true;
-};
+) => passwordRegex.test(value);
