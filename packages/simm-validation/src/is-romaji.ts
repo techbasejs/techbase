@@ -3,7 +3,8 @@
  * @param value - The string to check.
  * @returns True if the string is Romaji, false otherwise.
  */
-export const isRomaji = (value: string) => {
-  const romajiRegex = /^[a-zA-Z\s]+$/;
-  return romajiRegex.test(value);
+import { regexValidate } from "../src/shared/constants/regex"
+export const isRomaji = (value: string | null | undefined): boolean => {
+  const romajiRegex =regexValidate.VALID_ROMAJI;
+  return typeof value === 'string' && romajiRegex.test(value);
 };
