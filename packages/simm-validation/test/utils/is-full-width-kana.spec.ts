@@ -37,4 +37,20 @@ describe('isFullWidthKana', () => {
   it('should return false for a string containing only half-width punctuation marks', () => {
     expect(isFullWidthKana('.')).to.be.false;
   });
+
+  it('should return false for a mix of Japanese and English characters', () => {
+    expect(isFullWidthKana('アイウエオabc')).toBe(false);
+  });
+
+  it('should return false for a mix of Japanese characters and numbers', () => {
+    expect(isFullWidthKana('アイウエオ123')).toBe(false);
+  });
+
+  it('should return false for a mix of Japanese characters and special characters', () => {
+    expect(isFullWidthKana('アイウエオ!@#$%^&*()_+-=[]{}|')).toBe(false);
+  });
+
+  it('should return false for a mix of English characters and numbers', () => {
+      expect(isFullWidthKana('abc123')).toBe(false);
+  });
 });
