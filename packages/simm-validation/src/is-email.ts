@@ -3,7 +3,7 @@
  * @param email string
  * @returns boolean
  */
-export const isStandardEmail = (
+export const isEmail = (
   email: string,
   emailRegex = /^[\w%+.-]+@[\w.-]+(?:\.[A-Za-z]{2,}){1,2}$/,
 ) => {

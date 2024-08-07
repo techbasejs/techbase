@@ -7,11 +7,11 @@
   - [x] hasEmoji
   - [x] isEmpty
   - [ ] required, requiredIf
-  - [ ] email
+  - [x] email
   - [ ] katakana
-  - [ ] hiragana
+  - [x] hiragana
   - [ ] japannese
-  - [ ] alphanumeric
+  - [x] isAlphaNumeric
   - [ ] alphabet
   - [ ] phone
   - [ ] url
