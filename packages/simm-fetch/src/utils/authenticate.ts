@@ -3,14 +3,14 @@ import { APIClientConfig, CustomRequestConfig } from "../types";
 import Cookies from "js-cookie";
 
 export function addAuthentication(config: APIClientConfig): AxiosRequestConfig {
-    const token = Cookies.get('accessToken');
-    if (token && config.headers) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    }
-    return config;
+  const token = Cookies.get("accessToken");
+  if (token && config.headers) {
+    config.headers["Authorization"] = `Bearer ${token}`;
+  }
+  return config;
 }
 
-export async function refreshToken(){
+export async function refreshToken() {
   //Todo handle RefreshToken with config
   return response?.data?.accessToken;
 }
