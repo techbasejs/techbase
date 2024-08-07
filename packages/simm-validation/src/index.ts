@@ -1,3 +1,4 @@
+export * from "./is-japanese-phone-number";
 export * from "./date-utils";
 export * from "./has-emoji";
 export * from "./is-empty";
