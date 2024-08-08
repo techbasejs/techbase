@@ -29,7 +29,7 @@
   - [ ] integer
   - [ ] minLength
   - [ ] maxLength
-  - [ ] unique
+  - [x] unique array
 - [ ] Basic Transforms
   - [ ] trim
   - [ ] lowercase
