@@ -7,7 +7,7 @@
   - [x] hasEmoji
   - [x] isEmpty
   - [ ] required, requiredIf
-  - [ ] email
+  - [x] email
   - [ ] katakana
   - [x] hiragana
   - [ ] japannese
