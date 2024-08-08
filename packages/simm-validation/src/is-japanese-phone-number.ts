@@ -1,8 +1,9 @@
-import isEmpty from "./is-empty";
+import { isEmpty } from "./is-empty";
 
-const defaultRegex = /^(0([1-9]{1}-?[1-9]\d{3}|[1-9]{2}-?\d{3}|[1-9]{2}\d{1}-?\d{2}|[1-9]{2}\d{2}-?\d{1})-?\d{4}|0[789]0-?\d{4}-?\d{4}|050-?\d{4}-?\d{4})$/;
+const defaultRegex =
+  /^(0([1-9]-?[1-9]\d{3}|[1-9]{2}-?\d{3}|[1-9]{2}\d-?\d{2}|[1-9]{2}\d{2}-?\d)-?\d{4}|0[7-9]0(?:-?\d{4}){2}|050(?:-?\d{4}){2})$/;
 
-interface PhoneNumberOptions {
+export interface PhoneNumberOptions {
   customRegex?: RegExp;
   [key: string]: any;
 }
@@ -22,10 +23,13 @@ interface PhoneNumberOptions {
  *  console.log(result2); // prints: true
  */
 
-export const isJapanesePhoneNumber = <T> (value: string | number | null | undefined | T, options: PhoneNumberOptions = {}): boolean => {
+export const isJapanesePhoneNumber = <T>(
+  value: string | number | null | undefined | T,
+  options: PhoneNumberOptions = {},
+): boolean => {
   if (isEmpty(value)) return false;
 
   const { customRegex } = options;
   const newRegex = customRegex || defaultRegex;
   return newRegex.test(String(value));
-}
+};
