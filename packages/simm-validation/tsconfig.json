@@ -6,7 +6,7 @@
     "declaration": true,
     "declarationDir": "lib",
     "types": ["node"],
-    "target": "ES2015",
+    "target": "ES2016",
     "jsx": "react-jsx",
     "lib": ["DOM", "ESNext", "dom.iterable"],
     "module": "ESNext",
