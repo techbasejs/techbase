@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { isKatakana } from '../../src';
+import { isKatakana } from '../src';
 
 describe('isKatakana', () => {
     it('should return true for full-width Katakana', () => {
@@ -20,5 +20,21 @@ describe('isKatakana', () => {
 
     it('should return true for Katakana phonetic extensions', () => {
         expect(isKatakana('ㇰㇱㇲ')).toBe(true);
+    });
+
+    it('should return false for alphanumeric strings', () => {
+        expect(isKatakana('ABC123')).toBe(false);
+    });
+
+    it('should return false for mixed alphanumeric and Katakana', () => {
+        expect(isKatakana('カタカナ123')).toBe(false);
+    });
+
+    it('should return false for numeric strings', () => {
+        expect(isKatakana('123456')).toBe(false);
+    });
+
+    it('should return false for mixed alphanumeric and other characters', () => {
+        expect(isKatakana('A1カタカナ')).toBe(false);
     });
 });
