@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isAlphanumeric } from "../../src/is-alphanumeric";
+import { isAlphanumeric } from "../src/is-alphanumeric";
 
 describe("isAlphanumeric", () => {
   it("should return true for a string with only letters", () => {
@@ -46,8 +46,8 @@ describe("isAlphanumeric", () => {
     ).toBe(true);
   });
 
-  it("should return false for a scientific notation number string", () => {
-    expect(isAlphanumeric("123e3")).toBe(false);
+  it("should return true for a scientific notation number string", () => {
+    expect(isAlphanumeric("123e3")).toBe(true);
   });
 
   it("should return false for a scientific notation number string with plus sign", () => {
