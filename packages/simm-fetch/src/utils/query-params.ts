@@ -19,10 +19,8 @@ export function buildQueryParams(params: any): string {
 //   return qs.stringify(params, { arrayFormat: "brackets" });
 // }
   
-export function appendQueryParams(url: string | undefined, params: any, queryConfig?: any): string {
-  const query = queryString.stringify({ ...params }, {...queryConfig, skipNull : true, sort: false} )
-  // const query = buildQueryParams(params);
-  console.log('++++', query);
+export function appendQueryParams(url: string | undefined, params: any, queryConfig: any = {}): string {
+  const query = queryString.stringify({ ...params }, { ...queryConfig } )
   if (!query) {
     return url as string;
   }
