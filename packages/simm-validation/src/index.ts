@@ -4,4 +4,6 @@ export * from "./has-emoji";
 export * from "./is-empty";
 export * from "./is-full-width-kana";
 export * from "./is-full-width";
+export * from "./is-url";
+export * from "./is-image-url";
 export { isBoolean, isEmpty } from "validator";
