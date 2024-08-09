@@ -1,14 +1,17 @@
-# Simple Upload
+# Simple Validation
 
 ## Features
 
 - [ ] Basic Rules
+  - [x] isDate
+  - [x] hasEmoji
+  - [x] isEmpty
   - [ ] required, requiredIf
   - [ ] email
   - [ ] katakana
-  - [ ] hiragana
+  - [x] hiragana
   - [ ] japannese
-  - [ ] alphanumeric
+  - [x] isAlphaNumeric
   - [ ] alphabet
   - [ ] phone
   - [ ] url
@@ -26,7 +29,7 @@
   - [ ] integer
   - [ ] minLength
   - [ ] maxLength
-  - [ ] unique
+  - [x] unique array
 - [ ] Basic Transforms
   - [ ] trim
   - [ ] lowercase

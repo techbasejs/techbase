@@ -16,3 +16,4 @@ cjs/
 esm/
 tsconfig.build.tsbuildinfo
 node_modules
+docs/

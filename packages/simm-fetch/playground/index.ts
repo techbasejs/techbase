@@ -23,6 +23,43 @@ const checkApiGetUser = async() => {
 }
 checkApiGetUser();
 
+const checkApiGetUserWithArrayParamsBracket = async() => {
+  client.get('/user',  { 
+    username: "A",
+    id: "1",
+    list: [0, null, 2],
+    address: null,
+    phone: undefined,
+  }, {
+    queryConfig: {
+      arrayFormat: 'bracket',
+      skipNull : true,
+      sort: false,
+    }
+  })
+    .then(response => {console.log(response.data)})
+    .catch(error => console.error(error));
+}
+
+
+const checkApiGetUserWithArrayParams = async() => {
+  client.get('/user',  { 
+    username: "A",
+    id: "1",
+    list: [0,1,2],
+    address: null,
+    phone: undefined,
+  }, {
+    queryConfig: {
+      arrayFormat: 'index',
+      skipNull : true,
+      sort: false
+    }
+  })
+    .then(response => {console.log(response.data)})
+    .catch(error => console.error(error));
+}
+checkApiGetUserWithArrayParamsBracket();
 
 //Test Merge Header
 newConfig.setHeader('Authorization', 'Bearer Token check')
