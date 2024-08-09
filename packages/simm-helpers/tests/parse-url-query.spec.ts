@@ -22,7 +22,9 @@ describe("Parse query", () => {
 
   test("Parse object value", () => {
     expect(
-      parseUrlQueryString('?value={"name":"Nguyen+Dinh+Truong","age":26,"isMale":true}'),
+      parseUrlQueryString(
+        '?value={"name":"Nguyen+Dinh+Truong","age":26,"isMale":true}',
+      ),
     ).toEqual({
       value: {
         name: "Nguyen Dinh Truong",
@@ -33,7 +35,9 @@ describe("Parse query", () => {
   });
 
   test("Parse single array value", () => {
-    expect(parseUrlQueryString('?value=["Java","Kotlin","Dart","Golang"]')).toEqual({
+    expect(
+      parseUrlQueryString('?value=["Java","Kotlin","Dart","Golang"]'),
+    ).toEqual({
       value: ["Java", "Kotlin", "Dart", "Golang"],
     });
   });
