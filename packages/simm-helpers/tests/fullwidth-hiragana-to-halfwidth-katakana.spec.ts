@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { convertFullWidthHiraganaToHalfWidthKatakana } from "../src/convert-fullwidthhiragana-to-halfwidthkatakana";
+import { convertFullWidthHiraganaToHalfWidthKatakana } from "../src/fullwidth-hiragana-to-halfwidth-katakana.js";
 
 describe("convertFullWidthHiraganaToHalfWidthKatakana", () => {
   it("should convert full-width Hiragana to half-width Katakana correctly", () => {
@@ -34,5 +34,19 @@ describe("convertFullWidthHiraganaToHalfWidthKatakana", () => {
     expect(convertFullWidthHiraganaToHalfWidthKatakana("あいうabc")).toBe(
       "ｱｲｳabc",
     );
+  });
+
+  it("should return null if the input is null", () => {
+    expect(convertFullWidthHiraganaToHalfWidthKatakana(null)).toEqual("");
+  });
+
+  it("should return undefined if the input is undefined", () => {
+    expect(convertFullWidthHiraganaToHalfWidthKatakana(undefined)).toEqual("");
+  });
+
+  it("should return input if the input contains special character", () => {
+    expect(
+      convertFullWidthHiraganaToHalfWidthKatakana("あいう!@#$%^&*()"),
+    ).toBe("ｱｲｳ!@#$%^&*()");
   });
 });

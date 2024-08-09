@@ -104,8 +104,11 @@ const mapFullWidthHiraganaToHalfWidthKatakana = new Map<string, string>([
  * @return {string} The string with full-width Hiragana characters replaced by half-width Katakana characters.
  */
 export const convertFullWidthHiraganaToHalfWidthKatakana = (
-  inputStr: string,
+  inputStr: string | undefined | null,
 ): string => {
+  if (!inputStr) {
+    return "";
+  }
   return inputStr.replace(REGEXP_HIRAGANA, (char) => {
     return mapFullWidthHiraganaToHalfWidthKatakana.get(char) as string;
   });
