@@ -1,3 +1,5 @@
+import { REGEXS } from "./constants";
+
 /**
  * Validates if the given string contains only Kana characters.
  * Kana Unicode range:  /^[\u3040-\u30FF]+$/
@@ -7,8 +9,9 @@
  * @returns {boolean} - Returns true if the string contains only Kana characters, false otherwise.
  */
 export const isKana = (
-  input: string,
-  regex: RegExp = /^[\u3040-\u30FF]+$/,
+  input?: string | null,
+  regex: RegExp = REGEXS.KANA,
 ): boolean => {
+  if (!input) return false;
   return regex.test(input);
 };
