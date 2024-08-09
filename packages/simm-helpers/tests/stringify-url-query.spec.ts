@@ -1,22 +1,22 @@
 import { test, expect, describe } from "vitest";
-import { stringifyUrlQueryObject } from "../src";
+import { stringifyUrlQuery } from "../src";
 
 describe("Stringify query", () => {
   test("Stringify null value", () => {
-    expect(stringifyUrlQueryObject({ value: null })).toEqual("?value");
+    expect(stringifyUrlQuery({ value: null })).toEqual("?value");
   });
 
   test("Stringify boolean value", () => {
-    expect(stringifyUrlQueryObject({ value: true })).toEqual("?value=true");
+    expect(stringifyUrlQuery({ value: true })).toEqual("?value=true");
   });
 
   test("Stringify number value", () => {
-    expect(stringifyUrlQueryObject({ value: -123.5 })).toEqual("?value=-123.5");
+    expect(stringifyUrlQuery({ value: -123.5 })).toEqual("?value=-123.5");
   });
 
   test("Stringify string value", () => {
     expect(
-      stringifyUrlQueryObject({
+      stringifyUrlQuery({
         value: "I am using C++",
       }),
     ).toEqual("?value=I+am+using+C\\+\\+");
@@ -24,7 +24,7 @@ describe("Stringify query", () => {
 
   test("Stringify object value", () => {
     expect(
-      stringifyUrlQueryObject({
+      stringifyUrlQuery({
         value: {
           name: "Nguyen Dinh Truong",
           age: 26,
@@ -36,7 +36,7 @@ describe("Stringify query", () => {
 
   test("Stringify array value", () => {
     expect(
-      stringifyUrlQueryObject({
+      stringifyUrlQuery({
         value: ["Java", "Kotlin", "Dart", "Golang", "C++"],
       }),
     ).toEqual('?value=["Java","Kotlin","Dart","Golang","C\\+\\+"]');
@@ -44,7 +44,7 @@ describe("Stringify query", () => {
 
   test("Stringify multiple value types", () => {
     expect(
-      stringifyUrlQueryObject({
+      stringifyUrlQuery({
         name: "Nguyen Dinh Truong",
         age: 26,
         isMale: true,
