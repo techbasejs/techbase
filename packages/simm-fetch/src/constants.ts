@@ -18,10 +18,10 @@ export const STATUS_CODES = {
 };
 
 export const ERROR_MESSAGES = {
-  [STATUS_CODES.BAD_REQUEST]: 'Bad Request',
-  [STATUS_CODES.UNAUTHORIZED]: 'Unauthorized',
-  [STATUS_CODES.FORBIDDEN]: 'Forbidden',
-  [STATUS_CODES.NOT_FOUND]: 'Not Found',
-  [STATUS_CODES.INTERNAL_SERVER_ERROR]: 'Internal Server Error',
+  [STATUS_CODES.BAD_REQUEST]: "Bad Request",
+  [STATUS_CODES.UNAUTHORIZED]: "Unauthorized",
+  [STATUS_CODES.FORBIDDEN]: "Forbidden",
+  [STATUS_CODES.NOT_FOUND]: "Not Found",
+  [STATUS_CODES.INTERNAL_SERVER_ERROR]: "Internal Server Error",
   // ... Add other messages as needed
 };

@@ -1,19 +1,19 @@
-import axios from 'axios';
-import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
-import MockAdapter from 'axios-mock-adapter';
-import APIClient from '../src/api-client'; // Adjust this import according to your file structure
-import { APIClientConfig } from '../src/types';
+import axios from "axios";
+import { describe, it, beforeEach, afterEach, expect, vi } from "vitest";
+import MockAdapter from "axios-mock-adapter";
+import APIClient from "../src/api-client"; // Adjust this import according to your file structure
+import { APIClientConfig } from "../src/types";
 
-vi.mock('./utils/merge-configs');
-vi.mock('./utils/query-params');
-vi.mock('./utils/index');
-vi.mock('./utils/handle-retry');
+vi.mock("./utils/merge-configs");
+vi.mock("./utils/query-params");
+vi.mock("./utils/index");
+vi.mock("./utils/handle-retry");
 
-describe('APIClient', () => {
+describe("APIClient", () => {
   const config: APIClientConfig = {
-    baseURL: 'http://mockapi.com',
-    url: '/test',
-    method: 'GET',
+    baseURL: "http://mockapi.com",
+    url: "/test",
+    method: "GET",
     data: null,
     headers: {},
     isRetry: false,
@@ -31,49 +31,51 @@ describe('APIClient', () => {
     mock.reset();
   });
 
-  it('should perform GET request successfully', async () => {
-    const responseData = { data: 'test' };
+  it("should perform GET request successfully", async () => {
+    const responseData = { data: "test" };
     mock.onGet(`${config.baseURL}/test`).reply(200, responseData);
 
-    const response = await client.get('/test');
+    const response = await client.get("/test");
 
     expect(response.status).toBe(200);
     expect(response.data).toEqual(responseData);
   });
 
-  it('should perform POST request successfully', async () => {
-    const postData = { name: 'test' };
+  it("should perform POST request successfully", async () => {
+    const postData = { name: "test" };
     const responseData = { success: true };
     mock.onPost(`${config.baseURL}/test`, postData).reply(201, responseData);
 
-    const response = await client.post('/test', postData);
+    const response = await client.post("/test", postData);
 
     expect(response.status).toBe(201);
     expect(response.data).toEqual(responseData);
   });
 
-  it('should handle request error', async () => {
+  it("should handle request error", async () => {
     mock.onGet(`${config.baseURL}/test`).reply(500);
 
     try {
-      await client.get('/test');
+      await client.get("/test");
     } catch (error) {
-      if (error instanceof Error && 'response' in error) {
+      if (error instanceof Error && "response" in error) {
         expect((error as any).response.status).toBe(500);
       }
     }
   });
 
-  it.skip('should retry request on failure when isRetry is enabled', async () => {
+  it.skip("should retry request on failure when isRetry is enabled", async () => {
     config.isRetry = true;
-    mock.onGet(`${config.baseURL}/test`).replyOnce(500).onGet(`${config.baseURL}/test`).reply(200, { data: 'retry success' });
-
-
+    mock
+      .onGet(`${config.baseURL}/test`)
+      .replyOnce(500)
+      .onGet(`${config.baseURL}/test`)
+      .reply(200, { data: "retry success" });
   });
 
-  it.skip('should cancel requests', () => {
-    const cancelMessage = 'Request canceled by the user.';
-    
+  it.skip("should cancel requests", () => {
+    const cancelMessage = "Request canceled by the user.";
+
     client.cancelRequests(cancelMessage);
 
     const source = axios.CancelToken.source();
