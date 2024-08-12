@@ -20,5 +20,5 @@ export const isEmail = (
   // Check if the value is falsy.
   if (isEmpty(value)) return false;
   // Check if the value is a valid email address using a regular expression.
-  return regex.test(value ?? "");
+  return regex.test(String(value));
 };
