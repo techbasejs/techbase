@@ -1,9 +1,9 @@
+import { inRange } from "../../simm-helpers/src/in-range";
 import { expect, describe, test } from "vitest";
-import { isInRange } from "../src/is-in-range";
 
-describe("isInRange", () => {
+describe("inRange", () => {
   test("returns true for values within the range", () => {
-    const isAdult = isInRange(18, 65);
+    const isAdult = inRange(18, 65);
 
     const withinRangeValues = [18, 20, 50, 65];
 
@@ -13,7 +13,7 @@ describe("isInRange", () => {
   });
 
   test("returns false for values outside the range", () => {
-    const isAdult = isInRange(18, 65);
+    const isAdult = inRange(18, 65);
 
     const outsideRangeValues = [17, 66, 100, 10];
 
@@ -23,7 +23,7 @@ describe("isInRange", () => {
   });
 
   test("handles edge cases correctly", () => {
-    const isTeenager = isInRange(13, 19);
+    const isTeenager = inRange(13, 19);
 
     expect(isTeenager(13)).toBe(true);
     expect(isTeenager(19)).toBe(true);
@@ -32,7 +32,7 @@ describe("isInRange", () => {
   });
 
   test("returns false for non-number inputs", () => {
-    const isValid = isInRange(0, 10);
+    const isValid = inRange(0, 10);
 
     // Test non-number inputs
     expect(isValid("5" as any)).toBe(false);
