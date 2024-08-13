@@ -11,7 +11,11 @@
  * console.log(inRangeNumber(5, 10, 20));  // false
  * console.log(inRangeNumber(25, 10, 20)); // false
  */
-export const inRangeNumber = (value: number, min: number, max: number): boolean => {
+export const inRangeNumber = (
+  value: number,
+  min: number,
+  max: number,
+): boolean => {
   if (typeof value !== "number") {
     return false;
   }
