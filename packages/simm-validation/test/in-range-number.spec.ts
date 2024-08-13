@@ -45,17 +45,6 @@ describe("inRangeNumber", () => {
     expect(inRangeNumber(0.255e3, 100, 300)).toBe(true); // Exponential
   });
 
-  test("should return true when the number is 255 in different formats and within the range", () => {
-    const min = 100;
-    const max = 300;
-
-    expect(inRangeNumber(255, min, max)).toBe(true);
-    expect(inRangeNumber(255, min, max)).toBe(true);
-    expect(inRangeNumber(0xff, min, max)).toBe(true);
-    expect(inRangeNumber(0b1111_1111, min, max)).toBe(true);
-    expect(inRangeNumber(0.255e3, min, max)).toBe(true);
-  });
-
   test("should return false when value is not a number", () => {
     expect(inRangeNumber(Number.NaN, 10, 20)).toBe(false);
     expect(inRangeNumber(Number("invalid"), 10, 20)).toBe(false);
