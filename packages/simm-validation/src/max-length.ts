@@ -6,8 +6,10 @@
  * @returns True if the length is at most the maximum, otherwise false.
  */
 export const maxLength = (value: any, max: number): boolean => {
-  if (typeof value === 'number') {
-      return value.toString().length <= max;
+  if (typeof value === "number") {
+    return value.toString().length <= max;
   }
-  return (Array.isArray(value) || typeof value === 'string') && value.length <= max;
+  return (
+    (Array.isArray(value) || typeof value === "string") && value.length <= max
+  );
 };

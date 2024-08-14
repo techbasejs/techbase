@@ -6,8 +6,10 @@
  * @returns True if the length is at least the minimum, otherwise false.
  */
 export const minLength = (value: any, min: number): boolean => {
-  if (typeof value === 'number') {
-      return value.toString().length >= min;
+  if (typeof value === "number") {
+    return value.toString().length >= min;
   }
-  return (Array.isArray(value) || typeof value === 'string') && value.length >= min;
+  return (
+    (Array.isArray(value) || typeof value === "string") && value.length >= min
+  );
 };

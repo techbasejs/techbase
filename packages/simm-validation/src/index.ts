@@ -8,3 +8,5 @@ export * from "./is-hiragana";
 export * from "./is-empty";
 export * from "./is-url";
 export * from "./is-email";
+export * from "./max-length";
+export * from "./min-length";
