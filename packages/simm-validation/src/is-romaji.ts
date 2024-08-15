@@ -5,6 +5,10 @@
  */
 import { regexValidate } from "../src/shared/constants/regex"
 export const isRomaji = (value: string | null | undefined): boolean => {
-  const romajiRegex =regexValidate.VALID_ROMAJI;
-  return typeof value === 'string' && romajiRegex.test(value);
+  if (value === null || value === undefined) {
+    return false;
+  }
+  
+  const romajiRegex = regexValidate.VALID_ROMAJI;
+  return romajiRegex.test(value);
 };
