@@ -10,6 +10,7 @@ export default unjs({
     "packages/**/cjs",
     "packages/**/esm",
     "packages/**/lib",
+    "docs/**"
   ],
   rules: {
     "unicorn/no-null": 0,
