@@ -21,26 +21,32 @@ type FormatType =
   | "YYYY-MM-DD HH:mm";
 
 const padZero = (num: number): string => String(num).padStart(2, "0");
+const parseDate = (date: DateType): Date => {
+  if (date === null || date === undefined)
+    throw new TypeError("Date cannot be null or undefined");
 
-export function dateFormat(date: DateType, format: FormatType): string {
-  let dateObj: Date;
-  if (date === null || date === undefined) {
-    return "";
-  } else if (typeof date === "string") {
-    dateObj = new Date(date);
+  if (typeof date === "string") {
+    const dateObj = new Date(date);
     if (Number.isNaN(dateObj.getTime())) {
       throw new TypeError(`Invalid date string '${date}'`);
     }
-  } else if (date instanceof Date) {
+    return dateObj;
+  }
+
+  if (date instanceof Date) {
     if (Number.isNaN(date.getTime())) {
       throw new TypeError(`Invalid Date object`);
     }
-    dateObj = date;
+    return date;
   } else {
     throw new TypeError(`Invalid date type '${date}'`);
   }
+};
+
+export function dateFormat(date: DateType, format: FormatType): string {
   try {
-    const day = padZero(dateObj?.getDate());
+    const dateObj = parseDate(date);
+    const day = padZero(dateObj.getDate());
     const month = padZero(dateObj.getMonth() + 1);
     const year = dateObj.getFullYear();
     const hours = padZero(dateObj.getHours());
