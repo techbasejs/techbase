@@ -3,7 +3,6 @@
  *
  * @param {string} text - The string to check.
  * @returns {boolean} - Returns `true` if the string contains at least one Kanji character, otherwise returns `false`.
-`
  */
 import { regexValidate } from "./shared/constants/regex";
 
@@ -12,4 +11,4 @@ export const isKanji = (text: string | null | undefined): boolean => {
     return false;
   }
   return regexValidate.KANJI_REGEX.test(text);
-}
+};
