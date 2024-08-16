@@ -1,4 +1,4 @@
-import { REGEXS } from "./constants";
+import { REGEXS } from "./shared/constants";
 import { isEmpty } from "./is-empty";
 
 export interface PhoneNumberOptions {

@@ -1,4 +1,4 @@
-import { REGEXS } from "./constants";
+import { REGEXS } from "./shared/constants";
 
 /**
  * Checks if the given text is composed of only full-width katakana characters,

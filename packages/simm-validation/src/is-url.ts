@@ -1,4 +1,4 @@
-import { REGEXS } from "./constants";
+import { REGEXS } from "./shared/constants";
 
 /**
  * Checks if a given URL string matches a standard URL format including HTTP(S) and FTP protocols.

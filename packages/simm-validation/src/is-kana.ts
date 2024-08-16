@@ -1,4 +1,4 @@
-import { REGEXS } from "./constants";
+import { REGEXS } from "./shared/constants";
 
 /**
  * Validates if the given string contains only Kana characters.
