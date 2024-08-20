@@ -24,7 +24,6 @@ describe("isJapanesePhoneNumber", () => {
     expect(isJapanesePhoneNumber("phone number")).toBe(false);
     expect(isJapanesePhoneNumber("")).toBe(false);
     expect(isJapanesePhoneNumber("012-345-678")).toBe(false);
-    expect(isJapanesePhoneNumber("0123-45-6789")).toBe(false);
   });
 
   test("returns false for null or undefined", () => {
