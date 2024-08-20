@@ -11,7 +11,7 @@
 - [ ] String
   - [ ] removeEmoji
 - [ ] Date
-  - [ ] formatDate
+  - [x] formatDate
   - [ ] formatTimeAgo
 - [ ] Array
 
