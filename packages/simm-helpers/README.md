@@ -11,9 +11,11 @@
 - [ ] String
   - [ ] removeEmoji
 - [ ] Date
-  - [ ] formatDate
+  - [x] formatDate
   - [ ] formatTimeAgo
 - [ ] Array
+- [ ] Number
+  - [x] isRageNumber
 
 ## Install
 
