@@ -2,7 +2,7 @@
   "name": "@techbasejs/simm-helpers",
   "version": "1.0.0",
   "description": "Missing ECMAScript module utils for Node.js",
-  "repository": "techbasejs/techbase/tree/main/packages/simm-helpers",
+  "repository": "techbasejs/techbasejs",
   "license": "MIT",
   "sideEffects": false,
   "type": "module",

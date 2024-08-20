@@ -7,6 +7,7 @@ import replace from "@rollup/plugin-replace";
 import esbuild from "rollup-plugin-esbuild";
 import banner from "rollup-plugin-banner2";
 import { RollupOptions } from "rollup";
+import { packageNames } from "../package-names";
 
 const externalPackages = [
   "ssh2",
@@ -39,17 +40,7 @@ const plugins = [
 ];
 
 (async () => {
-  const packages = [
-    "packages/simm",
-    "packages/simm-fetch",
-    "packages/simm-gen-es-tsconfig",
-    "packages/simm-helpers",
-    "packages/simm-mapped-types",
-    "packages/simm-next-auth",
-    "packages/simm-player",
-    "packages/simm-upload",
-    "packages/simm-validation",
-  ];
+  const packages = packageNames.map(packageName => `packages/${packageName}`)
   for (const packagePath of packages) {
     console.log("Building", packagePath);
     const config = {

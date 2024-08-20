@@ -1,11 +1,3 @@
-/**
- * Formats a given date according to the specified format string.
- *
- * @param {DateType} date - The date to format. It can be a Date object, a string representing a date, null, or undefined.
- * @param {FormatType} format - The format string that specifies the output format of the date. The format can include year, month, day, hour, minute, and second components.
- * @return {string} The formatted date string according to the specified format. Returns an empty string if the date is null or undefined.
- * @throws {TypeError} Throws an error if the date is of an invalid type or if the date string is invalid.
- */
 type DateType = string | Date | null | undefined;
 type FormatType =
   | "YYYY"
@@ -42,7 +34,14 @@ const parseDate = (date: DateType): Date => {
     throw new TypeError(`Invalid date type '${date}'`);
   }
 };
-
+/**
+ * Formats a given date according to the specified format string.
+ *
+ * @param {DateType} date - The date to format. It can be a Date object, a string representing a date, null, or undefined.
+ * @param {FormatType} format - The format string that specifies the output format of the date. The format can include year, month, day, hour, minute, and second components.
+ * @return {string} The formatted date string according to the specified format. Returns an empty string if the date is null or undefined.
+ * @throws {TypeError} Throws an error if the date is of an invalid type or if the date string is invalid.
+ */
 export function dateFormat(date: DateType, format: FormatType): string {
   try {
     const dateObj = parseDate(date);

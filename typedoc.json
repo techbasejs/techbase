@@ -1,5 +1,5 @@
 { 
-  "entryPoints": ["packages/*"],
+  "entryPoints": ["packages/simm-helpers", "packages/simm-validation"],
   "name": "Packages Example",
   "entryPointStrategy": "packages",
   "includeVersion": false

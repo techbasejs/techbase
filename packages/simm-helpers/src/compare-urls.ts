@@ -1,10 +1,18 @@
 /**
  * Compares two URLs based on their segments.
- *
  * @param {string} url1 - The first URL to compare.
  * @param {string} url2 - The second URL to compare.
  * @param {string} startsWith - The character to check for at the start of segments.
  * @return {boolean} Returns true if the URLs match, false otherwise.
+ * 
+ * @example
+ * ```javascript
+ * compareUrls("https://google.com", "https://facebook.com")
+ * ```
+ * With startsWith `-`
+ * ```javascript
+ * compareUrls("https://google.com", "https://facebook.com", "-")
+ * ```
  */
 export const compareUrls = (
   url1: string,
