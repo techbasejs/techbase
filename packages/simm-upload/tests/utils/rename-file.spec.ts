@@ -1,8 +1,25 @@
 import { describe, it, expect } from 'vitest';
-import { simmUpload } from '../../src/index';
+import { renameFile } from '../../src/rename-file';
+
+interface FileOptions {
+  lastModified?: number;
+  type?: string;
+}
+
+
+global.File = function (fileBits, fileName, options: FileOptions = {}) {
+  this.name = fileName;
+  this.lastModified = options.lastModified || Date.now();
+  this.type = options.type || '';
+  this.size = fileBits.reduce((acc, curr) => acc + curr.length, 0);
+
+  this.arrayBuffer = async () => new ArrayBuffer(this.size);
+  this.slice = (start, end, contentType) => new Blob(fileBits.slice(start, end), { type: contentType });
+  this.stream = () => new ReadableStream();
+  this.text = async () => fileBits.join('');
+} as any;
 
 describe('simmUpload', () => {
-  const { renameFile } = simmUpload();
 
   it('should rename the file without timestamp', () => {
     const file = new File(['content'], 'oldName.txt', { type: 'text/plain' });
