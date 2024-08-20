@@ -16,7 +16,7 @@ export const inRangeNumber = (
   min: number,
   max: number,
 ): boolean => {
-  if (typeof value !== "number") {
+  if (Number.isNaN(value)) {
     return false;
   }
   return value >= min && value <= max;

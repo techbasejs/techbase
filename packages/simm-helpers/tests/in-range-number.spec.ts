@@ -2,10 +2,14 @@ import { inRangeNumber } from "../../simm-helpers/src/in-range-number";
 import { expect, describe, test } from "vitest";
 
 describe("inRangeNumber", () => {
+  test("should return false when the input is not a valid number", () => {
+    expect(inRangeNumber(Number('12a'), 10, 20)).toBe(false);
+  });
+  
   test("should return true when the number is within the range", () => {
     expect(inRangeNumber(15, 10, 20)).toBe(true);
   });
-
+  
   test("should return false when the number is below the range", () => {
     expect(inRangeNumber(5, 10, 20)).toBe(false);
   });
