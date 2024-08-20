@@ -1,4 +1,4 @@
-import { AxiosRequestConfig, AxiosResponse  } from 'axios';
+import { AxiosRequestConfig, AxiosResponse } from "axios";
 export interface RequestConfig {
   baseURL?: string;
   headers?: { [key: string]: string };
@@ -37,10 +37,17 @@ export interface Interceptor<T> {
   onRejected?: (error: any) => any | Promise<any>;
 }
 
-export type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'OPTIONS' | 'HEAD';
+export type HTTPMethod =
+  | "GET"
+  | "POST"
+  | "PUT"
+  | "DELETE"
+  | "PATCH"
+  | "OPTIONS"
+  | "HEAD";
 export interface APIClientConfig extends AxiosRequestConfig {
   baseURL?: string;
-  headers?:any;
+  headers?: any;
   timeout?: number;
   isRetry?: boolean;
   retries?: number;
@@ -48,15 +55,21 @@ export interface APIClientConfig extends AxiosRequestConfig {
   useAuth?: boolean;
   isRefreshing?: boolean;
   url?: string;
-  body?: any,
-  data?: any,
+  body?: any;
+  data?: any;
   hooks?: {
-    beforeRequest?: Array<(config: AxiosRequestConfig) => AxiosRequestConfig | Promise<AxiosRequestConfig>>;
-    afterResponse?: Array<(response: AxiosResponse) => AxiosResponse | Promise<AxiosResponse>>;
+    beforeRequest?: Array<
+      (
+        config: AxiosRequestConfig,
+      ) => AxiosRequestConfig | Promise<AxiosRequestConfig>
+    >;
+    afterResponse?: Array<
+      (response: AxiosResponse) => AxiosResponse | Promise<AxiosResponse>
+    >;
   };
 }
 export interface CustomRequestConfig extends AxiosRequestConfig {
-  type?: 'json' | 'text' | 'blob' | 'arrayBuffer';
+  type?: "json" | "text" | "blob" | "arrayBuffer";
   parseResponse?: (response: any) => any;
 }
 
@@ -74,14 +87,14 @@ export type GenericError<T = any> = {
 };
 
 export const CONTENT_TYPES = {
-  'html': 'text/html',
-  'json': 'application/json',
-  'xml': 'application/xml',
-  'urlencoded': 'application/x-www-form-urlencoded',
-  'form': 'application/x-www-form-urlencoded',
-  'formData': 'multipart/form-data',
-  'text': 'text/plain',
-  'octet-stream': 'application/octet-stream'
+  html: "text/html",
+  json: "application/json",
+  xml: "application/xml",
+  urlencoded: "application/x-www-form-urlencoded",
+  form: "application/x-www-form-urlencoded",
+  formData: "multipart/form-data",
+  text: "text/plain",
+  "octet-stream": "application/octet-stream",
 };
 
 export type ContentType = keyof typeof CONTENT_TYPES;

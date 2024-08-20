@@ -27,6 +27,7 @@
   "devDependencies": {
     "@types/lodash": "^4.17.5",
     "@types/node": "^20.12.11",
+    "changelogen": "^0.5.5",
     "eslint": "^9.2.0",
     "eslint-config-unjs": "0.3.1",
     "jiti": "^1.21.0",
