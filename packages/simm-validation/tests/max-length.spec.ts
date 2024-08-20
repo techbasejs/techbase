@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { maxLength } from "./../src/index";
+import { maxLength } from "../src/index";
 
 describe("maxLength", () => {
   it("should return true for a string with length equal to max", () => {
