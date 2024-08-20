@@ -1,7 +1,5 @@
+import { REGEXS } from "./shared/constants";
 import { isEmpty } from "./is-empty";
-
-const defaultRegex =
-  /^(0([1-9]-?[1-9]\d{3}|[1-9]{2}-?\d{3}|[1-9]{2}\d-?\d{2}|[1-9]{2}\d{2}-?\d)-?\d{4}|0[7-9]0(?:-?\d{4}){2}|050(?:-?\d{4}){2})$/;
 
 export interface PhoneNumberOptions {
   customRegex?: RegExp;
@@ -30,6 +28,6 @@ export const isJapanesePhoneNumber = <T>(
   if (isEmpty(value)) return false;
 
   const { customRegex } = options;
-  const newRegex = customRegex || defaultRegex;
+  const newRegex = customRegex || REGEXS.DEFAULT_PHONE_NUMBER;
   return newRegex.test(String(value));
 };

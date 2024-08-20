@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isAlphanumeric } from "../../src/is-alphanumeric";
+import { isAlphanumeric } from "../src/is-alphanumeric";
 
 describe("isAlphanumeric", () => {
   it("should return true for a string with only letters", () => {

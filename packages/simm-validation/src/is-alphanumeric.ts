@@ -1,3 +1,4 @@
+import { REGEXS } from "./shared/constants";
 import { isEmpty } from "./is-empty";
 /**
  * Check if the given value is alphanumeric.
@@ -9,6 +10,5 @@ export const isAlphanumeric = (
 ): boolean => {
   if (isEmpty(value)) return false;
 
-  const alphanumericRegex = /^[\dA-Za-z]+$/;
-  return alphanumericRegex.test(String(value));
+  return REGEXS.ALPHANUMERIC.test(String(value));
 };
