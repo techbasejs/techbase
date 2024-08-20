@@ -14,6 +14,8 @@
   - [ ] formatDate
   - [ ] formatTimeAgo
 - [ ] Array
+- [ ] Number
+  - [x] isRageNumber
 
 ## Install
 
