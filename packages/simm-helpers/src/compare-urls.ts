@@ -4,7 +4,7 @@
  * @param {string} url2 - The second URL to compare.
  * @param {string} startsWith - The character to check for at the start of segments.
  * @return {boolean} Returns true if the URLs match, false otherwise.
- * 
+ *
  * @example
  * ```javascript
  * compareUrls("https://google.com", "https://facebook.com")

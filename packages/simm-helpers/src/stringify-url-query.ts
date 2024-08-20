@@ -18,7 +18,7 @@ const stringifyValue = (value: AnyType) => {
    */
   return (typeof value === "object" ? JSON.stringify(value) : value)
     .trim()
-    .replace(/\+/g, "\\+")
+    .replace(/\+/g, String.raw`\+`)
     .replace(/\s+/g, "+");
 };
 
@@ -31,7 +31,7 @@ const stringifyValue = (value: AnyType) => {
  */
 const stringifyUrlQuery = (obj: { [key: string]: AnyType }) => {
   // If object is empty then returns empty string.
-  if (!Object.keys(obj).length) return "";
+  if (Object.keys(obj).length === 0) return "";
 
   let query = "?";
 

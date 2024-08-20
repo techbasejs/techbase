@@ -19,7 +19,7 @@ describe("Stringify query", () => {
       stringifyUrlQuery({
         value: "I am using C++",
       }),
-    ).toEqual("?value=I+am+using+C\\+\\+");
+    ).toEqual(String.raw`?value=I+am+using+C\+\+`);
   });
 
   test("Stringify object value", () => {
@@ -39,7 +39,7 @@ describe("Stringify query", () => {
       stringifyUrlQuery({
         value: ["Java", "Kotlin", "Dart", "Golang", "C++"],
       }),
-    ).toEqual('?value=["Java","Kotlin","Dart","Golang","C\\+\\+"]');
+    ).toEqual(String.raw`?value=["Java","Kotlin","Dart","Golang","C\+\+"]`);
   });
 
   test("Stringify multiple value types", () => {
@@ -56,7 +56,7 @@ describe("Stringify query", () => {
         jobs: [{ label: "React" }, { label: "C++" }],
       }),
     ).toEqual(
-      '?name=Nguyen+Dinh+Truong&age=26&isMale=true&location={"country":"Vietnam","code":1234,"axis":{"x":12,"y":23}}&jobs=[{"label":"React"},{"label":"C\\+\\+"}]',
+      String.raw`?name=Nguyen+Dinh+Truong&age=26&isMale=true&location={"country":"Vietnam","code":1234,"axis":{"x":12,"y":23}}&jobs=[{"label":"React"},{"label":"C\+\+"}]`,
     );
   });
 });

@@ -47,10 +47,7 @@ const parseJson = (value: string) => {
  * @returns The flatten array.
  */
 const flatArray = (arr: AnyType[]) => {
-  return arr.reduce(
-    (final: AnyType[], item: AnyType) => final.concat(item),
-    [],
-  );
+  return arr.flat();
 };
 
 /**
@@ -113,7 +110,7 @@ const parseUrlQuery = (query: string) => {
    */
   query = query
     .trim()
-    .replace(/^[?#&]/, "")
+    .replace(/^[#&?]/, "")
     .replace(/(?<!\\)\+/g, " ")
     .replace(/\\\+/g, "+");
   // Remove hash string (#xyz) if exists.
@@ -130,8 +127,8 @@ const parseUrlQuery = (query: string) => {
 
     // Getting the key,value pairs.
     const splitData = splitOnFirst(parameter, "=");
-    let key = splitData[0] as string;
-    let value = splitData[1];
+    const key = splitData[0] as string;
+    const value = splitData[1];
 
     // If key already exists in map, the add new value to the end of array value.
     if (queryMap.has(key)) {
@@ -150,9 +147,9 @@ const parseUrlQuery = (query: string) => {
   }
 
   // Loop through all key,value pairs and parse value to proper type.
-  queryMap.forEach((value, key) => {
+  for (const [key, value] of queryMap.entries()) {
     params[key] = parseValue(value);
-  });
+  }
 
   return params;
 };

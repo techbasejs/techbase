@@ -15,7 +15,7 @@ describe("Parse query", () => {
   });
 
   test("Parse string value", () => {
-    expect(parseUrlQuery("?value=I+am+using+C\\+\\+")).toEqual({
+    expect(parseUrlQuery(String.raw`?value=I+am+using+C\+\+`)).toEqual({
       value: "I am using C++",
     });
   });
@@ -35,9 +35,7 @@ describe("Parse query", () => {
   });
 
   test("Parse single array value", () => {
-    expect(
-      parseUrlQuery('?value=["Java","Kotlin","Dart","Golang"]'),
-    ).toEqual({
+    expect(parseUrlQuery('?value=["Java","Kotlin","Dart","Golang"]')).toEqual({
       value: ["Java", "Kotlin", "Dart", "Golang"],
     });
   });
@@ -45,7 +43,7 @@ describe("Parse query", () => {
   test("Parse multiple array value", () => {
     expect(
       parseUrlQuery(
-        '?value=["Java","Kotlin","Dart","Golang"]&value=["Javascript","C\\+\\+"]',
+        String.raw`?value=["Java","Kotlin","Dart","Golang"]&value=["Javascript","C\+\+"]`,
       ),
     ).toEqual({
       value: ["Java", "Kotlin", "Dart", "Golang", "Javascript", "C++"],
@@ -55,7 +53,7 @@ describe("Parse query", () => {
   test("Parse multiple value types", () => {
     expect(
       parseUrlQuery(
-        '?name=Nguyen+Dinh+Truong&age=26&isMale=true&location={"country":"Vietnam","code":1234,"axis":{"x":12,"y":23}}&jobs=[{"label":"React"},{"label":"C\\+\\+"}]',
+        String.raw`?name=Nguyen+Dinh+Truong&age=26&isMale=true&location={"country":"Vietnam","code":1234,"axis":{"x":12,"y":23}}&jobs=[{"label":"React"},{"label":"C\+\+"}]`,
       ),
     ).toEqual({
       name: "Nguyen Dinh Truong",
