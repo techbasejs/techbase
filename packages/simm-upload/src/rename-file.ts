@@ -27,4 +27,4 @@ export const renameFile = (
     lastModified: file.lastModified,
   });
   return newFile;
-}; 
+};
