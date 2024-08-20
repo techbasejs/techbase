@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { minLength } from "./../src/index";
+import { minLength } from "../src/index";
 
 describe("minLength", () => {
   it("should return true for a string with length equal to min", () => {
