@@ -1,5 +1,5 @@
-import { AxiosRequestConfig, AxiosResponse  } from 'axios';
-import queryString from 'query-string';
+import { AxiosRequestConfig, AxiosResponse } from "axios";
+import queryString from "query-string";
 export interface RequestConfig {
   baseURL?: string;
   headers?: { [key: string]: string };
@@ -68,7 +68,8 @@ export interface APIClientConfig extends AxiosRequestConfig {
       (response: AxiosResponse) => AxiosResponse | Promise<AxiosResponse>
     >;
   };
-  queryConfig?: queryString.StringifyOptions | undefined,
+  queryConfig?: queryString.StringifyOptions | undefined;
+  _retry?: boolean;
 }
 export interface CustomRequestConfig extends AxiosRequestConfig {
   type?: "json" | "text" | "blob" | "arrayBuffer";
