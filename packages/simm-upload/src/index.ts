@@ -1,1 +1,3 @@
-export const simmUpload = () => {};
+export const simmUpload = () => {
+  return {};
+};
