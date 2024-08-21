@@ -27,9 +27,9 @@
   - [ ] positive
   - [ ] negative
   - [ ] integer
-  - [ ] minLength
-  - [ ] maxLength
-  - [ ] unique
+  - [x] minLength
+  - [x] maxLength
+  - [x] unique array
 - [ ] Basic Transforms
   - [ ] trim
   - [ ] lowercase

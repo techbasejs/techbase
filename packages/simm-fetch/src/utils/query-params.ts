@@ -1,4 +1,5 @@
 import { has } from "lodash";
+import queryString from "query-string";
 import qs from "qs";
 
 export function buildQueryParams(params: any): string {
@@ -21,14 +22,13 @@ export function buildQueryParams(params: any): string {
 export function appendQueryParams(
   url: string | undefined,
   params: any,
+  queryConfig: any = {},
 ): string {
-  const queryString = buildQueryParams(params);
-  if (!queryString) {
+  const query = queryString.stringify({ ...params }, { ...queryConfig });
+  if (!query) {
     return url as string;
   }
-  return url?.toString().includes("?")
-    ? `${url}&${queryString}`
-    : `${url}?${queryString}`;
+  return url?.toString().includes("?") ? `${url}&${query}` : `${url}?${query}`;
 }
 
 export function objectToQueryString(obj: {

@@ -1,5 +1,5 @@
 import { test, expect, describe } from "vitest";
-import isEmpty from "../src/is-empty";
+import { isEmpty } from "../src/is-empty";
 
 describe("isEmpty", () => {
   test("isEmpty correctly identifies null and undefined values", () => {
