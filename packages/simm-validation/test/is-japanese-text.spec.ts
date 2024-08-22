@@ -1,9 +1,29 @@
 import { expect, describe, test } from "vitest";
-import { isJapaneseText } from "../src";
+import { isJapaneseText } from "../src/is-japanese";
 
 describe("isJapaneseText", () => {
-  test("returns true for a string containing only Japanese characters", () => {
-    const testString = "こんにちは";
+  test("returns true for a string containing only Hiragana characters", () => {
+    const testString = "こんにちは"; // Hiragana
+    expect(isJapaneseText(testString)).toBe(true);
+  });
+
+  test("returns true for a string containing only Katakana characters", () => {
+    const testString = "カタカナ"; // Katakana
+    expect(isJapaneseText(testString)).toBe(true);
+  });
+
+  test("returns true for a string containing only Full-width Katakana characters", () => {
+    const testString = "ｶﾀｶﾅ"; // Full-width Katakana
+    expect(isJapaneseText(testString)).toBe(true);
+  });
+
+  test("returns true for a string containing only Kanji characters", () => {
+    const testString = "漢字"; // Kanji
+    expect(isJapaneseText(testString)).toBe(true);
+  });
+
+  test("returns true for a string containing mixed Hiragana, Katakana, and Kanji characters", () => {
+    const testString = "今日はカタカナと漢字"; // Mixed Hiragana, Katakana, and Kanji
     expect(isJapaneseText(testString)).toBe(true);
   });
 

@@ -10,4 +10,4 @@ export * from "./is-email";
 export * from "./max-length";
 export * from "./min-length";
 export * from "./is-katakana";
-export * from "./is-japanese-text";
+export * from "./is-japanese";

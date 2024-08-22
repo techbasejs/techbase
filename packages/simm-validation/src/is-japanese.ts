@@ -1,4 +1,4 @@
-import { JAPANESE_REGEX } from "./utils/regex";
+import { JAPANESE_REGEX } from "./constants";
 import { checkRegExp } from "./utils/check-regexp";
 
 export const isJapaneseText = (str: string | null): boolean => {
