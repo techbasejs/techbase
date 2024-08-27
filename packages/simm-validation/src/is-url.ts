@@ -1,3 +1,5 @@
+import { REGEXS } from "./shared/constants";
+
 /**
  * Checks if a given URL string matches a standard URL format including HTTP(S) and FTP protocols.
  *
@@ -7,9 +9,6 @@
  *                   and optional fragment or query string.
  * @returns `true` if the URL string matches the specified format, `false` otherwise.
  */
-export const isURL = (
-  url: string,
-  urlRegex = /^(https?|ftp):\/\/(?:www\.)?((?:[\d!#$%&'()*+,./:;=?@[\]a-z~-]+(?:\.[\d!#$&'()*+,./:;=?@[\]a-z~-]*)*)|(?:\d{1,3}\.){3}\d{1,3})(?::\d{2,5})?(?:[#/?]\S*)?$/i,
-) => {
+export const isURL = (url: string, urlRegex = REGEXS.URL) => {
   return urlRegex.test(url);
 };

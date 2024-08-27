@@ -62,7 +62,9 @@ class APIClient {
       ? this.config?.baseURL + url
       : this.config?.baseURL;
     this.config = mergeConfigs(this.config, config || {});
-    modifyUrl = params ? appendQueryParams(modifyUrl, params) : modifyUrl;
+    modifyUrl = params
+      ? appendQueryParams(modifyUrl, params, config?.queryConfig)
+      : modifyUrl;
     this.config.url = modifyUrl;
     this.config.method = method;
     this.config.data = data;

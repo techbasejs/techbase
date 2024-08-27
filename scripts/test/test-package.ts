@@ -1,4 +1,4 @@
-import { createVitest } from 'vitest/node';
+import { createVitest } from "vitest/node";
 
 export async function testPackage(packageName: string, argv: any) {
   console.log(":: starting test package", packageName);
@@ -9,12 +9,11 @@ export async function testPackage(packageName: string, argv: any) {
     coverage: {
       provider: "istanbul",
       enabled: argv.coverage,
-      include: ['**/src/**/*.ts',],
+      include: ["**/src/**/*.ts"],
     },
-    environment: argv.environment,
+    environment: argv.environment ?? "jsdom",
   });
 
   await vitest.start();
-  
   await vitest.close();
 }

@@ -14,7 +14,7 @@
  *
  * For all other types, the function assumes they are not empty.
  */
-function isEmpty<T>(value: T): boolean {
+export function isEmpty<T>(value: T): boolean {
   if (value === null || value === undefined) {
     return true;
   }
@@ -38,4 +38,4 @@ function isEmpty<T>(value: T): boolean {
   return false;
 }
 
-export default isEmpty;
+// export default isEmpty;
