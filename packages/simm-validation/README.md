@@ -8,13 +8,14 @@
   - [x] isEmpty
   - [ ] required, requiredIf
   - [ ] email
+  - [x] password
   - [ ] katakana
   - [x] hiragana
   - [ ] japannese
   - [x] isAlphaNumeric
   - [ ] alphabet
   - [ ] phone
-  - [ ] url
+  - [x] url
   - [ ] lowercase
   - [ ] uppercase
   - [ ] datetime
