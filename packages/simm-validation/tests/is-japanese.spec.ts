@@ -42,4 +42,17 @@ describe("isJapanese", () => {
     const testString = undefined;
     expect(isJapanese(testString)).toBe(false);
   });
+  test("returns false for a string containing only Latin characters", () => {
+    const testString = "ABCDE";
+    expect(isJapanese(testString)).toBe(false);
+  });
+
+  test("returns false for a string containing mixed Latin and Japanese characters", () => {
+    const testString = "ABCDEこんにちは";
+    expect(isJapanese(testString)).toBe(false);
+  });
+  test("returns false for a string containing full-width Latin characters", () => {
+    const testString = "ＡＢＣＤＥ";
+    expect(isJapanese(testString)).toBe(false);
+  });
 });
