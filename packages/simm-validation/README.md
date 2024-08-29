@@ -10,7 +10,7 @@
   - [ ] email
   - [ ] katakana
   - [x] hiragana
-  - [ ] japannese
+  - [x] japannese
   - [x] isAlphaNumeric
   - [ ] alphabet
   - [ ] phone
