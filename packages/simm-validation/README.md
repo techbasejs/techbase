@@ -4,6 +4,7 @@
 
 - [ ] Basic Rules
   - [x] isDate
+  - [x] isBase64
   - [x] hasEmoji
   - [x] isEmpty
   - [ ] required, requiredIf
