@@ -30,6 +30,7 @@
   - [x] minLength
   - [x] maxLength
   - [x] unique array
+  - [x] function
 - [ ] Basic Transforms
   - [ ] trim
   - [ ] lowercase
