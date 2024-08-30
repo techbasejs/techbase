@@ -31,6 +31,7 @@
   - [x] minLength
   - [x] maxLength
   - [x] unique array
+  - [x] isStringArray
 - [ ] Basic Transforms
   - [ ] trim
   - [ ] lowercase
