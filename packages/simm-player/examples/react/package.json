@@ -1,0 +1,22 @@
+{
+  "name": "react-example",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-scripts": "4.0.3",
+    "@simm-player/react": "workspace:*"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "typescript": "^4.3.0",
+    "@types/react": "^17.0.11",
+    "@types/react-dom": "^17.0.9"
+  }
+}

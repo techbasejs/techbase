@@ -1,0 +1,26 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "declarationDir": "dist",
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "jsx": "react",
+    "esModuleInterop": true,
+    "declaration": true
+  },
+  "include": ["src/**/*", "src/*.ts", "src/*.tsx", "src/*.vue"],
+  "exclude": ["node_modules", "dist", "index.html"],
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ]
+}

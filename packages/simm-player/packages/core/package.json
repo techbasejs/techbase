@@ -1,0 +1,25 @@
+{
+  "name": "@simm-player/core",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "dependencies": {
+    "rollup-plugin-dts": "^6.1.1",
+    "tslib": "^2.7.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@types/node": "^14.14.31",
+    "rollup": "^4.21.2",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "typescript": "^5.5.4"
+  },
+  "type": "module"
+}
