@@ -1,4 +1,5 @@
 import { isURL } from "./is-url";
+import { regexValidate } from "../src/shared/constants/regex";
 /**
  * Check if the given string is a valid image URL.
  * @param str - The string to check.
@@ -14,7 +15,7 @@ import { isURL } from "./is-url";
 export const isImageURL = (str: string | null | undefined): boolean => {
   if (!str || !isURL(str)) return false;
 
-  const imageURLFormats = /.(jpeg|jpg|gif|png|bmp|webp|svg)$/i;
+  const imageURLFormats = regexValidate.URL_IMG_REGEX;
 
   return imageURLFormats.test(str);
 };
