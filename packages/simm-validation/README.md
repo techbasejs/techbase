@@ -31,7 +31,7 @@
   - [x] minLength
   - [x] maxLength
   - [x] unique array
-- [ ] Basic Transforms
+  - [x] isIp
   - [ ] trim
   - [ ] lowercase
   - [ ] uppercase
