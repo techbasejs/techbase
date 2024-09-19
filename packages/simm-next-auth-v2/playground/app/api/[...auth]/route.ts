@@ -11,10 +11,27 @@ const loginProvider = new Provider("credentials", {
     }>,
   ) => {
     const body = await request.json();
+    const dataLogin = {}
+    fetch('https://dummyjson.com/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: body.email,
+        password: body.password,
+        expiresInMins: 30, 
+      }),
+      credentials: 'include' 
+    })
+    .then(res => res.json())
+    .then(res => {
+      Object.assign(dataLogin,res) 
+    })
+
     return {
       authorized: true,
-      session: body,
-      jwt: {},
+      session: {
+        user: dataLogin
+      },
     };
   },
 });

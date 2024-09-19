@@ -14,10 +14,12 @@ type CallbacksType = {
 
 type ProviderHandlerResponseType = {
   authorized?: boolean;
-  session?: Record<
+  session?: {
+   user?: Record<
     string,
     number | string | undefined | null | boolean | object
-  >;
+  >,
+  }
 };
 
 type ProviderHandlerErrorType = {
