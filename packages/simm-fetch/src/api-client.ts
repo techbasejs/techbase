@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
+import axios, { AxiosInstance, AxiosResponse, AxiosError, Axios } from "axios";
 import { APIClientConfig, HTTPMethod } from "./types";
 import { mergeConfigs } from "./utils/merge-configs";
 import { appendQueryParams } from "./utils/query-params";
@@ -33,22 +33,19 @@ class APIClient {
     );
   }
 
-  private async handleResponseCondition(
-    error: AxiosError,
-  ): Promise<AxiosResponse> {
-    if (this.config.isRetry) {
-      const retryRequest = await handleRetry(
-        () =>
-          this.axiosInstance.request({
-            method: this.config.method,
-            url: this.config.url,
-            data: this.config.data,
-          }),
+  private async handleResponseCondition(error: AxiosError) {
+    if (this.config.retries) {
+      const response = await handleRetry(
+        error,
         this.config,
+        this.axiosInstance,
       );
-      return retryRequest;
+      return response instanceof AxiosError
+        ? handleResponseError(response, this.config)
+        : handleResponseSuccess(response, this.config);
+    } else {
+      return handleResponseError(error, this.config);
     }
-    return handleResponseError(error, this.config);
   }
 
   private async request<T>(

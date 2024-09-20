@@ -1,7 +1,13 @@
-import {APIClient, APIConfig} from '../src/index';
+import { APIClient, APIConfig } from '../src/index';
 function createAPIClient(config: APIConfig): APIClient {
   const client = new APIClient(config.getConfig());
   return client;
+}
+const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3MjY3OTg2MTMsImV4cCI6MTc1ODMzNDYxMywiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSJ9.6snE2-fAZpIt19oevMFRQFEt9oECj0Fe1g5D0yfpazs'
+const config = {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  }
 }
 
 const newConfig = new APIConfig({
@@ -12,19 +18,19 @@ const newConfig = new APIConfig({
 //Todo
 newConfig.setBaseURL("http://localhost:4000");
 const client = createAPIClient(newConfig)
-const checkApiGetUser = async() => {
-  client.get('/user',  { 
+const checkApiGetUser = async () => {
+  client.get('/user', {
     username: "A",
     id: "1",
-    list: [0,1,2]
+    list: [0, 1, 2]
   })
-    .then(response => {console.log(response.data)})
+    .then(response => { console.log(response.data) })
     .catch(error => console.error(error));
 }
 checkApiGetUser();
 
-const checkApiGetUserWithArrayParamsBracket = async() => {
-  client.get('/user',  { 
+const checkApiGetUserWithArrayParamsBracket = async () => {
+  client.get('/user', {
     username: "A",
     id: "1",
     list: [0, null, 2],
@@ -33,30 +39,30 @@ const checkApiGetUserWithArrayParamsBracket = async() => {
   }, {
     queryConfig: {
       arrayFormat: 'bracket',
-      skipNull : true,
+      skipNull: true,
       sort: false,
     }
   })
-    .then(response => {console.log(response.data)})
+    .then(response => { console.log(response.data) })
     .catch(error => console.error(error));
 }
 
 
-const checkApiGetUserWithArrayParams = async() => {
-  client.get('/user',  { 
+const checkApiGetUserWithArrayParams = async () => {
+  client.get('/user', {
     username: "A",
     id: "1",
-    list: [0,1,2],
+    list: [0, 1, 2],
     address: null,
     phone: undefined,
   }, {
     queryConfig: {
       arrayFormat: 'index',
-      skipNull : true,
+      skipNull: true,
       sort: false
     }
   })
-    .then(response => {console.log(response.data)})
+    .then(response => { console.log(response.data) })
     .catch(error => console.error(error));
 }
 checkApiGetUserWithArrayParamsBracket();
@@ -64,36 +70,36 @@ checkApiGetUserWithArrayParamsBracket();
 //Test Merge Header
 newConfig.setHeader('Authorization', 'Bearer Token check')
 const client1 = createAPIClient(newConfig);
-const checkMergeHeader = async() => {
-  client1.get('/user',  { 
+const checkMergeHeader = async () => {
+  client1.get('/user', {
     username: "A",
     id: "1",
   },
-  {
-    headers: {
-      'User-Agent': 'Nghia check header'
+    {
+      headers: {
+        'User-Agent': 'Nghia check header'
+      }
     }
-  }
-)
-    .then(response => {console.log(response.data)})
+  )
+    .then(response => { console.log(response.data) })
     .catch(error => console.error(error));
 }
 checkMergeHeader();
 
 // Test api Retry
-const retryApi = async() => {
-  await client.get('/retry',  { 
+const retryApi = async () => {
+  await client.get('/retry', {
     username: "A",
     id: "1",
-    list: [0,1,2]
+    list: [0, 1, 2]
   },
-  {
-    isRetry: true,
-    retries: 3,
-  }
+    {
+      retries: 4,
+      ...config
+    }
   )
-    .then(response => {console.log(response)})
-    .catch(error => console.error(error));
+    .then(response => { console.log(response) })
+    .catch(error => { console.error(error) });
 }
 retryApi()
 
@@ -101,8 +107,8 @@ retryApi()
 const formBasic = new FormData();
 formBasic.append('userName', 'FORM');
 client.post('/upload', formBasic)
-.then(response => {console.log('upload form:', response.data)})
-.catch(error => console.error(error));
+  .then(response => { console.log('upload form:', response.data) })
+  .catch(error => console.error(error));
 
 //Test formData include File
 const fileData = new Blob(["text"], { type: "application/octet-stream" });;
@@ -114,20 +120,20 @@ client.post('/send', bodyFormData, {
     "Content-Type": "multipart/form-data"
   }
 })
-.then(response => {console.log('upload file:', response.data)})
-.catch(error => console.error(error));
+  .then(response => { console.log('upload file:', response.data) })
+  .catch(error => console.error(error));
 
 const newConfig2 = new APIConfig({
   baseURL: 'https://jsonplaceholder.typicode.com/',
 })
 const client2 = createAPIClient(newConfig2)
 const testHandleRequestSuccess = async () => {
-  await client2.post("/posts", { title: "foo", body: "bar", userId: 1 },{
+  await client2.post("/posts", { title: "foo", body: "bar", userId: 1 }, {
     headers: {
       'Content-Type': 'application/json',
     },
 
-  } ).then(response => {console.log(response?.data)}).catch(error => {console.error(error)});
+  }).then(response => { console.log(response?.data) }).catch(error => { console.error(error) });
 }
 
 testHandleRequestSuccess();

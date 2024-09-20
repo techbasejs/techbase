@@ -6,12 +6,7 @@ import { APIClientConfig } from "../types";
 export const handleResponseSuccess = async (
   response: AxiosResponse,
   clientConfig: APIClientConfig,
-): Promise<AxiosResponse> => {
-  //Todo Handle response Data
-  const contentType = getContentType(response?.data);
-  const data = parseResponseData(response?.data, contentType);
-  response.data = data;
-
+): Promise<AxiosResponse | any> => {
   //Using hook if have
-  return response;
+  return response.data ?? response;
 };

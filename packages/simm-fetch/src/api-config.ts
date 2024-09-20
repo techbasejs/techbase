@@ -5,7 +5,7 @@ class APIConfig {
     baseURL: "",
     headers: {},
     timeout: 10_000,
-    retries: 3,
+    retries: 0,
     retryCount: 0,
   };
   constructor(config?: APIClientConfig) {

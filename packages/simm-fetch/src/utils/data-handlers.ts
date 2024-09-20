@@ -8,15 +8,15 @@ export function getContentType(data: any): string {
       return "text/plain";
     }
     case "object": {
-      if (data instanceof FormData) {
-        return "multipart/form-data";
-      }
-      if (Object.prototype.toString.call(data) === "[object FormData]") {
-        return "multipart/form-data";
-      }
-      if (data instanceof File || data instanceof Blob) {
-        return "application/octet-stream";
-      }
+      // if (data instanceof FormData) {
+      //   return "multipart/form-data";
+      // }
+      // if (Object.prototype.toString.call(data) === "[object FormData]") {
+      //   return "multipart/form-data";
+      // }
+      // if (data instanceof File || data instanceof Blob) {
+      //   return "application/octet-stream";
+      // }
       return "application/json";
     }
     default: {
@@ -28,7 +28,7 @@ export function getContentType(data: any): string {
 export function transformRequestData(data: any, contentType: string): any {
   switch (contentType) {
     case "application/json": {
-      return JSON.stringify(data);
+      return data && JSON.stringify(data);
     }
     case "text/plain": {
       return data.toString();
