@@ -8,12 +8,12 @@ const newConfig = new APIConfig({
   baseURL: '',
 })
 
-//Test handle query param 
+//Test handle query param
 //Todo
 newConfig.setBaseURL("http://localhost:4000");
 const client = createAPIClient(newConfig)
 const checkApiGetUser = async() => {
-  client.get('/user',  { 
+  client.get('/user',  {
     username: "A",
     id: "1",
     list: [0,1,2]
@@ -24,7 +24,7 @@ const checkApiGetUser = async() => {
 checkApiGetUser();
 
 const checkApiGetUserWithArrayParamsBracket = async() => {
-  client.get('/user',  { 
+  client.get('/user',  {
     username: "A",
     id: "1",
     list: [0, null, 2],
@@ -43,7 +43,7 @@ const checkApiGetUserWithArrayParamsBracket = async() => {
 
 
 const checkApiGetUserWithArrayParams = async() => {
-  client.get('/user',  { 
+  client.get('/user',  {
     username: "A",
     id: "1",
     list: [0,1,2],
@@ -65,7 +65,7 @@ checkApiGetUserWithArrayParamsBracket();
 newConfig.setHeader('Authorization', 'Bearer Token check')
 const client1 = createAPIClient(newConfig);
 const checkMergeHeader = async() => {
-  client1.get('/user',  { 
+  client1.get('/user',  {
     username: "A",
     id: "1",
   },
@@ -82,7 +82,7 @@ checkMergeHeader();
 
 // Test api Retry
 const retryApi = async() => {
-  await client.get('/retry',  { 
+  await client.get('/retry',  {
     username: "A",
     id: "1",
     list: [0,1,2]
@@ -97,7 +97,7 @@ const retryApi = async() => {
 }
 retryApi()
 
-//Test formData 
+//Test formData
 const formBasic = new FormData();
 formBasic.append('userName', 'FORM');
 client.post('/upload', formBasic)
@@ -131,3 +131,41 @@ const testHandleRequestSuccess = async () => {
 }
 
 testHandleRequestSuccess();
+
+// testHook
+const url = new APIConfig({
+  baseURL: 'https://api.example.com',
+  hooks: {
+    beforeRequest: [
+      (config) => {
+        config.baseURL = 'https://jsonplaceholder.typicode.com'
+        config.timeout = 30_000
+        config.headers = {
+          ...config.headers,
+          'Authorization': 'Bearer Token Asdfedw23123',
+          'Content-Type': 'application/json',
+        };
+
+        return config
+      }
+    ],
+    afterResponse: [
+      (response) => {
+        if (response.statusText === 'OK') {
+          console.log(response.data);
+        }
+        return response
+      }
+    ]
+  }
+})
+
+const clientHook = createAPIClient(url);
+const testGetMethod = async () => {
+  await clientHook.get('/comments', {postId: 1}, {
+    headers: {
+      'Custom-header': 'new header'
+    }
+  }).then(response => {console.log(response)}).catch(error => {console.error(error)});
+}
+testGetMethod();

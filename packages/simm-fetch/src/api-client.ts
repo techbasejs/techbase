@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
+import axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig, AxiosError } from "axios";
 import { APIClientConfig, HTTPMethod } from "./types";
 import { mergeConfigs } from "./utils/merge-configs";
 import { appendQueryParams } from "./utils/query-params";
@@ -18,6 +18,7 @@ class APIClient {
   constructor(config: APIClientConfig) {
     this.config = config;
     this.axiosInstance = axios.create(config);
+    this.setupHook();
     this.setupInterceptors();
   }
 
@@ -30,6 +31,35 @@ class APIClient {
     this.axiosInstance.interceptors.response.use(
       async (response) => await handleResponseSuccess(response, this.config),
       async (error: AxiosError) => await this.handleResponseCondition(error),
+    );
+  }
+  private setupHook() {
+    this.axiosInstance.interceptors.request.use(
+      async (config: AxiosRequestConfig) => {
+        if (this.config.hooks && this.config.hooks.beforeRequest) {
+          for (const hook of this.config.hooks.beforeRequest) {
+            config = await hook(config);
+          }
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(handleRequestError(error));
+      },
+    );
+
+    this.axiosInstance.interceptors.response.use(
+      async (response: AxiosResponse) => {
+        if (this.config.hooks && this.config.hooks.afterResponse) {
+          for (const hook of this.config.hooks.afterResponse) {
+            response = await hook(response);
+          }
+        }
+        return response;
+      },
+      (error: AxiosError) => {
+        return this.handleResponseCondition(error);
+      },
     );
   }
 
@@ -58,9 +88,7 @@ class APIClient {
     params?: any,
     config?: APIClientConfig,
   ): Promise<AxiosResponse<T>> {
-    let modifyUrl = Utils.isValidUrl(this.config?.baseURL + url)
-      ? this.config?.baseURL + url
-      : this.config?.baseURL;
+    let modifyUrl = url;
     this.config = mergeConfigs(this.config, config || {});
     modifyUrl = params
       ? appendQueryParams(modifyUrl, params, config?.queryConfig)
@@ -68,7 +96,6 @@ class APIClient {
     this.config.url = modifyUrl;
     this.config.method = method;
     this.config.data = data;
-
     return await this.axiosInstance.request<T>({
       method: method,
       url: modifyUrl,
@@ -81,7 +108,7 @@ class APIClient {
     params?: any,
     config?: APIClientConfig,
   ): Promise<AxiosResponse<T>> {
-    return await this.request<T>("GET", url, null, params, config);
+    return await this.request<T>("GET", url, undefined, params, config);
   }
 
   public async post<T>(
@@ -89,7 +116,7 @@ class APIClient {
     data: any,
     config?: APIClientConfig,
   ): Promise<AxiosResponse<T>> {
-    return await this.request<T>("POST", url, data, null, config);
+    return await this.request<T>("POST", url, data, undefined, config);
   }
 
   public async put<T>(
@@ -97,14 +124,14 @@ class APIClient {
     data: any,
     config?: APIClientConfig,
   ): Promise<AxiosResponse<T>> {
-    return await this.request<T>("PUT", url, data, null, config);
+    return await this.request<T>("PUT", url, data, undefined, config);
   }
 
   public async delete<T>(
     url: string,
     config?: APIClientConfig,
   ): Promise<AxiosResponse<T>> {
-    return await this.request<T>("DELETE", url, null, null, config);
+    return await this.request<T>("DELETE", url, undefined, undefined, config);
   }
 
   cancelRequests(message?: string): void {

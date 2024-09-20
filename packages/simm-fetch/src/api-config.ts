@@ -7,6 +7,7 @@ class APIConfig {
     timeout: 10_000,
     retries: 3,
     retryCount: 0,
+    hooks: {},
   };
   constructor(config?: APIClientConfig) {
     if (config) {
