@@ -11,3 +11,4 @@ export * from "./max-length";
 export * from "./min-length";
 export * from "./is-katakana";
 export * from "./is-base64";
+export * from "./is-rgb-color";
