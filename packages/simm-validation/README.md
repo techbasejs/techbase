@@ -33,6 +33,7 @@
   - [x] maxLength
   - [x] unique array
   - [x] isRgbColor
+  - [x] hexColor
 - [ ] Basic Transforms
   - [ ] trim
   - [ ] lowercase

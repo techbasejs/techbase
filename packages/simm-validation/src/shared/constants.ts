@@ -9,5 +9,6 @@ const REGEXS = {
   BASE64:
     /^(?:[\d+/A-Za-z]{4})*(?:[\d+/A-Za-z]{2}==|[\d+/A-Za-z]{3}=|[\d+/A-Za-z]{4})$/,
   rgbColor: /^rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/,
+  HEXCOLOR: /^#?([\dA-Fa-f]{6}|[\dA-Fa-f]{3})$/,
 };
 export { REGEXS };
