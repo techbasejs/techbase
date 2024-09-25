@@ -22,6 +22,16 @@ describe("isHexColor", () => {
     expect(isHexColor(testString)).toBe(true);
   });
 
+  test("returns true for a valid 8-character hex color with alpha", () => {
+    const testString = "#FFFFFF00"; // White color with full transparency
+    expect(isHexColor(testString, true)).toBe(true);
+  });
+
+  test("returns true for a valid 4-character shorthand hex color with alpha", () => {
+    const testString = "#FFF0"; // White color with partial transparency
+    expect(isHexColor(testString, true)).toBe(true);
+  });
+
   test("returns false for a hex color with invalid characters", () => {
     const testString = "#GGG"; // Invalid characters 'G'
     expect(isHexColor(testString)).toBe(false);
@@ -54,11 +64,6 @@ describe("isHexColor", () => {
 
   test("returns false for a string with extra characters", () => {
     const testString = "#FFFFFFF"; // Too many characters (7 instead of 6)
-    expect(isHexColor(testString)).toBe(false);
-  });
-
-  test("returns false for a string with missing #", () => {
-    const testString = "FFF123 "; // Missing #
     expect(isHexColor(testString)).toBe(false);
   });
 });

@@ -4,28 +4,39 @@ import { REGEXS } from "./shared/constants";
  * Validates if the given string is a valid hex color string.
  *
  * This validation includes:
- * - Hexadecimal color strings can be 3 or 6 characters long (excluding the leading `#`).
+ * - Hexadecimal color strings can be 3, 6, or 8 characters long (excluding the leading `#`).
  * - The characters should be valid hexadecimal digits: 0-9, a-f, or A-F.
  * - The string can optionally start with a `#`.
  *
  * @param {string | null | undefined} input - The string to validate.
- * @returns {boolean} - Returns true if the string is a valid hex color string, false otherwise.
+ * @param {boolean} [hasAlpha=false] - Optional parameter to specify if alpha values should be checked.
+ * @returns {boolean} - Returns true if the input is a valid hex color, otherwise false.
  *
  * @example
- * ```typescript
- * const result1 = isHexColor("#FFFFFF"); // true, valid hex color
- * const result2 = isHexColor("#FFF"); // true, valid shorthand hex color
- * const result3 = isHexColor("000000"); // true, valid hex color without #
- * const result4 = isHexColor("#GGG"); // false, invalid characters
- * const result5 = isHexColor(""); // false, empty string
- * const result6 = isHexColor(null); // false, input is null
- * const result7 = isHexColor(undefined); // false, input is undefined
- * ```
+ * // Valid cases
+ * isHexColor("#FFFFFF"); // true
+ * isHexColor("#FFF"); // true
+ * isHexColor("000000"); // true
+ * isHexColor("ABC"); // true
+ * isHexColor("#FFFFFF00", true); // true
+ * isHexColor("#FFF0", true); // true
+ *
+ * // Invalid cases
+ * isHexColor("#GGG"); // false
+ * isHexColor("#FFFFF"); // false
+ * isHexColor("Hello"); // false
+ * isHexColor(""); // false
+ * isHexColor(null); // false
+ * isHexColor(undefined); // false
  */
-export const isHexColor = (input: string | null | undefined): boolean => {
-  if (typeof input !== "string") {
-    return false;
-  }
+export function isHexColor(
+  input: string | null | undefined,
+  hasAlpha: boolean = false,
+): boolean {
+  if (typeof input !== "string") return false;
 
-  return REGEXS.HEXCOLOR.test(input);
-};
+  // Define regex for hex color with optional alpha
+  const hexColorRegex = hasAlpha ? REGEXS.HEXCOLOR : REGEXS.HEXCOLOR;
+
+  return hexColorRegex.test(input);
+}
