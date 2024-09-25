@@ -18,7 +18,10 @@ const REGEXS = {
   HEXCOLOR: /^#([\dA-Fa-f]{3}|[\dA-Fa-f]{6})$/,
   HEXCOLOR_OPACITY:
     /^#?([\dA-Fa-f]{3}|[\dA-Fa-f]{6}|[\dA-Fa-f]{8}|[\dA-Fa-f]{4})$/,
-
+  UPPERCASE_REGEX: /^[A-Z]$/,
+  LOWERCASE_REGEX: /^[a-z]$/,
+  NUMERIC_REGEX: /^[0-9]$/,
+  SYMBOL_REGEX: /^[-#!$@£%^&*()_+|~=`{}\[\]:";'<>?,.\/\\ ]$/,
   EMOJI:
     /[\u{1F300}-\u{1F5FF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{2B50}\u{2B55}\u{231A}-\u{231B}\u{23E9}-\u{23EC}\u{23F0}\u{23F3}\u{25AA}-\u{25AB}\u{25B6}-\u{25C0}\u{25FB}-\u{25FE}]/gu,
   CREDIT_CARD: {

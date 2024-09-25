@@ -19,3 +19,4 @@ export * from "./is-romaji";
 export * from "./is-katakana";
 export * from "./is-luhn-number";
 export * from "./is-credit-card";
+export * from "./is-strong-password";
