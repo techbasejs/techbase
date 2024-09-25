@@ -16,6 +16,7 @@
   - [ ] alphabet
   - [ ] phone
   - [ ] url
+  - [x] json
   - [ ] lowercase
   - [ ] uppercase
   - [ ] datetime
