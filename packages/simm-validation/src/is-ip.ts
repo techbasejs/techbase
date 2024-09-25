@@ -98,19 +98,27 @@ export const ipVersion = (
 /**
  * Verifies if the provided IP address matches the expected IP version (IPv4 or IPv6).
  * @param input - The input string to check for an IP address.
- * @param typeIp - The expected IP version ('IPv4' or 'IPv6').
+ * @param typeIp - The expected IP version ('IPv4' or 'IPv6' or 'nullable').
  * @returns `true` if the IP matches the expected version, otherwise `false`.
  *
  * @example
  * ```typescript
  * isIP('192.168.1.1', 'IPv4'); // true
+ * isIP('192.168.1.1'); // true
  * isIP('2001:0db8:85a3:0000:0000:8a2e:0370:7334', 'IPv6'); // true
+ * isIP('2001:0db8:85a3:0000:0000:8a2e:0370:7334'); // true
  * isIP('192.168.1.1', 'IPv6'); // false
+ * isIP('invalid_ip'); // false
  * ```
  */
 export const isIP = (
   input?: string | null | undefined,
   typeIp?: (typeof IP_VERSION)[keyof typeof IP_VERSION],
 ): boolean => {
-  return `IPv${ipVersion(input)}` == typeIp;
+  const version = ipVersion(input);
+  const validVersion = (
+    [IP_VERSION_NUMBER.V4, IP_VERSION_NUMBER.V6] as number[]
+  ).includes(version);
+  if (!validVersion) return false;
+  return typeIp == undefined || typeIp == `IPv${version}`;
 };

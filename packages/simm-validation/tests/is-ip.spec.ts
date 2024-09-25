@@ -104,8 +104,10 @@ describe("isIP", () => {
       expect(isIP("192.168.1.1", IP_VERSION.V4)).toBe(true);
       expect(isIP("127.0.0.1", IP_VERSION.V4)).toBe(true);
       expect(isIP("255.255.255.255", IP_VERSION.V4)).toBe(true);
+      expect(isIP("255.255.255.255")).toBe(true);
       expect(isIP("8.8.8.8", IP_VERSION.V4)).toBe(true);
       expect(isIP("0.0.0.0", IP_VERSION.V4)).toBe(true);
+      expect(isIP("0.0.0.0")).toBe(true);
     });
 
     it("should return true for valid IPv6 addresses", () => {
@@ -115,7 +117,9 @@ describe("isIP", () => {
       expect(isIP("::1", IP_VERSION.V6)).toBe(true);
       expect(isIP("fe80::1ff:fe23:4567:890a", IP_VERSION.V6)).toBe(true);
       expect(isIP("::", IP_VERSION.V6)).toBe(true);
+      expect(isIP("::")).toBe(true);
       expect(isIP("2001:0db8::", IP_VERSION.V6)).toBe(true);
+      expect(isIP("2001:0db8::")).toBe(true);
     });
 
     it("should return false for invalid IP addresses or mismatching types", () => {
@@ -125,7 +129,9 @@ describe("isIP", () => {
       ).toBe(false);
       expect(isIP("invalid-ip", IP_VERSION.V4)).toBe(false);
       expect(isIP("invalid-ip", IP_VERSION.V6)).toBe(false);
+      expect(isIP("0123.456")).toBe(false);
       expect(isIP("", IP_VERSION.V4)).toBe(false);
+      expect(isIP("")).toBe(false);
     });
   });
 });
