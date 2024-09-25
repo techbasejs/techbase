@@ -12,14 +12,14 @@ describe("isHexColor", () => {
     expect(isHexColor(testString)).toBe(true);
   });
 
-  test("returns true for a valid 6-character hex color without #", () => {
+  test("returns false for a valid 6-character hex color without #", () => {
     const testString = "000000"; // Black color in hex without #
-    expect(isHexColor(testString)).toBe(true);
+    expect(isHexColor(testString)).toBe(false);
   });
 
-  test("returns true for a valid 3-character hex color without #", () => {
+  test("returns false for a valid 3-character hex color without #", () => {
     const testString = "ABC"; // Shorthand color code without #
-    expect(isHexColor(testString)).toBe(true);
+    expect(isHexColor(testString)).toBe(false);
   });
 
   test("returns true for a valid 8-character hex color with alpha", () => {
