@@ -1,4 +1,4 @@
-import { isRomaji } from "../../src/is-romaji";
+import { isRomaji } from "../src/is-romaji";
 import { describe, expect, it } from "vitest";
 
 describe("isRomaji", () => {
@@ -35,5 +35,15 @@ describe("isRomaji", () => {
   // Test case for an empty string
   it("should return false for empty string", () => {
     expect(isRomaji("")).toBe(false);
+  });
+
+  // Test case for a null value
+  it("should return false for null value", () => {
+    expect(isRomaji(null)).toBe(false);
+  });
+
+  // Test case for an undefined value
+  it("should return false for undefined value", () => {
+    expect(isRomaji(undefined)).toBe(false);
   });
 });

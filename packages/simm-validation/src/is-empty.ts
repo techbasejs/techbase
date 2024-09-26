@@ -13,6 +13,13 @@
  *   - Objects with no own properties
  *
  * For all other types, the function assumes they are not empty.
+ * @example
+ * isEmpty(null); // true
+ * isEmpty(undefined); // true
+ * isEmpty(""); // true
+ * isEmpty([]); // true
+ * isEmpty(new Set()); // true
+ * isEmpty(new Map()); // true
  */
 export function isEmpty<T>(value: T): boolean {
   if (value === null || value === undefined) {
@@ -37,5 +44,3 @@ export function isEmpty<T>(value: T): boolean {
 
   return false;
 }
-
-// export default isEmpty;

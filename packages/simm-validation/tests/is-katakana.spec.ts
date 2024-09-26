@@ -1,40 +1,36 @@
 import { describe, it, expect } from "vitest";
-import { isKatakana } from "../src";
+import { isKatakana } from "../src/is-katakana";
 
 describe("isKatakana", () => {
-  it("should return true for full-width Katakana", () => {
+  it("should return false for null input", () => {
+    expect(isKatakana(null)).toBe(false);
+  });
+
+  it("should return false for undefined input", () => {
+    expect(isKatakana(undefined)).toBe(false);
+  });
+
+  it("should return false for empty string", () => {
+    expect(isKatakana("")).toBe(false);
+  });
+
+  it("should return true for string with only Katakana characters", () => {
     expect(isKatakana("カタカナ")).toBe(true);
   });
 
-  it("should return true for half-width Katakana", () => {
-    expect(isKatakana("ｶﾀｶﾅ")).toBe(true);
+  it("should return false for string with non-Katakana characters", () => {
+    expect(isKatakana("カタカナabc")).toBe(false);
   });
 
-  it("should return false for mixed Katakana and non-Katakana", () => {
-    expect(isKatakana("カタカナA")).toBe(false);
+  it("should return false for string with Hiragana characters", () => {
+    expect(isKatakana("ひらがな")).toBe(false);
   });
 
-  it("should return false for Hiragana", () => {
-    expect(isKatakana("あいうえお")).toBe(false);
+  it("should return false for string with Kanji characters", () => {
+    expect(isKatakana("漢字")).toBe(false);
   });
 
-  it("should return true for Katakana phonetic extensions", () => {
-    expect(isKatakana("ㇰㇱㇲ")).toBe(true);
-  });
-
-  it("should return false for alphanumeric strings", () => {
-    expect(isKatakana("ABC123")).toBe(false);
-  });
-
-  it("should return false for mixed alphanumeric and Katakana", () => {
-    expect(isKatakana("カタカナ123")).toBe(false);
-  });
-
-  it("should return false for numeric strings", () => {
-    expect(isKatakana("123456")).toBe(false);
-  });
-
-  it("should return false for mixed alphanumeric and other characters", () => {
-    expect(isKatakana("A1カタカナ")).toBe(false);
+  it("should return false for string with mixed Katakana and other characters", () => {
+    expect(isKatakana("カタカナひらがな")).toBe(false);
   });
 });

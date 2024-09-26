@@ -16,6 +16,7 @@
   - [ ] alphabet
   - [ ] phone
   - [ ] url
+  - [x] json
   - [ ] lowercase
   - [ ] uppercase
   - [ ] datetime
@@ -32,6 +33,11 @@
   - [x] maxLength
   - [x] unique array
   - [x] isIp
+  - [x] isRgbColor
+  - [x] hexColor
+  - [x] isLuhnNumber
+  - [x] isCreditCard
+- [ ] Basic Transforms
   - [ ] trim
   - [ ] lowercase
   - [ ] uppercase
