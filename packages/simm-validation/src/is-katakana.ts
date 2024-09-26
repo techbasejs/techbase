@@ -1,12 +1,19 @@
+import { REGEXS } from "./shared/constants";
+
 /**
  * Checks if the input string contains only Katakana characters.
  *
  * @param {string} input - The string to check.
  * @return {boolean} Returns true if the input string contains only Katakana characters, false otherwise.
+ * @example
+ * isKatakana("カタカナ"); // true
+ * isKatakana("カタカナabc"); // false
+ * isKatakana("ひらがな"); // false
+ * isKatakana("漢字"); // false
  */
-export function isKatakana(input: string): boolean {
-  if (!input) return true;
-  // eslint-disable-next-line unicorn/better-regex
-  const katakanaRegex = /^[\u30A0-\u30FF\uFF65-\uFF9F\u31F0-\u31FF]+$/;
+export function isKatakana(input: string | null | undefined): boolean {
+  if (!input) return false;
+  const katakanaRegex = REGEXS.KATAKANA;
+
   return katakanaRegex.test(input);
 }

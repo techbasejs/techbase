@@ -4,7 +4,7 @@ import { isStringJson } from "../src";
 describe("isStringJson", () => {
   it("should be valid json", () => {
     expect(
-      isStringJson('{"email": "bar@email.com", "age": 26, "isMale": true}')
+      isStringJson('{"email": "bar@email.com", "age": 26, "isMale": true}'),
     ).toBe(true);
     expect(isStringJson("{}")).toBe(true);
     expect(isStringJson("[]")).toBe(true);
