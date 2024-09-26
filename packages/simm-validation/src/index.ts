@@ -10,6 +10,7 @@ export * from "./is-email";
 export * from "./max-length";
 export * from "./min-length";
 export * from "./is-base64";
+export * from "./is-ip";
 export * from "./is-rgb-color";
 export * from "./is-string-json";
 export * from "./is-hex-color";

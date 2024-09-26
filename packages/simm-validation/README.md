@@ -32,6 +32,7 @@
   - [x] minLength
   - [x] maxLength
   - [x] unique array
+  - [x] isIp
   - [x] isRgbColor
   - [x] hexColor
   - [x] isLuhnNumber
