@@ -19,8 +19,9 @@ const isStrictJSON = (input: string) => {
  * @param {any} input The input to validate.
  * @returns {boolean} Returns true if the input is JSON object or array of objects, false otherwise.
  */
-const isValidObject = (input: any) => {
-  if (Array.isArray(input)) return input.every(isValidObject);
+const isValidObject = (input: any): boolean => {
+  if (Array.isArray(input)) return input.every((element) => isValidObject(element));
+  
   return typeof input === "object" && input !== null;
 };
 
@@ -50,11 +51,11 @@ const isStringJson = (input: any) => {
   input = input.replace(/\s/g, "").replace(/\n|\r/, "");
 
   // Check if the string is JSON object
-  const isObjectFormat = /^\{.*\}$/.test(input);
+  const isObjectFormat = /^{.*}$/.test(input);
   if (isObjectFormat) return isStrictJSON(input);
 
   // Check if the string is JSON array
-  const isArrayFormat = /^\[.*\]$/.test(input);
+  const isArrayFormat = /^\[.*]$/.test(input);
   if (isArrayFormat) {
     const isValidArray = isStrictJSON(input);
     if (!isValidArray) return false;
