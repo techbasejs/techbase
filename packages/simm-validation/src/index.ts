@@ -17,3 +17,5 @@ export * from "./is-kanji";
 export * from "./is-kana";
 export * from "./is-romaji";
 export * from "./is-katakana";
+export * from "./is-luhn-number";
+export * from "./is-credit-card";

@@ -34,6 +34,8 @@
   - [x] unique array
   - [x] isRgbColor
   - [x] hexColor
+  - [x] isLuhnNumber
+  - [x] isCreditCard
 - [ ] Basic Transforms
   - [ ] trim
   - [ ] lowercase
