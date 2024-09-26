@@ -13,3 +13,4 @@ export * from "./is-katakana";
 export * from "./is-base64";
 export * from "./is-rgb-color";
 export * from "./is-string-json";
+export * from "./is-hex-color";
