@@ -1,11 +1,15 @@
 import { REGEXS } from "./shared/constants";
 
+interface MinimumCharacter {
+  min: number;
+}
+
 interface Options {
   minLength: number;
-  minLowercase?: number;
-  minUppercase?: number;
-  minNumbers?: number;
-  minSymbols?: number;
+  lowercase?: true | MinimumCharacter;
+  uppercase?: true | MinimumCharacter;
+  number?: true | MinimumCharacter;
+  symbol?: true | MinimumCharacter;
 }
 
 /**
@@ -20,7 +24,7 @@ const analyzePassword = (input: string) => {
   let numberCount = 0;
   let symbolCount = 0;
 
-  input.split("").forEach((char) => {
+  for (let char of input) {
     if (REGEXS.UPPERCASE_REGEX.test(char)) {
       uppercaseCount++;
     } else if (REGEXS.LOWERCASE_REGEX.test(char)) {
@@ -30,9 +34,23 @@ const analyzePassword = (input: string) => {
     } else if (REGEXS.SYMBOL_REGEX.test(char)) {
       symbolCount++;
     }
-  });
+  }
 
   return { uppercaseCount, lowercaseCount, numberCount, symbolCount };
+};
+
+/**
+ * Returns the default minimum characters based on the provided input.
+ *
+ * @param {undefined | true | MinimumCharacter} minimumChars - The input value to determine the default minimum characters.
+ * @returns {number} The default minimum characters, either 0, 1, or the input value itself.
+ */
+const getDefaultMinimumCharacters = (
+  minimumChars: undefined | true | MinimumCharacter
+) => {
+  if (minimumChars === undefined) return 0;
+  if (minimumChars === true) return 1;
+  return minimumChars.min;
 };
 
 /**
@@ -40,15 +58,32 @@ const analyzePassword = (input: string) => {
  *
  * @param {any} input The string to validate.
  * @param {number} options.minLength Minimum length.
- * @param {number} options.minLowercase Minimum lowercase characters.
- * @param {number} options.minUppercase Minimum uppercase characters.
- * @param {number} options.minNumbers Minimum number characters.
- * @param {number} options.minSymbols Minimum symbol characters.
+ * @param {boolean | MinimumCharacter} options.lowercase Determine lowercase characters.
+ * @param {boolean | MinimumCharacter} options.uppercase Determine uppercase characters.
+ * @param {boolean | MinimumCharacter} options.number Determine number characters.
+ * @param {boolean | MinimumCharacter} options.symbol Determine symbol characters.
  * @returns {boolean} Returns true if the string is strong password, false otherwise.
+ *
+ *  * @example
+ * ```typescript
+ * isStrongPassword("Abcdef@123", {
+ *   minLength: 8,
+ *   uppercase: { min: 1 },
+ *   lowercase: { min: 4 },
+ *   number: true,
+ *   symbol: true,
+ * }); // true
+ * ```
  */
 const isStrongPassword = (input: any, options: Options) => {
   // Returns false input is not a string
   if (typeof input !== "string") return false;
+
+  // Set default minimum characters
+  const minUppercase = getDefaultMinimumCharacters(options.uppercase);
+  const minLowercase = getDefaultMinimumCharacters(options.lowercase);
+  const minNumbers = getDefaultMinimumCharacters(options.number);
+  const minSymbols = getDefaultMinimumCharacters(options.symbol);
 
   // Password must not contain spaces
   if (input.includes(" ")) return false;
@@ -60,26 +95,16 @@ const isStrongPassword = (input: any, options: Options) => {
     analyzePassword(input);
 
   // Password must contain uppercase letter
-  if (
-    options.minUppercase !== undefined &&
-    uppercaseCount < options.minUppercase
-  )
-    return false;
+  if (minUppercase && uppercaseCount < minUppercase) return false;
 
   // Password must contain lowercase letter
-  if (
-    options.minLowercase !== undefined &&
-    lowercaseCount < options.minLowercase
-  )
-    return false;
+  if (minLowercase && lowercaseCount < minLowercase) return false;
 
   // Password must contain number letter
-  if (options.minNumbers !== undefined && numberCount < options.minNumbers)
-    return false;
+  if (minNumbers && numberCount < minNumbers) return false;
 
   // Password must contain symbol letter
-  if (options.minSymbols !== undefined && symbolCount < options.minSymbols)
-    return false;
+  if (minSymbols && symbolCount < minSymbols) return false;
 
   return true;
 };
