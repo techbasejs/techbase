@@ -37,6 +37,7 @@
   - [x] hexColor
   - [x] isLuhnNumber
   - [x] isCreditCard
+  - [x] isStrongPassword
 - [ ] Basic Transforms
   - [ ] trim
   - [ ] lowercase
