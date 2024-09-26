@@ -16,6 +16,6 @@ export const isRomaji = (value: string | null | undefined): boolean => {
   }
 
   const romajiRegex = REGEXS.ROMAJI;
-  
+
   return romajiRegex.test(value);
 };

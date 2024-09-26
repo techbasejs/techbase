@@ -15,6 +15,6 @@ export const hasEmoji = (value: string | null | undefined): boolean => {
   if (!value) return false;
   const regexEmoji = REGEXS.EMOJI;
   const regExpEmoji = new RegExp(regexEmoji);
-  
+
   return regExpEmoji.test(value);
 };

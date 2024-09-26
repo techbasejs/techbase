@@ -20,8 +20,9 @@ const isStrictJSON = (input: string) => {
  * @returns {boolean} Returns true if the input is JSON object or array of objects, false otherwise.
  */
 const isValidObject = (input: any): boolean => {
-  if (Array.isArray(input)) return input.every((element) => isValidObject(element));
-  
+  if (Array.isArray(input))
+    return input.every((element) => isValidObject(element));
+
   return typeof input === "object" && input !== null;
 };
 
