@@ -14,6 +14,7 @@ describe("isCreditCard", () => {
   });
 
   it("should not be credit card", () => {
+    expect(isCreditCard(new Date())).toBe(false);
     expect(isCreditCard("invalid")).toBe(false);
     expect(isCreditCard("1234567890")).toBe(false);
     expect(isCreditCard("3530111333300000", "AMEX")).toBe(false);

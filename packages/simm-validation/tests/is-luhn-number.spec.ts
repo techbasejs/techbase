@@ -8,6 +8,7 @@ describe("isLuhnNumber", () => {
   });
 
   it("should not be Luhn Number", () => {
+    expect(isLuhnNumber(new Date())).toBe(false);
     expect(isLuhnNumber("12345678")).toBe(false);
     expect(isLuhnNumber("invalid")).toBe(false);
   });

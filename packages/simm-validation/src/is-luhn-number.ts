@@ -3,6 +3,12 @@
  *
  * @param {any} input The string to validate.
  * @returns {boolean} Returns true if the string passes the Luhn algorithm, false otherwise.
+ *
+ * @example
+ * ```typescript
+ * isLuhnNumber("555555-555555-4444"); // true
+ * isLuhnNumber("4111111111111111"); // true
+ * ```
  */
 const isLuhnNumber = (input: any) => {
   // Returns false input is not a string
