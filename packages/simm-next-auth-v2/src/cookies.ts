@@ -24,6 +24,4 @@ class Cookies {
   }
 }
 
-export {
-  Cookies
-}
+export { Cookies };
