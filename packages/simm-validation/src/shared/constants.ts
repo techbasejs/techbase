@@ -1,4 +1,4 @@
-/* eslint-disable unicorn/better-regex */
+ 
 const REGEXS = {
   ALPHANUMERIC: /^[\dA-Za-z]+$/,
 
