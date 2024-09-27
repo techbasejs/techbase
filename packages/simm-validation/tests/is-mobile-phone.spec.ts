@@ -11,7 +11,7 @@ describe("isMobilePhone", () => {
   });
 
   it("should not be a mobile phone number", () => {
-    expect(isMobilePhone(85789550792, "vi-VN")).toBe(false);
+    expect(isMobilePhone(85_789_550_792, "vi-VN")).toBe(false);
     expect(isMobilePhone("+85789550792", "vi-VN")).toBe(false);
     expect(isMobilePhone("(5555) 555-1234", ["vi-VN", "en-US"])).toBe(false);
   });

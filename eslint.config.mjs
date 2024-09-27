@@ -21,6 +21,7 @@ export default unjs({
     "no-useless-escape": 0,
     "unicorn/better-regex": 0,
     "unicorn/prefer-string-slice": 0,
+    "no-prototype-builtins": 0,
     // rule overrides
   },
   markdown: {
