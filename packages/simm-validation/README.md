@@ -14,7 +14,7 @@
   - [ ] japannese
   - [x] isAlphaNumeric
   - [ ] alphabet
-  - [ ] phone
+  - [x] phone
   - [ ] url
   - [x] json
   - [x] jwt
