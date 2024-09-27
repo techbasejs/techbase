@@ -29,11 +29,7 @@ const isLuhnNumber = (input: any) => {
     if (shouldDouble) {
       // Double digit, if digit has 2 characters length, then get sum of 2 characters
       digit *= 2;
-      if (digit >= 10) {
-        sum += (digit % 10) + 1;
-      } else {
-        sum += digit;
-      }
+      sum += digit >= 10 ? (digit % 10) + 1 : digit;
     } else {
       sum += digit;
     }
