@@ -11,7 +11,7 @@ describe("isMacAddress", () => {
   });
 
   it("should not be MAC address", () => {
-    expect(isMacAddress(1234556432)).toBe(false);
+    expect(isMacAddress(1_234_556_432)).toBe(false);
     expect(isMacAddress("A1:B2C3.D4-E5F6")).toBe(false);
     expect(isMacAddress("001A2B3C4D5E")).toBe(false);
     expect(isMacAddress("GG:XX:YY:ZZ:4D:5E")).toBe(false);

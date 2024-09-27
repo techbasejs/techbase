@@ -207,7 +207,7 @@ const checkIsValidPhone = (input: string, locale: MobilePhoneLocale) => {
  */
 const isMobilePhone = (
   input: any,
-  locale?: MobilePhoneLocale | MobilePhoneLocale[]
+  locale?: MobilePhoneLocale | MobilePhoneLocale[],
 ) => {
   // Returns false input is not a string
   if (typeof input !== "string") return false;
@@ -215,7 +215,7 @@ const isMobilePhone = (
   // If not passing locale, then check all locales
   if (locale === undefined)
     return Object.keys(MOBILE_PHONE_NUMBER).some((locale) =>
-      checkIsValidPhone(input, locale as MobilePhoneLocale)
+      checkIsValidPhone(input, locale as MobilePhoneLocale),
     );
 
   // If passing multiple locales
@@ -223,7 +223,7 @@ const isMobilePhone = (
     return locale.some(
       (localeKey) =>
         MOBILE_PHONE_NUMBER.hasOwnProperty(localeKey) &&
-        checkIsValidPhone(input, localeKey)
+        checkIsValidPhone(input, localeKey),
     );
 
   // If passing just a single locale
