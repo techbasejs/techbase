@@ -17,6 +17,7 @@
   - [ ] phone
   - [ ] url
   - [x] json
+  - [x] jwt
   - [ ] lowercase
   - [ ] uppercase
   - [ ] datetime
