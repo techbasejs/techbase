@@ -7,6 +7,8 @@ describe("isHSLColor", () => {
     expect(isHSLColor("hsl(120deg,100%,50%)")).toBe(true);
     expect(isHSLColor("hsl(120 100% 50%)")).toBe(true);
     expect(isHSLColor("hsla(-0.5e2rad -100% -2.5%)")).toBe(true);
+    expect(isHSLColor("hsl(170, 50%, 50%)")).toBe(true);
+    expect(isHSLColor("hsla(108, 100%, 50%, 1)")).toBe(true);
   });
 
   it("should not be HSL color", () => {
