@@ -1,4 +1,3 @@
- 
 const REGEXS = {
   ALPHANUMERIC: /^[\dA-Za-z]+$/,
 

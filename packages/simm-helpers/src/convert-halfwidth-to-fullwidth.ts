@@ -1,4 +1,3 @@
- 
 /* eslint-disable unicorn/numeric-separators-style */
 
 const flipLatinCharRegex = {

@@ -46,7 +46,7 @@ const analyzePassword = (input: string) => {
  * @returns {number} The default minimum characters, either 0, 1, or the input value itself.
  */
 const getDefaultMinimumCharacters = (
-  minimumChars: undefined | true | MinimumCharacter
+  minimumChars: undefined | true | MinimumCharacter,
 ) => {
   if (minimumChars === undefined) return 0;
   if (minimumChars === true) return 1;
