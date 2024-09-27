@@ -24,10 +24,9 @@ const isHSLColor = (input: any) => {
     .replace(/\s?(hsla?\(|\)|,)\s?/gi, "$1");
 
   // If has comma, then check by comma format, otherwise check by space format
-  const regex =
-    strippedStr.indexOf(",") !== -1
-      ? REGEXS.HSL_WITH_COMMA
-      : REGEXS.HSL_WITH_SPACE;
+  const regex = strippedStr.includes(",")
+    ? REGEXS.HSL_WITH_COMMA
+    : REGEXS.HSL_WITH_SPACE;
 
   return regex.test(strippedStr);
 };
