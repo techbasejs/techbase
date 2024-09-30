@@ -6,7 +6,7 @@ describe("isMimeType", () => {
     expect(isMimeType("image/jpeg")).toBe(true);
     expect(isMimeType("text/plain; charset=UTF-8")).toBe(true);
     expect(isMimeType("multipart/form-data; boundary=aBoundaryString")).toBe(
-      true
+      true,
     );
   });
 
