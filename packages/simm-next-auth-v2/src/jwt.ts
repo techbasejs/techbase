@@ -20,6 +20,16 @@ async function sign<T extends object>(payload: T) {
   return jwt;
 }
 
-export {
-  sign,
+async function verify<T>(token: string) {
+  try {
+    const { payload } = await jwtVerify(token, secret, {
+      issuer: "simple-next-auth:issuer",
+      audience: "simple-next-auth:audience",
+    });
+    return payload;
+  } catch {
+    return null;
+  }
 }
+
+export { sign, verify };
