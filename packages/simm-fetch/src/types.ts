@@ -1,4 +1,4 @@
-import { AxiosRequestConfig, AxiosResponse } from "axios";
+import { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import queryString from "query-string";
 export interface RequestConfig {
   baseURL?: string;
@@ -67,6 +67,7 @@ export interface APIClientConfig extends AxiosRequestConfig {
     afterResponse?: Array<
       (response: AxiosResponse) => AxiosResponse | Promise<AxiosResponse>
     >;
+    beforeError?: Array<(error: AxiosError) => AxiosError | Promise<AxiosError>>;
   };
   queryConfig?: queryString.StringifyOptions | undefined;
   _retry?: boolean;

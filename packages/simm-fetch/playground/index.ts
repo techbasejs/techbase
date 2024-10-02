@@ -145,7 +145,6 @@ const url = new APIConfig({
           'Authorization': 'Bearer Token Asdfedw23123',
           'Content-Type': 'application/json',
         };
-
         return config
       }
     ],
@@ -155,6 +154,14 @@ const url = new APIConfig({
           console.log(response.data);
         }
         return response
+      }
+    ],
+    beforeError: [
+      (error) => {
+        if (error.response?.status === 400) {
+          console.log(error);
+        }
+        return error
       }
     ]
   }
