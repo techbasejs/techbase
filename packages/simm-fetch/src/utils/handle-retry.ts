@@ -1,9 +1,23 @@
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import { APIClientConfig } from "../types";
 export const handleRetry = async (
-  requestFn: () => Promise<AxiosResponse>,
+  error: AxiosError,
   config: APIClientConfig,
-): Promise<AxiosResponse> => {
+  axiosInstance: AxiosInstance,
+): Promise<AxiosResponse | AxiosError> => {
   //Todo retry API with option/config
-  config.isRetry = false;
+  const statusRangeToRetry = [500, 599];
+  if (config.retries && config.retries > 0) {
+    config.retries -= 1;
+    if (
+      error.response &&
+      statusRangeToRetry[0] <= error.response.status &&
+      statusRangeToRetry[1] >= error.response.status
+    ) {
+      return await axiosInstance(error.config as APIClientConfig);
+    }
+  }
+  return await new Promise((resolve) => {
+    resolve(error);
+  });
 };
