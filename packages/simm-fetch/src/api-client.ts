@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
+import axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig, AxiosError } from "axios";
 import { APIClientConfig, HTTPMethod } from "./types";
 import { mergeConfigs } from "./utils/merge-configs";
 import { appendQueryParams } from "./utils/query-params";
@@ -18,6 +18,7 @@ class APIClient {
   constructor(config: APIClientConfig) {
     this.config = config;
     this.axiosInstance = axios.create(config);
+    this.setupHook();
     this.setupInterceptors();
   }
 
@@ -30,6 +31,46 @@ class APIClient {
     this.axiosInstance.interceptors.response.use(
       async (response) => await handleResponseSuccess(response, this.config),
       async (error: AxiosError) => await this.handleResponseCondition(error),
+    );
+  }
+  private setupHook() {
+    this.axiosInstance.interceptors.request.use(
+      async (config: AxiosRequestConfig) => {
+        if (this.config.hooks && this.config.hooks.beforeRequest) {
+          const promises = this.config.hooks.beforeRequest.map((hook) =>
+            hook(config),
+          );
+          const results = await Promise.all(promises);
+          config = results.at(-1) ?? config;
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(handleRequestError(error));
+      },
+    );
+
+    this.axiosInstance.interceptors.response.use(
+      async (response: AxiosResponse) => {
+        if (this.config.hooks && this.config.hooks.afterResponse) {
+          const promises = this.config.hooks.afterResponse.map((hook) =>
+            hook(response),
+          );
+          const results = await Promise.all(promises);
+          response = results.at(-1) ?? response;
+        }
+        return response;
+      },
+      async (error: AxiosError) => {
+        if (this.config.hooks && this.config.hooks.beforeError) {
+          const promises = this.config.hooks.beforeError.map((hook) =>
+            hook(error),
+          );
+          const results = await Promise.all(promises);
+          error = results.at(-1) ?? error;
+        }
+        return error;
+      },
     );
   }
 
@@ -58,6 +99,13 @@ class APIClient {
     params?: any,
     config?: APIClientConfig,
   ): Promise<AxiosResponse<T>> {
+    if (this.config.hooks && this.config.hooks.beforeRequest) {
+      const hookLength = this.config.hooks.beforeRequest.length;
+      const updatedConfig = await this.config.hooks.beforeRequest[
+        hookLength - 1
+      ](this.config);
+      this.config.baseURL = updatedConfig.baseURL;
+    }
     let modifyUrl = Utils.isValidUrl(this.config?.baseURL + url)
       ? this.config?.baseURL + url
       : this.config?.baseURL;
