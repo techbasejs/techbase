@@ -3,11 +3,7 @@ import { Upload } from "./upload";
 
 export type TypeLayout = "basic" | "advanced";
 
-// export enum EnumTypeDriver {
-//   LOCAL = "local",
-//   CLOUD = "cloud",
-//   S3 = "s3",
-// }
+export type TypeDriver = "local" | "cloud" | "s3";
 
 export type UploaderOptions = {
   layout?: TypeLayout;
@@ -33,9 +29,9 @@ export interface UploadOptions {
 
 export interface UploadResponse {
   data?: string | ArrayBuffer | Blob;
-  // xhr?: XMLHttpRequest;
+  xhr?: XMLHttpRequest;
   status?: number;
-  // headers?: Record<string, string | string[] | undefined>;
+  headers?: Record<string, string | string[] | undefined>;
 }
 
 export type UploadError = {

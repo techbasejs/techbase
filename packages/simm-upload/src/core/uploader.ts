@@ -1,13 +1,14 @@
 import {
   TypeLayout,
   UploaderOptions,
+  UploadError,
   UploadOptions,
   UploadProgressEventListener,
   UploadResponse,
 } from "./type";
 
 import FormDataNode from "form-data";
-import { uploadManager } from "./upload-function";
+import { Upload } from "./upload";
 
 type Options = UploaderOptions &
   UploadOptions & {
@@ -36,6 +37,8 @@ export class Uploader {
 
   private onProgress?: UploadProgressEventListener;
 
+  private uploadInstance: Upload;
+
   constructor(options: Options) {
     if (!options) {
       throw new Error("Missing options");
@@ -57,20 +60,89 @@ export class Uploader {
     this.autoUpload = options.autoUpload;
     this.dragToUpload = options.dragToUpload;
     this.onProgress = options.onProgress;
+
+    this.uploadInstance = new Upload({
+      endpointApi: this.endpointApi,
+      form: this.form,
+      headers: this.headers,
+      withCredentials: this.withCredentials,
+    });
   }
 
-  // submit upload
-  async submit(): Promise<UploadResponse> {
-    return await uploadManager.upload(
-      this.endpointApi,
-      this.form,
-      {
-        headers: this.headers,
-        onProgress: this.onProgress,
-      },
-      this.withCredentials,
-    );
+  public async submit(): Promise<UploadResponse> {
+    return await this.uploadInstance.upload();
   }
+
+  public setFileList(files: File[]): void {
+    this.uploadInstance.setFileList(files);
+  }
+
+  public clearFiles(): void {
+    this.uploadInstance.clearFiles();
+  }
+
+  public onPreview(file: File | string | unknown): void {
+    this.uploadInstance.onPreview(file);
+  }
+
+  public onRemove(file: File, fileList: File[]): void {
+    this.uploadInstance.onRemove(file, fileList);
+  }
+
+  public onSuccess(
+    response: UploadResponse,
+    file: File,
+    fileList: File[],
+  ): void {
+    this.uploadInstance.onSuccess(response, file, fileList);
+  }
+
+  public onError(error: UploadError, file: File, fileList: File[]): void {
+    this.uploadInstance.onError(error, file, fileList);
+  }
+
+  public onChange(file: File, fileList: File[]): void {
+    this.uploadInstance.onChange(file, fileList);
+  }
+
+  public onBeforeUpload(file: File): void {
+    this.uploadInstance.beforeUpload(file);
+  }
+
+  public onBeforeRemove(file: File, fileList: File[]): void {
+    this.uploadInstance.beforeRemove(file, fileList);
+  }
+
+  public abort() {
+    if (this.uploadInstance) {
+      return this.uploadInstance.abort();
+    } else {
+      throw new Error("No upload instance to abort.");
+    }
+  }
+
   // render html upload template
-  render() {}
+  render() {
+    const target = document.querySelector(
+      this.target as string,
+    ) as HTMLInputElement;
+    if (!target) {
+      throw new Error(`Target element ${this.target} not found.`);
+    }
+
+    const html = `
+    <div class="uploader">
+    <input 
+      type="file" 
+      accept="${this.accept}" 
+      ${this.multiple ? "multiple" : ""} 
+      ${this.disabled ? "disabled" : ""} 
+      ${this.autoUpload ? 'onchange="this.form.submit()"' : ""}
+    />
+    ${this.dragToUpload ? '<div class="drag-drop-area">Drag files here to upload</div>' : ""}
+    </div>
+  `;
+
+    return (target.innerHTML = html);
+  }
 }

@@ -40,28 +40,28 @@ export class Upload {
     this.withCredentials = options.withCredentials;
   }
 
-  async upload(): Promise<UploadResponse> {
+  public async upload(): Promise<UploadResponse> {
     return new Promise((resolve, reject) => {
       resolve({ data: "", status: 200 });
     });
   }
 
-  setFileList(files: File[]): void {}
+  public setFileList(files: File[]): void {}
 
-  clearFiles(): void {}
+  public clearFiles(): void {}
 
   /**
    * function when clicking the uploaded files
    * @param file
    */
-  onPreview(file: File | string | unknown): void {}
+  public onPreview(file: File | string | unknown): void {}
 
   /**
    * function when clicking the remove file button
    * @param file
    * @param fileList
    */
-  onRemove(file: File, fileList: File[]): void {}
+  public onRemove(file: File, fileList: File[]): void {}
 
   /**
    * function when uploaded successfully
@@ -69,7 +69,11 @@ export class Upload {
    * @param file
    * @param fileList
    */
-  onSuccess(response: UploadResponse, file: File, fileList: File[]): void {}
+  public onSuccess(
+    response: UploadResponse,
+    file: File,
+    fileList: File[],
+  ): void {}
 
   /**
    *  function when some errors occurs
@@ -77,29 +81,29 @@ export class Upload {
    * @param file
    * @param fileList
    */
-  onError(error: UploadError, file: File, fileList: File[]): void {}
+  public onError(error: UploadError, file: File, fileList: File[]): void {}
 
   /**
    * function when select file or upload file success or upload file fail
    * @param file
    * @param fileList
    */
-  onChange(file: File, fileList: File[]): void {}
+  public onChange(file: File, fileList: File[]): void {}
 
   /**
    * function before uploading with the file to be uploaded as its parameter. If false is  returned or a Promise is returned and then is rejected, uploading will be aborted
    * @param file
    */
-  beforeUpload(file: File): void {}
+  public beforeUpload(file: File): void {}
 
   /**
    * function before removing a file with the file and file list as its parameters. If false is returned or a Promise is returned and then is rejected, removing will be aborted.
    * @param file
    * @param fileList
    */
-  beforeRemove(file: File, fileList: File[]): void {}
+  public beforeRemove(file: File, fileList: File[]): void {}
 
-  abort(): void {
+  public abort(): void {
     this.xhr?.abort();
   }
 
