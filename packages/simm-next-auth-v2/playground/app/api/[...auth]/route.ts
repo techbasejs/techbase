@@ -12,7 +12,7 @@ const loginProvider = new Provider("credentials", {
   ) => {
     const body = await request.json();
     const dataLogin = {}
-    fetch('https://dummyjson.com/auth/login', {
+   await fetch('https://dummyjson.com/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -38,6 +38,11 @@ const loginProvider = new Provider("credentials", {
 
 const handlers = auth({
   providers: [loginProvider],
+  callbacks:{
+    redirect: ({ url, baseUrl , user}) => {
+      return baseUrl
+    }
+  }
 });
 
 export { handlers as GET, handlers as POST };

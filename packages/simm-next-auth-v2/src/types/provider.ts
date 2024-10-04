@@ -3,15 +3,6 @@ import { AUTH_PROVIDER } from "../constants";
 
 type ProviderType = `${AUTH_PROVIDER}`;
 
-type CallbacksType = {
-  jwt: (token: string) => string,
-  session: (token: string) => string,
-  redirect: (params: {
-    url: string,
-    base_url: string,
-  }) => string
-}
-
 type ProviderHandlerResponseType = {
   authorized?: boolean;
   session?: {
@@ -33,7 +24,6 @@ type AuthRequestType<T = object> = {
 
 export {
   ProviderType,
-  CallbacksType,
   ProviderHandlerResponseType,
   ProviderHandlerErrorType,
   AuthRequestType,
