@@ -15,17 +15,19 @@ export type UploaderOptions = {
   dragToUpload?: boolean;
 };
 
-export interface UploadOptions {
-  form:
-    | Record<string, string | Blob>
-    | FormData
-    | FormDataNode
-    | Blob
-    | BufferSource;
+export type FormUploadDataType =
+  | Record<string, string | Blob>
+  | FormData
+  | FormDataNode
+  | Blob
+  | BufferSource;
+
+export type HttpOptions = {
   endpointApi: string;
+  xhr?: XMLHttpRequest;
   headers?: Record<string, string>;
   withCredentials?: boolean;
-}
+};
 
 export interface UploadResponse {
   data?: string | ArrayBuffer | Blob;

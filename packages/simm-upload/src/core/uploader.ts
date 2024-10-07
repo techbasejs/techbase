@@ -1,8 +1,9 @@
 import {
+  FormUploadDataType,
+  HttpOptions,
   TypeLayout,
   UploaderOptions,
   UploadError,
-  UploadOptions,
   UploadProgressEventListener,
   UploadResponse,
 } from "./type";
@@ -11,7 +12,7 @@ import FormDataNode from "form-data";
 import { Upload } from "./upload";
 
 type Options = UploaderOptions &
-  UploadOptions & {
+  HttpOptions & {
     onProgress?: UploadProgressEventListener;
   };
 export class Uploader {
@@ -39,7 +40,7 @@ export class Uploader {
 
   private uploadInstance: Upload;
 
-  constructor(options: Options) {
+  constructor(form: FormUploadDataType, options: Options) {
     if (!options) {
       throw new Error("Missing options");
     }
@@ -48,7 +49,7 @@ export class Uploader {
       throw new Error("Destination URL is missing or invalid.");
     }
 
-    this.form = options.form;
+    this.form = form;
     this.endpointApi = options.endpointApi;
     this.headers = options.headers;
     this.withCredentials = options.withCredentials;
@@ -61,11 +62,11 @@ export class Uploader {
     this.dragToUpload = options.dragToUpload;
     this.onProgress = options.onProgress;
 
-    this.uploadInstance = new Upload({
-      endpointApi: this.endpointApi,
-      form: this.form,
-      headers: this.headers,
-      withCredentials: this.withCredentials,
+    this.uploadInstance = new Upload(form, {
+      endpointApi: options.endpointApi,
+      headers: options.headers,
+      withCredentials: options.withCredentials,
+      xhr: options.xhr,
     });
   }
 

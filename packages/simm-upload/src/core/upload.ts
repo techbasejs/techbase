@@ -1,9 +1,10 @@
 import {
+  FormUploadDataType,
+  HttpOptions,
   UploadError,
   UploadErrorEventListener,
   UploadEventListenerUnion,
   UploadEvents,
-  UploadOptions,
   UploadProgressEventListener,
   UploadResponse,
   UploadState,
@@ -33,11 +34,12 @@ export class Upload {
   private _uploadedBytes = 0;
   private _totalBytes = 0;
   private _state: UploadState = "new";
-  constructor(options: UploadOptions) {
-    this.form = options.form;
+  constructor(form: FormUploadDataType, options: HttpOptions) {
+    this.form = form;
     this.endpointApi = options.endpointApi;
     this.headers = options.headers;
     this.withCredentials = options.withCredentials;
+    this.xhr = options.xhr;
   }
 
   public async upload(): Promise<UploadResponse> {
