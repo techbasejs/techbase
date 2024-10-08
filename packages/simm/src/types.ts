@@ -10,6 +10,7 @@ export type SimmServerConfig = {
   proxyJump?: string;
   deploy?: SimmServerDeployConfig;
   sftp?: SimmServerSftpConfig;
+  exec?: SimmServerExecConfig;
 } & ConnectConfig;
 
 export type SimmServerDeployConfig = {
@@ -29,4 +30,8 @@ export type SimmServerSftpConfig = {
 export type BaseResultType<T> = {
   error?: Error;
   result?: T;
+};
+
+export type SimmServerExecConfig = {
+  afterDeploy: string;
 };
