@@ -50,7 +50,7 @@ const isDomainName = (input: any, options?: Options) => {
   const parts: string[] = input.split(".");
 
   // Top-level Domain is the last part
-  const tld = parts[parts.length - 1];
+  const tld = parts.at(-1);
 
   // Validate Top-level Domain
   if (options?.requireTopLevelDomain) {
