@@ -7,6 +7,7 @@
     "prepare": "husky",
     "build": "tsx scripts/build",
     "test": "tsx scripts/test",
+    "play": "tsx scripts/play",
     "lint": "eslint && prettier -w packages",
     "lint:fix": "eslint --fix && prettier -w packages",
     "prettier": "prettier --write **/*.{ts,js,tsx}"
