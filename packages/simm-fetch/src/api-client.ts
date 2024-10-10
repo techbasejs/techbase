@@ -1,117 +1,118 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
-import { APIClientConfig, HTTPMethod } from "./types";
-import { mergeConfigs } from "./utils/merge-configs";
+import { APIClientConfig, RefreshTokenConfig, RequestAdapter, RequestOptions  } from "./types";
 import { appendQueryParams } from "./utils/query-params";
-import { Utils } from "./utils";
 import {
   handleRequestError,
-  handleRequestSuccess,
+  handleRequestInterceptor,
   handleResponseError,
   handleResponseSuccess,
 } from "./utils/index";
-import { handleRetry } from "./utils/handle-retry";
-
-class APIClient {
-  private axiosInstance: AxiosInstance;
+import { AxiosAdapterImpl } from './adapters/axios-adapter';
+import { FetchAdapterImpl } from './adapters/fetch-adapter';
+import { RefreshTokenHandler } from "./refresh-token-handler";
+class APIClient <T extends RequestAdapter>{
   private config: APIClientConfig;
-  private refreshSubscribers: Array<(token: string) => void> = [];
-  constructor(config: APIClientConfig) {
+  private refreshTokenHandler?: RefreshTokenHandler;
+  private adapter: T;
+  constructor(config: APIClientConfig, adapter?: T, refreshTokenConfig?: RefreshTokenConfig) {
     this.config = config;
-    this.axiosInstance = axios.create(config);
+    this.adapter = adapter as T;
+    this.setupRefreshTokenHandler(refreshTokenConfig);
     this.setupInterceptors();
   }
 
   private setupInterceptors(): void {
-    this.axiosInstance.interceptors.request.use(
-      (config) => handleRequestSuccess(config, this.config),
-      (error) => Promise.reject(handleRequestError(error)),
-    );
-
-    this.axiosInstance.interceptors.response.use(
-      async (response) => await handleResponseSuccess(response, this.config),
-      async (error: AxiosError) => await this.handleResponseCondition(error),
-    );
+    this.adapter.setInterceptors({
+      request: (config: APIClientConfig) => this.handleRequestInterceptor(config),
+      requestError: handleRequestError,
+      response: handleResponseSuccess,
+      responseError: (error: any) => this.handleResponseError(error),
+  });
   }
+  private setupRefreshTokenHandler(refreshTokenConfig?: RefreshTokenConfig): void {
+    if (refreshTokenConfig) {
+      this.refreshTokenHandler = new RefreshTokenHandler(refreshTokenConfig, this.adapter, this.config);
+    }
+  }
+  private async handleRequestInterceptor(config: APIClientConfig): Promise<APIClientConfig> {
+    let interceptedConfig = handleRequestInterceptor(config, this.config);
+    
+    if (this.refreshTokenHandler) {
+      interceptedConfig = await this.refreshTokenHandler.handleRequest(interceptedConfig as APIClientConfig);
+    }
 
-  private async handleResponseCondition(
-    error: AxiosError,
-  ): Promise<AxiosResponse> {
-    if (this.config.isRetry) {
-      const retryRequest = await handleRetry(
-        () =>
-          this.axiosInstance.request({
-            method: this.config.method,
-            url: this.config.url,
-            data: this.config.data,
-          }),
-        this.config,
-      );
-      return retryRequest;
+    return interceptedConfig;
+  }
+  private async handleResponseError(error: any): Promise<any> {
+    if (this.refreshTokenHandler) {
+      try {
+        return await this.refreshTokenHandler.handleResponseError(error);
+      } catch {
+        // If refresh token handling fails, fall back to default error handling
+      }
     }
     return handleResponseError(error, this.config);
   }
 
-  private async request<T>(
-    method: HTTPMethod,
-    url: string,
-    data?: any,
-    params?: any,
-    config?: APIClientConfig,
-  ): Promise<AxiosResponse<T>> {
-    let modifyUrl = Utils.isValidUrl(this.config?.baseURL + url)
-      ? this.config?.baseURL + url
-      : this.config?.baseURL;
-    this.config = mergeConfigs(this.config, config || {});
-    modifyUrl = params
-      ? appendQueryParams(modifyUrl, params, config?.queryConfig)
-      : modifyUrl;
-    this.config.url = modifyUrl;
-    this.config.method = method;
-    this.config.data = data;
+  private async request<T>(options: RequestOptions): Promise<T> {
+    const mergedConfig: APIClientConfig = {
+      ...this.config,
+      ...options,
+      url: this.combineUrls(this.config.baseURL as string, options.url),
+    };
 
-    return await this.axiosInstance.request<T>({
-      method: method,
-      url: modifyUrl,
-      data: data,
-    });
+    if (options.params) {
+      mergedConfig.url = appendQueryParams(mergedConfig.url, options.params, mergedConfig.queryConfig);
+    }
+    return this.adapter.request<T>(mergedConfig);
   }
-
+  
+  private combineUrls(baseURL: string, url: string): string {
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+    return `${baseURL.replace(/\/+$/, '')}/${url.replace(/^\/+/, '')}`;
+  }
+  
   public async get<T>(
     url: string,
-    params?: any,
-    config?: APIClientConfig,
-  ): Promise<AxiosResponse<T>> {
-    return await this.request<T>("GET", url, null, params, config);
+    options?: Omit<RequestOptions, 'method' | 'url'>
+  ): Promise<T> {
+    return await this.request<T>({ method: 'GET', url, ...options });
   }
-
+  
   public async post<T>(
     url: string,
-    data: any,
-    config?: APIClientConfig,
-  ): Promise<AxiosResponse<T>> {
-    return await this.request<T>("POST", url, data, null, config);
+    data?: any, options?: Omit<RequestOptions, 'method' | 'url' | 'data'>
+  ): Promise<T> {
+    return await this.request<T>({ method: 'POST', url, data, ...options });
   }
 
   public async put<T>(
     url: string,
-    data: any,
-    config?: APIClientConfig,
-  ): Promise<AxiosResponse<T>> {
-    return await this.request<T>("PUT", url, data, null, config);
+    data?: any, options?: Omit<RequestOptions, 'method' | 'url' | 'data'>
+  ): Promise<T> {
+    return await this.request<T>({ method: 'PUT', url, data, ...options });
   }
 
   public async delete<T>(
     url: string,
-    config?: APIClientConfig,
-  ): Promise<AxiosResponse<T>> {
-    return await this.request<T>("DELETE", url, null, null, config);
+    options?: Omit<RequestOptions, 'method' | 'url'>
+  ): Promise<T> {
+    return await this.request<T>({ method: 'DELETE', url, ...options });
   }
 
-  cancelRequests(message?: string): void {
-    this.axiosInstance.defaults.cancelToken = new axios.CancelToken((cancel) =>
-      cancel(message),
-    );
+  public cancelRequests(message?: string): void {
+    this.adapter.cancelRequests(message);
   }
 }
+export function createAPIClient(config: APIClientConfig, 
+  adapterType: 'axios' | 'fetch' = 'axios',
+  refreshTokenConfig?: RefreshTokenConfig): APIClient<RequestAdapter> {
+  let adapter: RequestAdapter;
 
+  // eslint-disable-next-line prefer-const
+  adapter = adapterType === 'fetch' ? new FetchAdapterImpl(config) : new AxiosAdapterImpl(config);
+
+  return new APIClient(config, adapter, refreshTokenConfig);
+}
 export default APIClient;

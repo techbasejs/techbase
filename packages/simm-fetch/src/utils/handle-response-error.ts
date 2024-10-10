@@ -1,33 +1,36 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
-import Cookies from "js-cookie";
 import { APIClientConfig } from "../types";
-import { refreshToken } from "./authenticate";
 
-export const handleResponseError = async (
-  error: AxiosError,
-  clientConfig: APIClientConfig,
-): Promise<AxiosResponse> => {
-  const originalRequest = error.config as APIClientConfig;
-
-  //Todo Handle Response Error
-  if (
-    error.response &&
-    error.response.status === 401 &&
-    !originalRequest._retry
-  ) {
-    originalRequest._retry = true;
-    try {
-      const newAccessToken = await refreshToken();
-      const accessToken = newAccessToken;
-      Cookies.set("accessToken", accessToken);
-      originalRequest.headers = {
-        Authorization: `Bearer ${accessToken}`,
-      };
-      return axios(originalRequest);
-    } catch (error_) {
-      console.log(error_);
-    }
+export async function handleResponseError(error: any, config: APIClientConfig): Promise<any> {
+  if (config.retry && config.retry.attempts > 0) {
+    return handleRetry(error, config);
   }
+  return handleResponseError(error, config);
+}
 
-  throw error;
-};
+async function handleRetry(error: any, config: APIClientConfig): Promise<any> {
+  const { retry } = config;
+  const retryConfig = {
+    retryCount: 0,
+    retryDelay: retry?.delay || 1000,
+    maxRetries: retry?.attempts || 3,
+  };
+
+  const retryRequest = async () => {
+    try {
+      retryConfig.retryCount++;
+
+      return await error.config.adapter.request({
+        ...error.config,
+        url: error.config.url,
+      });
+    } catch (retryError) {
+      if (retryConfig.retryCount < retryConfig.maxRetries) {
+        await new Promise(resolve => setTimeout(resolve, retryConfig.retryDelay));
+        return retryRequest();
+      }
+      throw retryError;
+    }
+  };
+
+  return retryRequest();
+}
