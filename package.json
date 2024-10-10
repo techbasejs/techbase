@@ -40,6 +40,7 @@
     "yargs": "^17.7.2"
   },
   "dependencies": {
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.2",
+    "yup": "^1.4.0"
   }
 }
