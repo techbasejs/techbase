@@ -207,10 +207,7 @@ const checkIsValidPhone = (input: string, locale: MobilePhoneLocale) => {
  * isMobilePhone("84789550792", ["vi-VN", "en-US"]); // true
  * ```
  */
-const isMobilePhone = (
-  input: any,
-  locale?: MobilePhoneLocaleType,
-) => {
+const isMobilePhone = (input: any, locale?: MobilePhoneLocaleType) => {
   // Returns false input is not a string
   if (typeof input !== "string") return false;
 

@@ -5,7 +5,7 @@ import "../../src/yup-extends/custom-validate"; // Import the file that extends 
 describe("yup-extends isPhoneNumber", () => {
   it("should validate a correct phone number", () => {
     const schema = yup.string().isPhoneNumber();
-    const validPhoneNumber = "1234567890"; 
+    const validPhoneNumber = "1234567890";
 
     expect(schema.isValidSync(validPhoneNumber)).toBe(true);
   });
@@ -37,7 +37,7 @@ describe("yup-extends isPhoneNumber", () => {
   it("should validate a phone number with a specific locale", () => {
     const schema = yup.string().isPhoneNumber("Invalid phone number", "en-US");
     const validPhoneNumber = "(555) 555-1234"; // Replace with a valid phone number format for 'en-US' locale
-    console.log(schema.isValidSync(validPhoneNumber), schema, "@@@@@@")
+    console.log(schema.isValidSync(validPhoneNumber), schema, "@@@@@@");
     expect(schema.isValidSync(validPhoneNumber)).toBe(true);
   });
 });
