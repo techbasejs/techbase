@@ -38,5 +38,13 @@ export default defineConfig({
         postDeploy: "pnpm install",
       },
     },
+    // fe: {
+    //   username: config.production.user,
+    //   host: config.production.host,
+    //   privateKey: fs.readFileSync(config.server.private_key_path, "utf8"),
+    //   exec: {
+    //     afterDeploy: 'echo "$(date) - Called: echo \'Welcome to simm-cli\'" >> /var/log/test-exec.log && echo "Welcome to simm-cli"',
+    //   }
+    // },
   },
 });
