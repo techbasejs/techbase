@@ -5,24 +5,24 @@ describe("isDomainName", () => {
   it("should be FQDN string", () => {
     expect(isDomainName("www.google.com")).toBe(true);
     expect(
-      isDomainName("www.google_meet.com", { allowUnderscores: true })
+      isDomainName("www.google_meet.com", { allowUnderscores: true }),
     ).toBe(true);
     expect(isDomainName("www.google.com.", { allowTrailingDot: true })).toBe(
-      true
+      true,
     );
     expect(
       isDomainName(
         "fullyqualifieddomainnamesaretheprimarilyusedformforhumanreadability.com",
         {
           ignoreMaxLength: true,
-        }
-      )
+        },
+      ),
     ).toBe(true);
     expect(
       isDomainName("www.google.com123", {
         requireTopLevelDomain: true,
         allowNumericTLD: true,
-      })
+      }),
     ).toBe(true);
     expect(isDomainName("*.netlify.app", { allowWildcard: true })).toBe(true);
     expect(isDomainName("www.google-search.com")).toBe(true);
@@ -35,8 +35,8 @@ describe("isDomainName", () => {
     expect(isDomainName("www.google.com.")).toBe(false);
     expect(
       isDomainName(
-        "fullyqualifieddomainnamesaretheprimarilyusedformforhumanreadability.com"
-      )
+        "fullyqualifieddomainnamesaretheprimarilyusedformforhumanreadability.com",
+      ),
     ).toBe(false);
     expect(isDomainName("*.netlify.app")).toBe(false);
     expect(isDomainName("www.google_meet.com")).toBe(false);
@@ -45,10 +45,10 @@ describe("isDomainName", () => {
     expect(isDomainName("abc.証用のコ.com")).toBe(false);
     expect(isDomainName("abc.my-page.123")).toBe(false);
     expect(isDomainName("google.c", { requireTopLevelDomain: true })).toBe(
-      false
+      false,
     );
     expect(isDomainName("google.c om", { requireTopLevelDomain: true })).toBe(
-      false
+      false,
     );
     expect(isDomainName("google", { requireTopLevelDomain: true })).toBe(false);
   });
