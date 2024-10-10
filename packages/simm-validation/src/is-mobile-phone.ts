@@ -178,6 +178,8 @@ const MOBILE_PHONE_NUMBER = {
 
 type MobilePhoneLocale = keyof typeof MOBILE_PHONE_NUMBER;
 
+type MobilePhoneLocaleType = MobilePhoneLocale | MobilePhoneLocale[];
+
 /**
  * Validates phone number by the given locale of regex.
  *
@@ -207,7 +209,7 @@ const checkIsValidPhone = (input: string, locale: MobilePhoneLocale) => {
  */
 const isMobilePhone = (
   input: any,
-  locale?: MobilePhoneLocale | MobilePhoneLocale[],
+  locale?: MobilePhoneLocaleType,
 ) => {
   // Returns false input is not a string
   if (typeof input !== "string") return false;
@@ -230,4 +232,4 @@ const isMobilePhone = (
   return checkIsValidPhone(input, locale);
 };
 
-export { isMobilePhone, MobilePhoneLocale };
+export { isMobilePhone, MobilePhoneLocaleType };
