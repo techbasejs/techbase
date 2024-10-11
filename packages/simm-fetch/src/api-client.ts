@@ -1,4 +1,4 @@
-import { APIClientConfig, RefreshTokenConfig, RequestAdapter, RequestOptions  } from "./types";
+import { APIClientConfig, RefreshTokenConfig, RequestAdapter, RequestOptions } from "./types";
 import { appendQueryParams } from "./utils/query-params";
 import {
   handleRequestError,
@@ -8,8 +8,9 @@ import {
 } from "./utils/index";
 import { AxiosAdapterImpl } from './adapters/axios-adapter';
 import { FetchAdapterImpl } from './adapters/fetch-adapter';
-import { RefreshTokenHandler } from "./refresh-token-handler";
-class APIClient <T extends RequestAdapter>{
+import { RefreshTokenHandler } from "./utils/refresh-token-handler";
+
+class APIClient<T extends RequestAdapter> {
   private config: APIClientConfig;
   private refreshTokenHandler?: RefreshTokenHandler;
   private adapter: T;
@@ -26,22 +27,25 @@ class APIClient <T extends RequestAdapter>{
       requestError: handleRequestError,
       response: handleResponseSuccess,
       responseError: (error: any) => this.handleResponseError(error),
-  });
+    });
   }
+
   private setupRefreshTokenHandler(refreshTokenConfig?: RefreshTokenConfig): void {
     if (refreshTokenConfig) {
       this.refreshTokenHandler = new RefreshTokenHandler(refreshTokenConfig, this.adapter, this.config);
     }
   }
+
   private async handleRequestInterceptor(config: APIClientConfig): Promise<APIClientConfig> {
     let interceptedConfig = handleRequestInterceptor(config, this.config);
-    
+
     if (this.refreshTokenHandler) {
       interceptedConfig = await this.refreshTokenHandler.handleRequest(interceptedConfig as APIClientConfig);
     }
 
     return interceptedConfig;
   }
+
   private async handleResponseError(error: any): Promise<any> {
     if (this.refreshTokenHandler) {
       try {
@@ -65,21 +69,21 @@ class APIClient <T extends RequestAdapter>{
     }
     return this.adapter.request<T>(mergedConfig);
   }
-  
+
   private combineUrls(baseURL: string, url: string): string {
     if (url.startsWith('http://') || url.startsWith('https://')) {
       return url;
     }
     return `${baseURL.replace(/\/+$/, '')}/${url.replace(/^\/+/, '')}`;
   }
-  
+
   public async get<T>(
     url: string,
     options?: Omit<RequestOptions, 'method' | 'url'>
   ): Promise<T> {
     return await this.request<T>({ method: 'GET', url, ...options });
   }
-  
+
   public async post<T>(
     url: string,
     data?: any, options?: Omit<RequestOptions, 'method' | 'url' | 'data'>
@@ -105,7 +109,8 @@ class APIClient <T extends RequestAdapter>{
     this.adapter.cancelRequests(message);
   }
 }
-export function createAPIClient(config: APIClientConfig, 
+
+export function createAPIClient(config: APIClientConfig,
   adapterType: 'axios' | 'fetch' = 'axios',
   refreshTokenConfig?: RefreshTokenConfig): APIClient<RequestAdapter> {
   let adapter: RequestAdapter;

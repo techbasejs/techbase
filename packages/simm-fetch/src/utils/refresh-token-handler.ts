@@ -1,4 +1,4 @@
-import { RefreshTokenConfig, RequestAdapter, APIClientConfig } from "./types";
+import { RefreshTokenConfig, RequestAdapter, APIClientConfig } from "../types";
 
 export class RefreshTokenHandler {
   private isRefreshing: boolean = false;
@@ -8,6 +8,7 @@ export class RefreshTokenHandler {
     private config: RefreshTokenConfig,
     private adapter: RequestAdapter,
     private apiConfig: APIClientConfig
+    // eslint-disable-next-line unicorn/empty-brace-spaces
   ) { }
 
   public async handleRequest(config: APIClientConfig): Promise<APIClientConfig> {
