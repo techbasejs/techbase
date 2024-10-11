@@ -1,4 +1,4 @@
-import { isKanji } from "./../../src/is-kanji";
+import { isKanji } from "../src/is-kanji";
 import { describe, expect, it } from "vitest";
 
 describe("isKanji", () => {
@@ -24,6 +24,14 @@ describe("isKanji", () => {
 
   it("returns false for empty string", () => {
     expect(isKanji("")).toBe(false);
+  });
+
+  it("returns false for null value", () => {
+    expect(isKanji(null)).toBe(false);
+  });
+
+  it("returns false for undefined value", () => {
+    expect(isKanji(undefined)).toBe(false);
   });
 
   it("returns true for string with Kanji and other characters", () => {

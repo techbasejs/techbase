@@ -4,6 +4,7 @@
 
 - [ ] Basic Rules
   - [x] isDate
+  - [x] isBase64
   - [x] hasEmoji
   - [x] isEmpty
   - [ ] required, requiredIf
@@ -13,8 +14,10 @@
   - [ ] japannese
   - [x] isAlphaNumeric
   - [ ] alphabet
-  - [ ] phone
+  - [x] phone
   - [ ] url
+  - [x] json
+  - [x] jwt
   - [ ] lowercase
   - [ ] uppercase
   - [ ] datetime
@@ -30,6 +33,13 @@
   - [x] minLength
   - [x] maxLength
   - [x] unique array
+  - [x] isIp
+  - [x] isHslColor
+  - [x] isRgbColor
+  - [x] hexColor
+  - [x] isLuhnNumber
+  - [x] isCreditCard
+  - [x] isStrongPassword
 - [ ] Basic Transforms
   - [ ] trim
   - [ ] lowercase
