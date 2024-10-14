@@ -1,17 +1,26 @@
-import { AxiosResponse } from "axios";
-import { executeAfterResponseHooks } from "./hooks";
-import { getContentType, parseResponseData } from "./data-handlers";
-import { APIClientConfig } from "../types";
+//import { executeResponseHooks } from "./hooks";
+
 
 export const handleResponseSuccess = async (
-  response: AxiosResponse,
-  clientConfig: APIClientConfig,
-): Promise<AxiosResponse> => {
-  //Todo Handle response Data
-  const contentType = getContentType(response?.data);
-  const data = parseResponseData(response?.data, contentType);
-  response.data = data;
+  // response: AxiosResponse | Response,
+  response: any,
+  // config?: any
+) => {
+  let responseData: any
+  try {
+    const isAxiosResponse = 'data' in response;
+    responseData = {
+      data: isAxiosResponse ? response.data : await response.json(), //  repsonse data with axios or fetch
+      headers: isAxiosResponse ? response.headers : Object.fromEntries(response.headers.entries()),
+      status: response.status,
+      statusText: response.statusText,
+      ok: response.ok
+      // Add other response if need
+    };
+  } catch {
+    responseData = response
+  }
 
-  //Using hook if have
-  return response;
+  // await executeResponseHooks(responseData, config?.afterResponse); 
+  return responseData;
 };

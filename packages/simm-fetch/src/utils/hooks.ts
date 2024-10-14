@@ -1,6 +1,26 @@
 // src/utils/hooks.ts
 
 import { AxiosRequestConfig, AxiosResponse } from "axios";
+type ResponseHook = (responseData: { data: any, headers: Record<string, string>, status: number }) => void | Promise<void>;
+
+const responseHooks: ResponseHook[] = [];
+
+export const registerResponseHook = (hook: ResponseHook) => {
+  responseHooks.push(hook);
+};
+
+export const executeResponseHooks = async (
+  responseData: { data: any, headers: Record<string, string>, status: number },
+  afterResponse?: ResponseHook
+) => {
+  if (afterResponse) {
+    await Promise.resolve(afterResponse(responseData));
+  }
+
+  for (const hook of responseHooks) {
+    await Promise.resolve(hook(responseData));
+  }
+};
 
 export async function executeBeforeRequestHooks(
   config: AxiosRequestConfig,
