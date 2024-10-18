@@ -237,16 +237,16 @@ const isMobilePhone = (input: any, locale?: MobilePhoneLocaleType) => {
  * @param locale - Optional locale to specify the format of the mobile phone number.
  * @return A Yup test function that checks if the value is a valid mobile phone number.
  */
-function isMobilePhoneYup(this: StringSchema, message = "Invalid phone number", locale?: MobilePhoneLocaleType) {
-  return this.test(
-    "isMobilePhone",
-    message,
-    function (value) {
-      if (!value) return true;
+function isMobilePhoneYup(
+  this: StringSchema,
+  message = "Invalid phone number",
+  locale?: MobilePhoneLocaleType,
+) {
+  return this.test("isMobilePhone", message, function (value) {
+    if (!value) return true;
 
-      return isMobilePhone(value, locale);
-    },
-  );
+    return isMobilePhone(value, locale);
+  });
 }
 
 export { isMobilePhone, isMobilePhoneYup, MobilePhoneLocaleType };
