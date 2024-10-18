@@ -1,3 +1,5 @@
+import { StringSchema } from "yup";
+
 const MOBILE_PHONE_NUMBER = {
   "am-AM": /^(\+?374|0)(33|4[134]|55|77|88|9[13-689])\d{6}$/,
   "ar-AE": /^((\+?971)|0)?5[024568]\d{7}$/,
@@ -229,4 +231,22 @@ const isMobilePhone = (input: any, locale?: MobilePhoneLocaleType) => {
   return checkIsValidPhone(input, locale);
 };
 
-export { isMobilePhone, MobilePhoneLocaleType };
+/**
+ * Custom Yup test method to validate if a string is a mobile phone number.
+ * @param message - The validation error message to return if the test fails. Defaults to "Invalid phone number".
+ * @param locale - Optional locale to specify the format of the mobile phone number.
+ * @return A Yup test function that checks if the value is a valid mobile phone number.
+ */
+function isMobilePhoneYup(this: StringSchema, message = "Invalid phone number", locale?: MobilePhoneLocaleType) {
+  return this.test(
+    "isMobilePhone",
+    message,
+    function (value) {
+      if (!value) return true;
+
+      return isMobilePhone(value, locale);
+    },
+  );
+}
+
+export { isMobilePhone, isMobilePhoneYup, MobilePhoneLocaleType };
