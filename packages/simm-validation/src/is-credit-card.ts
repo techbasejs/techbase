@@ -36,7 +36,7 @@ const isCreditCard = (input: any, provider?: CreditCardType) => {
     if (
       Object.keys(creditCardRegexs).every(
         (cardProvider) =>
-          !creditCardRegexs[cardProvider as CreditCardType].test(input)
+          !creditCardRegexs[cardProvider as CreditCardType].test(input),
       )
     )
       return false;

@@ -18,6 +18,10 @@ export default unjs({
     "unicorn/prefer-code-point": 0,
     "no-useless-catch": 0,
     "unicorn/prefer-top-level-await": 0,
+    "no-useless-escape": 0,
+    "unicorn/better-regex": 0,
+    "unicorn/prefer-string-slice": 0,
+    "no-prototype-builtins": 0,
     // rule overrides
   },
   markdown: {

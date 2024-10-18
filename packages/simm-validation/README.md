@@ -14,9 +14,10 @@
   - [ ] japannese
   - [x] isAlphaNumeric
   - [ ] alphabet
-  - [ ] phone
+  - [x] phone
   - [ ] url
   - [x] json
+  - [x] jwt
   - [ ] lowercase
   - [ ] uppercase
   - [ ] datetime
@@ -33,6 +34,7 @@
   - [x] maxLength
   - [x] unique array
   - [x] isIp
+  - [x] isHslColor
   - [x] isRgbColor
   - [x] hexColor
   - [x] isLuhnNumber
