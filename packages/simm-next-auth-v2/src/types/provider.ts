@@ -1,16 +1,14 @@
 import { NextRequest } from "next/server";
 import { AUTH_PROVIDER } from "../constants";
+import { User } from "./session";
 
 type ProviderType = `${AUTH_PROVIDER}`;
 
 type ProviderHandlerResponseType = {
   authorized?: boolean;
   session?: {
-   user?: Record<
-    string,
-    number | string | undefined | null | boolean | object
-  >,
-  }
+    user?: User;
+  };
 };
 
 type ProviderHandlerErrorType = {
@@ -27,4 +25,4 @@ export {
   ProviderHandlerResponseType,
   ProviderHandlerErrorType,
   AuthRequestType,
-}
+};
