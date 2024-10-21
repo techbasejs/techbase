@@ -1,5 +1,6 @@
 import { Provider } from "../provider";
 import { AuthRequestType } from "./provider";
+import { User } from "./session";
 
 type Awaitable<T> = T | PromiseLike<T>;
 
@@ -14,7 +15,7 @@ type CallbacksType = {
   redirect?: (params: {
     url: string;
     baseUrl: string;
-    user: Record<string, number | string | undefined | null | boolean | object>;
+    user: User;
   }) => Awaitable<string>;
 };
 

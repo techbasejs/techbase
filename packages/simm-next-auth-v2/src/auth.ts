@@ -1,6 +1,6 @@
 import { getSession } from "./session";
 import { AuthRequestType } from "./types";
-import { AuthConfig } from "./types/auth";
+import { AuthConfig } from "./types";
 
 const auth = ({ providers }: AuthConfig) => {
   if (!process.env.NEXT_AUTH_SECRET) {
@@ -12,10 +12,22 @@ const auth = ({ providers }: AuthConfig) => {
     const results = new Map();
     const providerName = pathname.replace("/api/auth/", "");
 
-    if (method === "GET" && providerName === "session") {
-      const data = await getSession(request);
-      results.set("user", data?.user || null);
+    if (providerName === "session") {
+      if (method === "GET") {
+        const data = await getSession(request);
+        results.set("user", data?.user || null);
+      }
+      if (method === "POST") {
+        const data = await request.json();
+        results.set("user", data || null);
+      }
     }
+
+    // Todo SET cookies
+    // for (const cookie of cookies.values) {
+    //   const cookieStr = serialize(cookie.name, cookie.value, cookie.options);
+    //   headers.append("Set-Cookie", cookieStr);
+    // }
 
     return Response.json(Object.fromEntries(results) || {});
   };

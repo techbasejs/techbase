@@ -7,12 +7,14 @@ import React, {
   useState,
 } from "react";
 import { ofetch } from "ofetch";
+import { User } from "../types";
 
 export const SessionContext = createContext<{
   session: {
-    user: any;
+    user: User | null;
   };
-  updateSession?: () => void;
+  getSession?: () => void;
+  updateSession?: (payload: User) => void;
 }>({
   session: {
     user: null,
@@ -23,7 +25,7 @@ export function useSessionContext<T>() {
   const context = useContext(SessionContext);
   return {
     user: context.session.user as T,
-    update: context.updateSession,
+    update: context.getSession,
   };
 }
 
@@ -36,10 +38,10 @@ export const SessionProvider = ({
     user: null,
   });
   useEffect(() => {
-    updateSession();
+    getSession();
   }, []);
 
-  const updateSession = useCallback(() => {
+  const getSession = useCallback(() => {
     const url = `/api/auth/session`;
 
     ofetch(url).then((res) => {
@@ -49,8 +51,20 @@ export const SessionProvider = ({
     });
   }, []);
 
+  const updateSession = (payload: User) => {
+    const url = `/api/auth/session`;
+    ofetch(url, {
+      method: "POST",
+      body: payload,
+    }).then((res) => {
+      setSession({
+        user: res.user || null,
+      });
+    });
+  };
+
   return (
-    <SessionContext.Provider value={{ session, updateSession }}>
+    <SessionContext.Provider value={{ session, getSession, updateSession }}>
       {children}
     </SessionContext.Provider>
   );
