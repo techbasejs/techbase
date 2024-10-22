@@ -37,6 +37,7 @@ export default defineCommand({
         let deployCommand = [
           `git clone --single-branch -b ${branchName} --progress --verbose ${deployConfig.repo} ${deployConfig.path}`,
           `cd ${deployConfig.path}`,
+          `pnpm install && pnpm build`,
         ];
         const postDeployCmd = deployConfig.postDeploy || "";
         const gitConfigPath = path.join(deployConfig.path as string, ".git");
