@@ -5,7 +5,7 @@ export async function handleRetry(
   retryConfig: RetryConfig,
   errorLogger: (error: any) => Promise<void>,
   //  beforeRetry?: (error: any, attempt: number) => Promise<void>,
-  currentAttempt: number = 1
+  currentAttempt: number = 1,
 ): Promise<any> {
   try {
     return await request();
@@ -17,13 +17,22 @@ export async function handleRetry(
       //   await beforeRetry(error, currentAttempt);
       // }
       await delay(retryConfig.delay);
-      return await handleRetry(request, retryConfig, errorLogger, currentAttempt + 1);
+      return await handleRetry(
+        request,
+        retryConfig,
+        errorLogger,
+        currentAttempt + 1,
+      );
     }
     throw error;
   }
 }
 
-function shouldRetry(error: any, retryConfig: RetryConfig, currentAttempt: number): boolean {
+function shouldRetry(
+  error: any,
+  retryConfig: RetryConfig,
+  currentAttempt: number,
+): boolean {
   const { attempts, statusCodes, httpMethods } = retryConfig;
   const status = error.response?.status;
   const method = error.config?.method?.toUpperCase();
@@ -36,5 +45,5 @@ function shouldRetry(error: any, retryConfig: RetryConfig, currentAttempt: numbe
 }
 
 function delay(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

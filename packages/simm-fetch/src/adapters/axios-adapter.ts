@@ -21,7 +21,7 @@ export class AxiosAdapterImpl implements AxiosAdapter {
     },
   ): Promise<any> {
     const response = await this.axiosInstance.request<T>(config);
-    return response
+    return response;
   }
 
   setInterceptors(interceptors: {

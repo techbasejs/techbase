@@ -1,8 +1,4 @@
-import {
-  AxiosRequestConfig,
-  AxiosResponse,
-  AxiosInstance,
-} from "axios";
+import { AxiosRequestConfig, AxiosResponse, AxiosInstance } from "axios";
 import queryString from "query-string";
 
 export interface RequestOptions extends Partial<APIClientConfig> {
@@ -16,11 +12,21 @@ export interface Interceptor<T> {
   onRejected?: (error: any) => any | Promise<any>;
 }
 
-export type ResponseHook = (response: AxiosResponse) => AxiosResponse | Promise<AxiosResponse>;
+export type ResponseHook = (
+  response: AxiosResponse,
+) => AxiosResponse | Promise<AxiosResponse>;
 export type ErrorHook = (error: any) => any | Promise<any>;
-export type RetryHook = (retryCount: number, error: any) => boolean | Promise<boolean>;
-export type RequestHook = (config: APIClientConfig) => Promise<APIClientConfig> | APIClientConfig;
-export type RedirectHook = (url: string, response: AxiosResponse) => string | Promise<string>;
+export type RetryHook = (
+  retryCount: number,
+  error: any,
+) => boolean | Promise<boolean>;
+export type RequestHook = (
+  config: APIClientConfig,
+) => Promise<APIClientConfig> | APIClientConfig;
+export type RedirectHook = (
+  url: string,
+  response: AxiosResponse,
+) => string | Promise<string>;
 export type HTTPMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
 export interface RetryConfig {
@@ -59,7 +65,6 @@ export interface CustomRequestConfig extends AxiosRequestConfig {
   type?: "json" | "text" | "blob" | "arrayBuffer";
   parseResponse?: (response: any) => any;
 }
-
 
 export const CONTENT_TYPES = {
   html: "text/html",

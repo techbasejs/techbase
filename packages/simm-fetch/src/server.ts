@@ -7,8 +7,6 @@ const port = 4000;
 //app.use(formidable());
 app.use(express.json());
 
-
-
 app.post("/login", (req, res) => {
   // Simulate login and token generation
   accessToken = `access_${Date.now()}`;
@@ -16,8 +14,8 @@ app.post("/login", (req, res) => {
   res.json({ accessToken, refreshToken });
 });
 const authenticateToken = (req: Request, res: Response, next: () => void) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
   if (token !== accessToken) {
     return res.sendStatus(401);
   }
@@ -51,17 +49,21 @@ app.get("/protected", authenticateToken, (req, res) => {
 
 let retryCount = 0;
 
-app.get('/retry-test', (req, res) => {
+app.get("/retry-test", (req, res) => {
   console.log(`Retry attempt: ${retryCount + 1}`);
   if (retryCount == 0) {
     retryCount++;
-    return res.status(500).json({ error: 'Simulated server error with status 500' });
+    return res
+      .status(500)
+      .json({ error: "Simulated server error with status 500" });
   } else if (retryCount == 1) {
     retryCount++;
-    return res.status(504).json({ error: 'Simulated server error with status 504' });
+    return res
+      .status(504)
+      .json({ error: "Simulated server error with status 504" });
   }
   retryCount = 0;
-  return res.status(200).json({ message: 'Success after retry' });
+  return res.status(200).json({ message: "Success after retry" });
 });
 
 // app.post("/send", (req, res) => {

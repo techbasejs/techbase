@@ -1,6 +1,11 @@
 // import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
-import { ResponseHook, RequestHook, RetryHook, APIClientConfig } from "../types";
+import {
+  ResponseHook,
+  RequestHook,
+  RetryHook,
+  APIClientConfig,
+} from "../types";
 
 // ... existing code ...
 
@@ -16,7 +21,7 @@ export async function executeBeforeRequestHooks(
 }
 export async function executeAfterResponseHooks<T>(
   response: T,
-  hooks: ResponseHook[]
+  hooks: ResponseHook[],
 ): Promise<T> {
   let modifiedResponse = response;
   for (const hook of hooks) {

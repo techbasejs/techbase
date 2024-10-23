@@ -8,9 +8,7 @@ export class RefreshTokenHandler {
     private config: RefreshTokenConfig,
     private adapter: RequestAdapter,
     private apiConfig: APIClientConfig,
-
-    // eslint-disable-next-line unicorn/empty-brace-spaces
-  ) { }
+  ) {}
 
   public async handleRequest(
     config: APIClientConfig,
@@ -76,15 +74,15 @@ export class RefreshTokenHandler {
     requestConfig = this.config.createRefreshRequest
       ? this.config.createRefreshRequest(refreshToken)
       : {
-        method: "POST",
-        url: this.apiConfig.baseURL + this.config.refreshTokenUrl,
-        data: { refreshToken },
-        headers: {
-          "Content-Type": "application/json",
-          ...this.apiConfig.headers,
-        },
-        baseURL: this.apiConfig.baseURL,
-      };
+          method: "POST",
+          url: this.apiConfig.baseURL + this.config.refreshTokenUrl,
+          data: { refreshToken },
+          headers: {
+            "Content-Type": "application/json",
+            ...this.apiConfig.headers,
+          },
+          baseURL: this.apiConfig.baseURL,
+        };
     const response = await this.adapter.request(
       requestConfig as APIClientConfig,
     );

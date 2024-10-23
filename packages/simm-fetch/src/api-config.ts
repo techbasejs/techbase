@@ -15,11 +15,9 @@ class APIConfig {
     this.config.baseURL = url;
   }
 
-
   setTimeout(timeout: number): void {
     this.config.timeout = timeout;
   }
-
 
   getConfig(): APIClientConfig {
     return this.config;

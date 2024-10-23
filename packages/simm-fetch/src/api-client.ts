@@ -15,17 +15,16 @@ import {
   handleRequestInterceptor,
   handleResponseError,
   handleResponseSuccess,
-  handleRetry
+  handleRetry,
 } from "./utils/index";
-import {
-  //executeResponseHooks,
-  // executeBeforeRequestHooks,
-  //executeAfterResponseHooks,
-} from "./utils/hooks";
+import {} from //executeResponseHooks,
+// executeBeforeRequestHooks,
+//executeAfterResponseHooks,
+"./utils/hooks";
 import { AxiosAdapterImpl } from "./adapters/axios-adapter";
 import { FetchAdapterImpl } from "./adapters/fetch-adapter";
 import { RefreshTokenHandler } from "./utils/refresh-token-handler";
-import CacheManager from './utils/cache-manager';
+import CacheManager from "./utils/cache-manager";
 
 class APIClient<T extends RequestAdapter> {
   private config: APIClientConfig;
@@ -55,7 +54,10 @@ class APIClient<T extends RequestAdapter> {
 
   private setupCacheManager(): void {
     if (this.config.cache?.provider) {
-      this.cacheManager = new CacheManager(this.config.cache.provider, this.config.cache.ttl);
+      this.cacheManager = new CacheManager(
+        this.config.cache.provider,
+        this.config.cache.ttl,
+      );
     }
   }
   // private setupHooks(): void {
@@ -118,7 +120,6 @@ class APIClient<T extends RequestAdapter> {
     return interceptedConfig;
   }
 
-
   // private async handleResponseError(error: any): Promise<any> {
   //   if (this.refreshTokenHandler) {
   //     try {
@@ -146,7 +147,7 @@ class APIClient<T extends RequestAdapter> {
   }
 
   private async errorLogger(error: any): Promise<void> {
-    console.error('Response error:', error.message);
+    console.error("Response error:", error.message);
     // console.error('Status:', error.response?.status);
     // console.error('Data:', error.response?.data);
     // You can add more logging logic here if needed
@@ -166,7 +167,7 @@ class APIClient<T extends RequestAdapter> {
       );
     }
     const retryConfig = mergedConfig.retry;
-    console.log(106, retryConfig)
+    console.log(106, retryConfig);
     const makeRequest = async () => {
       const response = await this.adapter.request<T>(mergedConfig);
       return response;
@@ -214,7 +215,6 @@ class APIClient<T extends RequestAdapter> {
     return `${baseURL.replace(/\/+$/, "")}/${url.replace(/^\/+/, "")}`;
   }
 
-
   public clearCache(): void {
     if (this.cacheManager) {
       this.cacheManager.clear();
@@ -225,7 +225,11 @@ class APIClient<T extends RequestAdapter> {
     options?: Omit<RequestOptions, "method" | "url">,
   ): Promise<T> {
     if (this.cacheManager) {
-      const cachedData = await this.cacheManager.get<T>({ method: "GET", url, ...options });
+      const cachedData = await this.cacheManager.get<T>({
+        method: "GET",
+        url,
+        ...options,
+      });
       if (cachedData) {
         return cachedData;
       }
