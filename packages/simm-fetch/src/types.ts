@@ -1,38 +1,10 @@
-import { AxiosRequestConfig, AxiosResponse, AxiosInstance, InternalAxiosRequestConfig } from "axios";
+import {
+  AxiosRequestConfig,
+  AxiosResponse,
+  AxiosInstance,
+} from "axios";
 import queryString from "query-string";
-// export interface RequestConfig {
-//   baseURL?: string;
-//   headers?: { [key: string]: string };
-//   timeout?: number;
-//   auth?:
-//     | {
-//         username: string;
-//         password: string;
-//       }
-//     | {
-//         token: string;
-//       };
-//   graphql?: {
-//     endpoint: string;
-//     query: string;
-//     variables?: { [key: string]: any };
-//   };
-//   retry?: number;
-//   useAuthorization?: boolean;
-// }
-// export interface RequestOptions extends RequestConfig {
-//   method: "GET" | "POST" | "PUT" | "DELETE";
-//   url: string;
-//   data?: any;
-//   params?: { [key: string]: any };
-// }
-// export interface Response<T = any> {
-//   data: T;
-//   status: number;
-//   statusText: string;
-//   headers: { [key: string]: string };
-//   config: RequestOptions;
-// }
+
 export interface RequestOptions extends Partial<APIClientConfig> {
   method: HTTPMethod;
   url: string;
@@ -44,38 +16,41 @@ export interface Interceptor<T> {
   onRejected?: (error: any) => any | Promise<any>;
 }
 
-export type HTTPMethod =
-  | "GET"
-  | "POST"
-  | "PUT"
-  | "DELETE"
-  | "PATCH";
-export interface APIClientConfig extends Omit<AxiosRequestConfig, 'method'> {
+export type ResponseHook = (response: AxiosResponse) => AxiosResponse | Promise<AxiosResponse>;
+export type ErrorHook = (error: any) => any | Promise<any>;
+export type RetryHook = (retryCount: number, error: any) => boolean | Promise<boolean>;
+export type RequestHook = (config: APIClientConfig) => Promise<APIClientConfig> | APIClientConfig;
+export type RedirectHook = (url: string, response: AxiosResponse) => string | Promise<string>;
+export type HTTPMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+
+export interface RetryConfig {
+  attempts: number;
+  delay: number;
+  statusCodes?: number[];
+  httpMethods?: HTTPMethod[];
+}
+export interface APIClientConfig extends Omit<AxiosRequestConfig, "method"> {
   method?: HTTPMethod;
   baseURL?: string;
   headers?: Record<string, string>;
   timeout?: number;
-  isRetry?: boolean;
-  retries?: number;
-  retryCount?: number;
   useAuth?: boolean;
   isRefreshing?: boolean;
   url?: string;
   body?: any;
   data?: any;
-  retry?: {
-    attempts: number;
-    delay?: number;
+  retry?: RetryConfig;
+  cache?: {
+    provider: CacheProvider;
+    ttl?: number; // Time to live in seconds
+    keyPrefix?: string;
   };
   hooks?: {
-    beforeRequest?: Array<
-      (
-        config: AxiosRequestConfig,
-      ) => AxiosRequestConfig | Promise<AxiosRequestConfig>
-    >;
-    afterResponse?: Array<
-      (response: AxiosResponse) => AxiosResponse | Promise<AxiosResponse>
-    >;
+    afterResponse?: ResponseHook[];
+    beforeError?: ErrorHook[];
+    beforeRetry?: RetryHook[];
+    beforeRequest?: RequestHook[];
+    beforeRedirect?: RedirectHook[];
   };
   queryConfig?: queryString.StringifyOptions | undefined;
   _retry?: boolean;
@@ -100,7 +75,9 @@ export interface RequestAdapter {
   request<T = any>(config: APIClientConfig): Promise<T>;
 
   setInterceptors(interceptors: {
-    request: (config: APIClientConfig) => APIClientConfig | Promise<APIClientConfig>;
+    request: (
+      config: APIClientConfig,
+    ) => APIClientConfig | Promise<APIClientConfig>;
     requestError: (error: any) => Promise<any>;
     response: (response: any) => any | Promise<any>;
     responseError: (error: any) => Promise<any>;
@@ -132,3 +109,8 @@ export interface RefreshTokenConfig {
   };
 }
 export type ContentType = keyof typeof CONTENT_TYPES;
+export interface CacheProvider {
+  get<T>(key: string): Promise<T | null>;
+  set<T>(key: string, value: T, ttl?: number): Promise<void>;
+  clear(): Promise<void>;
+}

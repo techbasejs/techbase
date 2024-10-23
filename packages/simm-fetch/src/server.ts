@@ -49,12 +49,20 @@ app.get("/protected", authenticateToken, (req, res) => {
 // });
 // let count = 0;
 
-// app.get("/retry", (req, res) => {
-//   console.log("server count :", count++);
-//   res.status(400).send({
-//     message: "This is an error!",
-//   });
-// });
+let retryCount = 0;
+
+app.get('/retry-test', (req, res) => {
+  console.log(`Retry attempt: ${retryCount + 1}`);
+  if (retryCount == 0) {
+    retryCount++;
+    return res.status(500).json({ error: 'Simulated server error with status 500' });
+  } else if (retryCount == 1) {
+    retryCount++;
+    return res.status(504).json({ error: 'Simulated server error with status 504' });
+  }
+  retryCount = 0;
+  return res.status(200).json({ message: 'Success after retry' });
+});
 
 // app.post("/send", (req, res) => {
 //   res.send({

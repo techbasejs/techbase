@@ -5,8 +5,6 @@ class APIConfig {
     baseURL: "",
     headers: {},
     timeout: 10_000,
-    retries: 3,
-    retryCount: 0,
   };
   constructor(config?: APIClientConfig) {
     if (config) {
@@ -17,17 +15,11 @@ class APIConfig {
     this.config.baseURL = url;
   }
 
-  setHeader(key: string, value: string): void {
-    this.config.headers[key] = value;
-  }
 
   setTimeout(timeout: number): void {
     this.config.timeout = timeout;
   }
 
-  setRetries(retries: number): void {
-    this.config.retries = retries;
-  }
 
   getConfig(): APIClientConfig {
     return this.config;
