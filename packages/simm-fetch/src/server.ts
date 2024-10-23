@@ -39,6 +39,24 @@ app.post("/refresh", (req, res) => {
   }
 });
 
+app.post("/refresh", (req, res) => {
+  try {
+    console.log("Received refresh token request:", req.body);
+    const { refreshToken: sentRefreshToken } = req.body;
+
+    if (sentRefreshToken !== refreshToken) {
+      return res.status(403).json({ error: "Invalid refresh token" });
+    }
+
+    // Generate new access token
+    accessToken = `access_${Date.now()}`;
+    res.json({ accessToken });
+  } catch (error) {
+    console.error("Error processing refresh token:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.get("/protected", authenticateToken, (req, res) => {
   res.json({ message: "This is protected data" });
 });
@@ -65,19 +83,6 @@ app.get("/retry-test", (req, res) => {
   retryCount = 0;
   return res.status(200).json({ message: "Success after retry" });
 });
-
-// app.post("/send", (req, res) => {
-//   res.send({
-//     requestBody: {
-//       ...req.fields,
-//       file: req.files,
-//     },
-//   });
-// });
-
-// app.post("/upload", (req, res) => {
-//   res.send({ requestBody: { ...req.fields, file: req.files } });
-// });
 
 app.listen(port, () => {
   console.log(`Server is Fire at http://locahost:${port}`);
