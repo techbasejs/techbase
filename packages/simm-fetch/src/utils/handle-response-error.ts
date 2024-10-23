@@ -1,11 +1,8 @@
-import { APIClientConfig } from "../types";
-import { handleRetry } from "./handle-retry";
+import { AxiosError } from "axios";
 
-export async function handleResponseError(error: any, config: APIClientConfig): Promise<any> {
-  if (config.retry && config.retry.attempts > 0) {
-    return handleRetry(error, config);
-  }
-  // add other handle logic
+export async function handleResponseError(error: AxiosError): Promise<never> {
+    // console.error('Response error:', error.message);
+    // console.error('Status:', error.response?.status);
+    // console.error('Data:', error.response?.data);
+    throw error;
 }
-
-

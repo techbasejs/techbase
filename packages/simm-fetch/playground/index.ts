@@ -133,14 +133,50 @@
 
 // testHandleRequestSuccess();
 import { createAPIClient, APIConfig } from '../src/index';
-import { RefreshTokenConfig } from '../src/types';
+import { CacheProvider, RefreshTokenConfig } from '../src/types';
 
 // Simulated token storage (in a real app, this might be in localStorage or a secure storage)
 let accessToken: string | null = null;
 let refreshToken: string | null = null;
+class InMemoryCache implements CacheProvider {
+  private cache: Map<string, { value: any; expiry: number }> = new Map();
 
+  async get<T>(key: string): Promise<T | null> {
+    const cachedItem = this.cache.get(key);
+
+    if (!cachedItem) return null;
+
+    // Check if the cache has expired
+    if (Date.now() > cachedItem.expiry) {
+      this.cache.delete(key);
+
+      return null;
+    }
+
+    return cachedItem.value;
+  }
+
+  async set<T>(key: string, value: T, ttl?: number): Promise<void> {
+    const expiry = ttl ? Date.now() + ttl * 1000 : Number.POSITIVE_INFINITY; // Convert ttl to milliseconds
+    this.cache.set(key, { value, expiry });
+  }
+
+  async clear(): Promise<void> {
+    this.cache.clear();
+  }
+}
 const apiConfig = new APIConfig({
   baseURL: 'http://localhost:4000',
+  cache: {
+    provider: new InMemoryCache(),
+    ttl: 3,
+  },
+  retry: {
+    attempts: 3,
+    delay: 7000,
+    httpMethods: ['GET'],
+    statusCodes: [500, 504]
+  }
 });
 
 const refreshTokenConfig: RefreshTokenConfig = {
@@ -163,7 +199,28 @@ const refreshTokenConfig: RefreshTokenConfig = {
 
 
 const client = createAPIClient(apiConfig.getConfig(), 'axios', refreshTokenConfig);
+// client.addHook('beforeRequest', (config) => {
+//   config.retry = {
+//     attempts: 3,
+//     delay: 1000,
+//     httpMethods: ['GET'],
+//     statusCodes: [500, 504]
+//   }
+//   // Modify config before request
+//   return config;
+// });
 
+
+// client.addHook('afterResponse', (response) => {
+//   // Process response data
+//   response.data = 'change data from api before response';
+//   return response;
+// });
+
+// client.addHook('beforeError', (error) => {
+//   // Handle or transform error
+//   return error;
+// });
 async function login() {
   try {
     const response: any = await client.post('/login');
@@ -203,3 +260,20 @@ async function runTest() {
 
 // eslint-disable-next-line unicorn/prefer-top-level-await
 runTest().catch(console.error);
+
+async function testRetry() {
+
+  try {
+    console.log('Starting retry test...');
+    const response = await client.get('/retry-test');
+    console.log('Response:', response);
+  } catch (error: any) {
+    console.error('Final error:', error.message);
+    if (error.response) {
+      console.error('Status:', error.response.status);
+      console.error('Data:', error.response.data);
+    }
+  }
+}
+// eslint-disable-next-line unicorn/prefer-top-level-await
+testRetry();

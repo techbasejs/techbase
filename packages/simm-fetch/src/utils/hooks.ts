@@ -1,51 +1,47 @@
-// src/utils/hooks.ts
-
+// import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { AxiosRequestConfig, AxiosResponse } from "axios";
-type ResponseHook = (responseData: { data: any, headers: Record<string, string>, status: number }) => void | Promise<void>;
+import {
+  ResponseHook,
+  RequestHook,
+  RetryHook,
+  APIClientConfig,
+} from "../types";
 
-const responseHooks: ResponseHook[] = [];
-
-export const registerResponseHook = (hook: ResponseHook) => {
-  responseHooks.push(hook);
-};
-
-export const executeResponseHooks = async (
-  responseData: { data: any, headers: Record<string, string>, status: number },
-  afterResponse?: ResponseHook
-) => {
-  if (afterResponse) {
-    await Promise.resolve(afterResponse(responseData));
-  }
-
-  for (const hook of responseHooks) {
-    await Promise.resolve(hook(responseData));
-  }
-};
+// ... existing code ...
 
 export async function executeBeforeRequestHooks(
-  config: AxiosRequestConfig,
-  hooks?: Array<
-    (
-      config: AxiosRequestConfig,
-    ) => AxiosRequestConfig | Promise<AxiosRequestConfig>
-  >,
-): Promise<AxiosRequestConfig> {
+  config: APIClientConfig,
+  hooks?: RequestHook[],
+): Promise<any> {
   if (!hooks) return config;
   for (const hook of hooks) {
     config = await hook(config);
   }
   return config;
 }
-
-export async function executeAfterResponseHooks(
-  response: AxiosResponse,
-  hooks?: Array<
-    (response: AxiosResponse) => AxiosResponse | Promise<AxiosResponse>
-  >,
-): Promise<AxiosResponse> {
-  if (!hooks) return response;
+export async function executeAfterResponseHooks<T>(
+  response: T,
+  hooks: ResponseHook[],
+): Promise<T> {
+  let modifiedResponse = response;
   for (const hook of hooks) {
-    response = await hook(response);
+    modifiedResponse = await hook(modifiedResponse);
   }
-  return response;
+  return modifiedResponse;
 }
+
+export async function executeBeforeRetryHooks(
+  retryCount: number,
+  error: any,
+  hooks?: RetryHook[],
+): Promise<boolean> {
+  if (!hooks) return true;
+  for (const hook of hooks) {
+    if (!(await hook(retryCount, error))) {
+      return false;
+    }
+  }
+  return true;
+}
+
+// ... rest of the file ...

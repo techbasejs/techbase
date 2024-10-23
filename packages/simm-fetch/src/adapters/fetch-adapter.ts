@@ -1,29 +1,53 @@
-import { APIClientConfig, RequestAdapter } from '../types';
+import { APIClientConfig, RequestAdapter } from "../types";
 
 export class FetchAdapterImpl implements RequestAdapter {
   private config: APIClientConfig;
   private controller: AbortController | null = null;
   private interceptors: {
-    request: [(config: APIClientConfig) => APIClientConfig | Promise<APIClientConfig>, (error: any) => any | Promise<any>];
-    response: [(response: Response) => any | Promise<any>, (error: any) => any | Promise<any>];
+    request: [
+      (config: APIClientConfig) => APIClientConfig | Promise<APIClientConfig>,
+      (error: any) => any | Promise<any>,
+    ];
+    response: [
+      (response: Response) => any | Promise<any>,
+      (error: any) => any | Promise<any>,
+    ];
   };
 
   constructor(config: APIClientConfig) {
     this.config = config;
     this.interceptors = {
-      request: [async (config) => config, async (error) => { throw error; }],
-      response: [async (response) => response, async (error) => { throw error; }]
+      request: [
+        async (config) => config,
+        async (error) => {
+          throw error;
+        },
+      ],
+      response: [
+        async (response) => response,
+        async (error) => {
+          throw error;
+        },
+      ],
     };
   }
 
   setInterceptors(interceptors: {
-    request: (config: APIClientConfig) => APIClientConfig | Promise<APIClientConfig>;
+    request: (
+      config: APIClientConfig,
+    ) => APIClientConfig | Promise<APIClientConfig>;
     requestError: (error: any) => any | Promise<any>;
     response: (response: any) => any | Promise<any>;
     responseError: (error: any) => any | Promise<any>;
   }): void {
-    this.interceptors.request = [interceptors.request, interceptors.requestError];
-    this.interceptors.response = [interceptors.response, interceptors.responseError];
+    this.interceptors.request = [
+      interceptors.request,
+      interceptors.requestError,
+    ];
+    this.interceptors.response = [
+      interceptors.response,
+      interceptors.responseError,
+    ];
   }
 
   async request<T = any>(config: APIClientConfig): Promise<T> {
@@ -36,19 +60,23 @@ export class FetchAdapterImpl implements RequestAdapter {
       const fetchConfig: RequestInit = {
         method: interceptedConfig.method,
         headers: interceptedConfig.headers,
-        body: interceptedConfig.data ? JSON.stringify(interceptedConfig.data) : undefined,
+        body: interceptedConfig.data
+          ? JSON.stringify(interceptedConfig.data)
+          : undefined,
         signal,
       };
 
-      const timeoutId = interceptedConfig.timeout ? setTimeout(() => this.controller?.abort(), interceptedConfig.timeout) : null;
+      const timeoutId = interceptedConfig.timeout
+        ? setTimeout(() => this.controller?.abort(), interceptedConfig.timeout)
+        : null;
 
       const response: any = await fetch(interceptedConfig.url!, fetchConfig);
       const interceptedResponse = await this.interceptors.response[0](response);
       if (timeoutId) clearTimeout(timeoutId);
       if (interceptedResponse.ok) {
-        return await interceptedResponse.data
+        return await interceptedResponse.data;
       } else {
-        const error = new Error('Custom Fetch Error');
+        const error = new Error("Custom Fetch Error");
         (error as any).config = {
           ...fetchConfig,
           url: interceptedConfig.url,
@@ -66,11 +94,10 @@ export class FetchAdapterImpl implements RequestAdapter {
             method: interceptedConfig.method,
             data: interceptedConfig.data,
             timeout: interceptedConfig.timeout,
-          }
-        }
+          },
+        };
         throw error;
       }
-
     } catch (error) {
       return this.interceptors.response[1](error);
     }

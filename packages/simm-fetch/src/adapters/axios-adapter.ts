@@ -1,5 +1,9 @@
-import axios, { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-import { AxiosAdapter, APIClientConfig, HTTPMethod } from '../types';
+import axios, {
+  AxiosInstance,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from "axios";
+import { AxiosAdapter, APIClientConfig, HTTPMethod } from "../types";
 
 export class AxiosAdapterImpl implements AxiosAdapter {
   axiosInstance: AxiosInstance;
@@ -8,14 +12,16 @@ export class AxiosAdapterImpl implements AxiosAdapter {
     this.axiosInstance = axios.create(config);
   }
 
-  async request<T = any>(config: APIClientConfig & {
-    method: HTTPMethod;
-    url: string;
-    data?: any;
-    params?: any;
-  }): Promise<T> {
+  async request<T = any>(
+    config: APIClientConfig & {
+      method: HTTPMethod;
+      url: string;
+      data?: any;
+      params?: any;
+    },
+  ): Promise<any> {
     const response = await this.axiosInstance.request<T>(config);
-    return response.data;
+    return response;
   }
 
   setInterceptors(interceptors: {
@@ -30,11 +36,11 @@ export class AxiosAdapterImpl implements AxiosAdapter {
         const transformedConfig = await interceptors.request(apiClientConfig);
         return transformedConfig as InternalAxiosRequestConfig;
       },
-      interceptors.requestError
+      interceptors.requestError,
     );
     this.axiosInstance.interceptors.response.use(
       interceptors.response as (response: AxiosResponse) => AxiosResponse,
-      interceptors.responseError
+      interceptors.responseError,
     );
   }
 

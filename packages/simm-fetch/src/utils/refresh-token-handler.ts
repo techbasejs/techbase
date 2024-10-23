@@ -30,7 +30,7 @@ export class RefreshTokenHandler {
       if (this.isRefreshing) {
         return new Promise((resolve) => {
           this.refreshSubscribers.push((token: string) => {
-            originalRequest.headers['Authorization'] = `Bearer ${token}`;
+            originalRequest.headers["Authorization"] = `Bearer ${token}`;
             resolve(this.adapter.request(originalRequest));
           });
         });
@@ -40,11 +40,10 @@ export class RefreshTokenHandler {
       originalRequest._retry = true;
 
       try {
-
         const newToken = await this.refreshToken();
         for (const callback of this.refreshSubscribers) callback(newToken);
         this.refreshSubscribers = [];
-        originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+        originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
         return await this.adapter.request(originalRequest);
       } catch (refreshError) {
         if (this.config.onRefreshFailure) {
@@ -71,17 +70,21 @@ export class RefreshTokenHandler {
 
     let requestConfig;
     // eslint-disable-next-line prefer-const
-    requestConfig = this.config.createRefreshRequest ? this.config.createRefreshRequest(refreshToken) : {
-      method: 'POST',
-      url: this.apiConfig.baseURL + this.config.refreshTokenUrl,
-      data: { refreshToken },
-      headers: {
-        'Content-Type': 'application/json',
-        ...this.apiConfig.headers,
-      },
-      baseURL: this.apiConfig.baseURL,
-    };
-    const response = await this.adapter.request(requestConfig as APIClientConfig);
+    requestConfig = this.config.createRefreshRequest
+      ? this.config.createRefreshRequest(refreshToken)
+      : {
+        method: "POST",
+        url: this.apiConfig.baseURL + this.config.refreshTokenUrl,
+        data: { refreshToken },
+        headers: {
+          "Content-Type": "application/json",
+          ...this.apiConfig.headers,
+        },
+        baseURL: this.apiConfig.baseURL,
+      };
+    const response = await this.adapter.request(
+      requestConfig as APIClientConfig,
+    );
     const newToken = this.config.extractAccessToken(response);
     //const newToken = response.accessToken
     if (this.config.onRefreshSuccess) {
