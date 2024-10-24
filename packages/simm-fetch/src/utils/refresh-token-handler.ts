@@ -26,7 +26,7 @@ export class RefreshTokenHandler {
 
   public async handleResponseError(error: any): Promise<any> {
     const originalRequest = error.config;
-    if (error.response?.status === 401) {
+    if (error.response?.status === 401 && !originalRequest._retry) {
       if (this.isRefreshing) {
         return new Promise((resolve) => {
           this.refreshSubscribers.push((token: string) => {
@@ -41,6 +41,7 @@ export class RefreshTokenHandler {
 
       try {
         const newToken = await this.refreshToken();
+        // await this.delay(5100); // Add a small delay after refreshing
         for (const callback of this.refreshSubscribers) callback(newToken);
         this.refreshSubscribers = [];
         originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
@@ -86,7 +87,6 @@ export class RefreshTokenHandler {
       requestConfig as APIClientConfig,
     );
     const newToken = this.config.extractAccessToken(response);
-    //const newToken = response.accessToken
     if (this.config.onRefreshSuccess) {
       await this.config.onRefreshSuccess(newToken, response);
     }
