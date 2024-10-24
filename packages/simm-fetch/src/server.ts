@@ -1,69 +1,63 @@
 import express, { Application, Request, Response } from "express";
-//const formidable = require("express-formidable");
-let accessToken = "initial_access_token";
-let refreshToken = "initial_refresh_token";
+import jwt from "jsonwebtoken";
+
 const app: Application = express();
 const port = 4000;
-//app.use(formidable());
+const JWT_SECRET = "PzIM10uFrDm0qOlvbEY";
+let accessToken = "";
+let refreshToken = "";
+
 app.use(express.json());
 
 app.post("/login", (req, res) => {
-  // Simulate login and token generation
-  accessToken = `access_${Date.now()}`;
-  refreshToken = `refresh_${Date.now()}`;
+  accessToken = jwt.sign(req.body, JWT_SECRET, { expiresIn: '2s' });
+  refreshToken = jwt.sign(req.body, JWT_SECRET, { expiresIn: '7d' });
   res.json({ accessToken, refreshToken });
 });
+
 const authenticateToken = (req: Request, res: Response, next: () => void) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
-  if (token !== accessToken) {
-    return res.sendStatus(401);
-  }
-  next();
+  console.log('AuthenticateToken-SERVER...\n');
+  jwt.verify(token, JWT_SECRET, (err: jwt.VerifyErrors | null) => {
+    if (err) {
+      console.log('Token expired at:', err.expiredAt);
+      return res.status(401).json({ error: "Token expired" });
+    } else {
+      next();
+    }
+  });
 };
-app.post("/refresh", (req, res) => {
-  try {
-    console.log("Received refresh token request:", req.body);
-    const { refreshToken: sentRefreshToken } = req.body;
-
-    if (sentRefreshToken !== refreshToken) {
-      return res.status(403).json({ error: "Invalid refresh token" });
-    }
-
-    // Generate new access token
-    accessToken = `access_${Date.now()}`;
-    res.json({ accessToken });
-  } catch (error) {
-    console.error("Error processing refresh token:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
 
 app.post("/refresh", (req, res) => {
+  console.log('RefreshToken-SERVER...\n');
   try {
-    console.log("Received refresh token request:", req.body);
-    const { refreshToken: sentRefreshToken } = req.body;
+    // console.log("Received refresh token-SERVER:", req.body);
+    const { refreshToken } = req.body;
 
-    if (sentRefreshToken !== refreshToken) {
-      return res.status(403).json({ error: "Invalid refresh token" });
+    if (!refreshToken) {
+      return res.status(400).json({ error: "Refresh token is required" });
     }
 
-    // Generate new access token
-    accessToken = `access_${Date.now()}`;
-    res.json({ accessToken });
+    jwt.verify(refreshToken, JWT_SECRET, (err: jwt.VerifyErrors | null, decoded: jwt.JwtPayload) => {
+      const { iat, exp, ...payload } = decoded;
+      if (err) {
+        return res.status(403).json({ error: "Invalid refresh token" });
+      }
+      accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '15m' });
+      res.json({ accessToken });
+    });
   } catch (error) {
-    console.error("Error processing refresh token:", error);
+    console.error("Error processing refresh token-SERVER:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
 app.get("/protected", authenticateToken, (req, res) => {
-  res.json({ message: "This is protected data" });
+  console.log('Middleware passed-SERVER\n');
+  res.json({ message: "DATA from server with success token" });
 });
-// app.get("/user", (req, res) => {
-//   res.json(200);
-// });
-// let count = 0;
+
 
 let retryCount = 0;
 
