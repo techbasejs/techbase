@@ -9,6 +9,7 @@ const main = defineCommand({
   subCommands: {
     sftp: () => import("./commands/sftp").then((r) => r.default),
     deploy: () => import("./commands/deploy").then((r) => r.default),
+    exec: () => import("./commands/exec").then((r) => r.default),
   },
 });
 
