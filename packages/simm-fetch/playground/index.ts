@@ -132,6 +132,7 @@
 // }
 
 // testHandleRequestSuccess();
+import { AxiosError, AxiosResponse } from 'axios';
 import { createAPIClient, APIConfig } from '../src/index';
 import { CacheProvider, RefreshTokenConfig } from '../src/types';
 
@@ -295,6 +296,9 @@ const hookConfig = new APIConfig({
     ],
     afterResponse: [
       async (response) => {
+        /* With FETCH adapter
+          console.log('After response:', response);
+        */
         console.log('After response:', response.data);
         return response;
       }
@@ -315,11 +319,16 @@ const hookConfig = new APIConfig({
 });
 
 const hookClient = createAPIClient(hookConfig.getConfig(), 'axios');
-
+/* With FETCH adapter
+  const client = createAPIClient(config.getConfig(), 'fetch');
+*/
 const testHookAxios = async () => {
   try {
     const res: AxiosResponse = await hookClient.get('/todos/1');
     console.log('Response:', res.data);
+    /* With FETCH adapter
+      console.log('Response:', res);
+    */
   } catch (error: unknown) {
     if (error instanceof AxiosError) {
       console.log('Error message:', error.message);

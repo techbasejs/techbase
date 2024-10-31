@@ -56,7 +56,6 @@ export class FetchAdapterImpl implements RequestAdapter {
 
       this.controller = new AbortController();
       const signal = this.controller.signal;
-
       const fetchConfig: RequestInit = {
         method: interceptedConfig.method,
         headers: interceptedConfig.headers,
@@ -69,14 +68,15 @@ export class FetchAdapterImpl implements RequestAdapter {
       const timeoutId = interceptedConfig.timeout
         ? setTimeout(() => this.controller?.abort(), interceptedConfig.timeout)
         : null;
-
       const response: any = await fetch(interceptedConfig.url!, fetchConfig);
       const interceptedResponse = await this.interceptors.response[0](response);
       if (timeoutId) clearTimeout(timeoutId);
       if (interceptedResponse.ok) {
         return await interceptedResponse.data;
       } else {
-        const error = new Error("Custom Fetch Error");
+        const error = new Error(
+          `Request failed with status code ${response.status}`,
+        );
         (error as any).config = {
           ...fetchConfig,
           url: interceptedConfig.url,

@@ -17,10 +17,10 @@ import {
   handleResponseSuccess,
   handleRetry,
 } from "./utils/index";
-import { } from //executeResponseHooks,
-  // executeBeforeRequestHooks,
-  //executeAfterResponseHooks,
-  "./utils/hooks";
+import {} from //executeResponseHooks,
+// executeBeforeRequestHooks,
+//executeAfterResponseHooks,
+"./utils/hooks";
 import { AxiosAdapterImpl } from "./adapters/axios-adapter";
 import { FetchAdapterImpl } from "./adapters/fetch-adapter";
 import { RefreshTokenHandler } from "./utils/refresh-token-handler";
@@ -180,7 +180,7 @@ class APIClient<T extends RequestAdapter> {
       if (this.config.hooks?.afterResponse) {
         let modifiedResponse: any = response;
         for (const hook of this.config.hooks.afterResponse) {
-          modifiedResponse = await hook(modifiedResponse) as T;
+          modifiedResponse = (await hook(modifiedResponse)) as T;
         }
         return modifiedResponse;
       }
@@ -189,25 +189,22 @@ class APIClient<T extends RequestAdapter> {
 
     if (retryConfig) {
       try {
-        return await handleRetry(
-          makeRequest,
-          {
-            attempts: retryConfig.attempts,
-            delay: retryConfig.delay,
-            statusCodes: retryConfig.statusCodes,
-            onError: async (error: unknown) => {
-              await this.errorLogger(error);
-            },
-            beforeRetry: async (error: unknown, attempt: number) => {
-              if (this.config.hooks?.beforeRetry) {
-                for (const hook of this.config.hooks.beforeRetry) {
-                  await hook(attempt, error);
-                }
+        return await handleRetry(makeRequest, {
+          attempts: retryConfig.attempts,
+          delay: retryConfig.delay,
+          statusCodes: retryConfig.statusCodes,
+          onError: async (error: unknown) => {
+            await this.errorLogger(error);
+          },
+          beforeRetry: async (error: unknown, attempt: number) => {
+            if (this.config.hooks?.beforeRetry) {
+              for (const hook of this.config.hooks.beforeRetry) {
+                await hook(attempt, error);
               }
-              return true;
             }
-          }
-        );
+            return true;
+          },
+        });
       } catch (error) {
         return this.handleResponseError(error);
       }
