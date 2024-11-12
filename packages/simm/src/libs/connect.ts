@@ -54,7 +54,6 @@ function connectThroughJump(
           },
         );
       } else if (finalConfig.host) {
-        // Đến proxy cuối cùng
         nextClient.forwardOut(
           "127.0.0.1",
           8124,
@@ -101,7 +100,7 @@ export function sshConnect(
     return;
   }
 
-  const jumpConfigs: any[] = [];
+  const jumpConfigs: ServerConfig[] = [];
   let currentConfig = serverConfig;
 
   while (currentConfig?.proxyJump) {
