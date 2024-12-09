@@ -38,31 +38,34 @@ const uploadFolderViaSftp = async (
 
   await Promise.all(
     files.map((file, index) => {
-      const sourceFilePath = file.source;
-      const destFilePath = file.dest;
-      let uploadedBytes = 0;
-      const fileSize = fs.statSync(sourceFilePath).size;
-      const filename = path.basename(sourceFilePath);
-      const readStream = fs.createReadStream(sourceFilePath);
-      const writeStream = sftp.createWriteStream(destFilePath);
-      writeStream.on("close", () => {
-        consola.success(`File ${filename} transferred successfully`);
-      });
-      readStream.on("data", (chunk) => {
-        uploadedBytes += chunk.length;
-        const fileProgressPercent = Math.floor(
-          (uploadedBytes / fileSize) * 100,
-        );
-        if (index === 0) {
-          b1.update(fileProgressPercent, { filename: filename });
-        } else {
-          b2.update(fileProgressPercent, { filename: filename });
-        }
-      });
-      writeStream.on("error", (err: any) => {
-        callback?.(JSON.stringify(err));
-      });
-      readStream.pipe(writeStream);
+      return new Promise((resolve) => {
+        const sourceFilePath = file.source;
+        const destFilePath = file.dest;
+        let uploadedBytes = 0;
+        const fileSize = fs.statSync(sourceFilePath).size;
+        const filename = path.basename(sourceFilePath);
+        const readStream = fs.createReadStream(sourceFilePath);
+        const writeStream = sftp.createWriteStream(destFilePath);
+        writeStream.on("close", () => {
+          resolve(true)
+        });
+        readStream.on("data", (chunk) => {
+          uploadedBytes += chunk.length;
+          const fileProgressPercent = Math.floor(
+            (uploadedBytes / fileSize) * 100,
+          );
+          if (index === 0) {
+            b1.update(fileProgressPercent, { filename: filename });
+          } else {
+            b2.update(fileProgressPercent, { filename: filename });
+          }
+        });
+        writeStream.on("error", (err: any) => {
+          resolve(true)
+        });
+        readStream.pipe(writeStream);
+      })
+
     }),
   );
 

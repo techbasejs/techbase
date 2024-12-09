@@ -1,6 +1,6 @@
 {
   "name": "@techbasejs/simm",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "👂 Simple deploy like pm2",
   "repository": "techbase/techbasejs",
   "license": "MIT",
