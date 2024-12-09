@@ -4,12 +4,12 @@ export const regexValidate = {
   generateLatDMSRegex: (d: string, m: string, s: string) =>
     new RegExp(
       `^(([1-8]?\\d)${d}([1-5]?\\d|60)${m}([1-5]?\\d|60)(\\.\\d+)?|90${d}0${m}0)${s}[NSns]?$`,
-      "i"
+      "i",
     ),
   generateLongDMSRegex: (d: string, m: string, s: string) =>
     new RegExp(
       `^([1-7]?\\d{1,2}${d}([1-5]?\\d|60)${m}([1-5]?\\d|60)(\\.\\d+)?|180${d}0${m}0)${s}[EWew]?$`,
-      "i"
+      "i",
     ),
 };
 

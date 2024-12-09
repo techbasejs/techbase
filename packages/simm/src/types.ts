@@ -24,6 +24,12 @@ export type SimmServerSftpConfig = {
   source?: string;
   dest?: string;
   postSftp?: string;
+  files?: SimmServerSftpFile[];
+};
+
+export type SimmServerSftpFile = {
+  source: string;
+  dest: string;
 };
 
 export type BaseResultType<T> = {

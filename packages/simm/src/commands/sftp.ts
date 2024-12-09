@@ -5,31 +5,10 @@ import { defineCommand } from "citty";
 import { resolve } from "pathe";
 import consola from "consola";
 import { sshConnect } from "../libs/connect";
-import { SimmConfig } from "../types";
+import { SimmConfig, SimmServerSftpFile } from "../types";
 import { createResolver } from "../_resolver";
 import { SFTPWrapper } from "ssh2";
-
-/**
- * Recursively counts the total number of files in a directory and its subdirectories.
- *
- * @param sourcePath The absolute path to the directory to start counting from.
- * @returns The total number of files found.
- */
-const countFiles = (sourcePath: string) => {
-  let count = 0;
-  const files = fs.readdirSync(sourcePath);
-  for (const file of files) {
-    const sourceFilePath = path.join(sourcePath, file);
-    const stats = fs.statSync(sourceFilePath);
-    if (stats.isDirectory()) {
-      count = count + countFiles(sourceFilePath);
-    } else if (stats.isFile()) {
-      count++;
-    }
-  }
-
-  return count;
-};
+import { MultiBar, Presets } from "cli-progress";
 
 /**
  * Uploads a folder and its contents to a remote server via SFTP.
@@ -43,57 +22,53 @@ const countFiles = (sourcePath: string) => {
  */
 const uploadFolderViaSftp = async (
   sftp: SFTPWrapper,
-  sourcePath: string,
-  destPath: string,
-  totalFiles: number,
+  files: SimmServerSftpFile[],
   callback?: (err?: string | null) => void,
-): Promise<number> => {
-  let uploadedFilesCount = 0;
-  const files = fs.readdirSync(sourcePath);
-  const checkUploadDone = () => {
-    if (uploadedFilesCount === totalFiles) {
-      consola.success(`Files transferred successfully`);
-      callback?.();
-    }
-  };
+) => {
+  const multibar = new MultiBar(
+    {
+      clearOnComplete: false,
+      hideCursor: true,
+      format: " {bar} | {filename} | {value}/{total}",
+    },
+    Presets.shades_grey,
+  );
+  const b1 = multibar.create(100, 0);
+  const b2 = multibar.create(100, 0);
 
-  for (const file of files) {
-    const sourceFilePath = path.join(sourcePath, file);
-    const destFilePath = path.join(destPath, file);
-    const stats = fs.statSync(sourceFilePath);
-    if (stats.isFile()) {
+  await Promise.all(
+    files.map((file, index) => {
+      const sourceFilePath = file.source;
+      const destFilePath = file.dest;
+      let uploadedBytes = 0;
+      const fileSize = fs.statSync(sourceFilePath).size;
       const filename = path.basename(sourceFilePath);
-      await new Promise<void>((resolve, reject) => {
-        const readStream = fs.createReadStream(sourceFilePath);
-        const writeStream = sftp.createWriteStream(destFilePath);
-        writeStream.on("close", () => {
-          ++uploadedFilesCount;
-          consola.success(`File ${filename} transferred successfully`);
-          resolve();
-        });
-        writeStream.on("error", (err: any) => {
-          callback?.(JSON.stringify(err));
-          reject(err);
-        });
-        readStream.pipe(writeStream);
+      const readStream = fs.createReadStream(sourceFilePath);
+      const writeStream = sftp.createWriteStream(destFilePath);
+      writeStream.on("close", () => {
+        consola.success(`File ${filename} transferred successfully`);
       });
-      checkUploadDone();
-    } else if (stats.isDirectory()) {
-      sftp.mkdir(destFilePath, { mode: "0755" }, async () => {
-        const newCount = await uploadFolderViaSftp(
-          sftp,
-          sourceFilePath,
-          destFilePath,
-          totalFiles,
-          callback,
-        ); // Recurse for subfolders
-        uploadedFilesCount = uploadedFilesCount + newCount;
-        checkUploadDone();
+      readStream.on("data", (chunk) => {
+        uploadedBytes += chunk.length;
+        const fileProgressPercent = Math.floor(
+          (uploadedBytes / fileSize) * 100,
+        );
+        if (index === 0) {
+          b1.update(fileProgressPercent, { filename: filename });
+        } else {
+          b2.update(fileProgressPercent, { filename: filename });
+        }
       });
-    }
-  }
+      writeStream.on("error", (err: any) => {
+        callback?.(JSON.stringify(err));
+      });
+      readStream.pipe(writeStream);
+    }),
+  );
 
-  return uploadedFilesCount;
+  multibar.stop();
+
+  callback?.(null);
 };
 
 export default defineCommand({
@@ -115,15 +90,15 @@ export default defineCommand({
     const configPath = resolve(workDir, `simm.config.ts`);
     const simmConfig: SimmConfig = await resolver.import(configPath);
 
-    const sourcePath = resolve(
-      workDir,
-      simmConfig.servers[environment].sftp?.source as string,
-    );
+    const files = simmConfig.servers[environment].sftp?.files;
 
-    const destPath = simmConfig.servers[environment].sftp?.dest as string;
+    if (!files) {
+      console.log("files is undefined");
+      return;
+    }
+
     const preSftp = simmConfig.servers[environment].sftp?.preSftp as string;
     const postSftp = simmConfig.servers[environment].sftp?.postSftp as string;
-    const totalFiles = countFiles(sourcePath);
 
     sshConnect(simmConfig, environment, (client) => {
       client.sftp((err, sftp) => {
@@ -140,9 +115,7 @@ export default defineCommand({
             execSync(cmd.join(" && "), { stdio: "inherit" });
           }
 
-          execSync(`rm -rf ${destPath}`, { stdio: "inherit" });
-
-          uploadFolderViaSftp(sftp, sourcePath, destPath, totalFiles, (err) => {
+          uploadFolderViaSftp(sftp, files, (err) => {
             sftp.end();
             if (err) {
               throw err;

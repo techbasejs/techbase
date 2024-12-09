@@ -13,7 +13,7 @@ describe("isLatLong", () => {
     expect(
       isLatLong("12deg 50min 57.4548sec N, 24deg 26min 0.9384sec E", {
         dmsUnits: { degree: "deg", minute: "min", second: "sec" },
-      })
+      }),
     ).toBe(true);
   });
 
@@ -25,16 +25,16 @@ describe("isLatLong", () => {
     expect(isLatLong("1200.849293,24.433594")).toBe(false);
     expect(isLatLong("12.849293,24.433594", { checkDMS: true })).toBe(false);
     expect(
-      isLatLong("12° 50' 57.4548'' N,24° 26' 0.9384'' T", { checkDMS: true })
+      isLatLong("12° 50' 57.4548'' N,24° 26' 0.9384'' T", { checkDMS: true }),
     ).toBe(false);
     expect(isLatLong("-12° 50' 57.4548'' N,24° 26' 0.9384'' E")).toBe(false);
     expect(isLatLong("12° 50' 57.4548'' North,24° 26' 0.9384'' East")).toBe(
-      false
+      false,
     );
     expect(
       isLatLong("12deg 50min 57.4548sec N, 24deg 26min 0.9384sec E", {
         checkDMS: true,
-      })
+      }),
     ).toBe(false);
   });
 });
