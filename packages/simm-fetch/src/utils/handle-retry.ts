@@ -1,49 +1,37 @@
-import { RetryConfig } from "../types";
+interface RetryConfig {
+  attempts: number;
+  delay: number;
+  statusCodes?: number[];
+  onError?: (error: unknown) => Promise<void>;
+  beforeRetry?: (error: unknown, attempt: number) => Promise<boolean>;
+}
 
-export async function handleRetry(
-  request: () => Promise<any>,
-  retryConfig: RetryConfig,
-  errorLogger: (error: any) => Promise<void>,
-  //  beforeRetry?: (error: any, attempt: number) => Promise<void>,
-  currentAttempt: number = 1,
-): Promise<any> {
-  try {
-    return await request();
-  } catch (error: any) {
-    await errorLogger(error);
+export async function handleRetry<T>(
+  fn: () => Promise<T>,
+  options: RetryConfig
+): Promise<T> {
+  let error: unknown;
 
-    if (shouldRetry(error, retryConfig, currentAttempt)) {
-      // if (beforeRetry) {
-      //   await beforeRetry(error, currentAttempt);
-      // }
-      await delay(retryConfig.delay);
-      return await handleRetry(
-        request,
-        retryConfig,
-        errorLogger,
-        currentAttempt + 1,
-      );
+  for (let attempt = 1; attempt <= options.attempts; attempt++) {
+    try {
+      return await fn();
+    } catch (error_) {
+      error = error_;
+
+      if (options.onError) {
+        await options.onError(error_);
+      }
+
+      const shouldRetry = await options.beforeRetry?.(error_, attempt);
+      if (shouldRetry === false) {
+        break;
+      }
+
+      if (attempt < options.attempts) {
+        await new Promise(resolve => setTimeout(resolve, options.delay));
+      }
     }
-    throw error;
   }
-}
 
-function shouldRetry(
-  error: any,
-  retryConfig: RetryConfig,
-  currentAttempt: number,
-): boolean {
-  const { attempts, statusCodes, httpMethods } = retryConfig;
-  const status = error.response?.status;
-  const method = error.config?.method?.toUpperCase();
-
-  return (
-    currentAttempt < attempts &&
-    (!statusCodes || statusCodes.includes(status)) &&
-    (!httpMethods || httpMethods.includes(method))
-  );
-}
-
-function delay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  throw error;
 }

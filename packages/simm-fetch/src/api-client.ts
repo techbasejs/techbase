@@ -115,7 +115,11 @@ class APIClient<T extends RequestAdapter> {
     }
 
     // Execute beforeRequest hooks
-    //interceptedConfig = await executeBeforeRequestHooks(interceptedConfig, this.hooks.beforeRequest || [])
+    if (this.config.hooks?.beforeRequest) {
+      for (const hook of this.config.hooks.beforeRequest) {
+        interceptedConfig = await hook(interceptedConfig);
+      }
+    }
 
     return interceptedConfig;
   }
@@ -132,9 +136,11 @@ class APIClient<T extends RequestAdapter> {
   // }
   private async handleResponseError(error: any): Promise<any> {
     // Execute beforeError hooks
-    // for (const hook of this.hooks.beforeError || []) {
-    //   error = await hook(error);
-    // }
+    if (this.config.hooks?.beforeError) {
+      for (const hook of this.config.hooks.beforeError) {
+        error = await hook(error);
+      }
+    }
 
     if (this.refreshTokenHandler) {
       try {
@@ -170,25 +176,36 @@ class APIClient<T extends RequestAdapter> {
     console.log(106, retryConfig);
     const makeRequest = async () => {
       const response = await this.adapter.request<T>(mergedConfig);
-      return response;
       // Execute afterResponse hooks
-      // return executeAfterResponseHooks(response as any, this.hooks.afterResponse || []);
+      if (this.config.hooks?.afterResponse) {
+        let modifiedResponse: any = response;
+        for (const hook of this.config.hooks.afterResponse) {
+          modifiedResponse = (await hook(modifiedResponse)) as T;
+        }
+        return modifiedResponse;
+      }
+      return response;
     };
 
     if (retryConfig) {
       try {
-        return await handleRetry(
-          makeRequest,
-          retryConfig,
-          (error) => this.errorLogger(error),
-          // this.hooks.beforeRetry ? async (error, attempt) => {
-          //   for (const hook of this.hooks?.beforeRetry || []) {
-          //     await hook(error, attempt);
-          //   }
-          // } : undefined
-        );
+        return await handleRetry(makeRequest, {
+          attempts: retryConfig.attempts,
+          delay: retryConfig.delay,
+          statusCodes: retryConfig.statusCodes,
+          onError: async (error: unknown) => {
+            await this.errorLogger(error);
+          },
+          beforeRetry: async (error: unknown, attempt: number) => {
+            if (this.config.hooks?.beforeRetry) {
+              for (const hook of this.config.hooks.beforeRetry) {
+                await hook(attempt, error);
+              }
+            }
+            return true;
+          },
+        });
       } catch (error) {
-        // If all retries fail, handle the error
         return this.handleResponseError(error);
       }
     }

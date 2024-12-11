@@ -9,12 +9,12 @@
 //   baseURL: '',
 // })
 
-// //Test handle query param 
+// //Test handle query param
 // //Todo
 // newConfig.setBaseURL("http://localhost:4000");
 // const client = createAPIClient(newConfig)
 // const checkApiGetUser = async() => {
-//   client.get('/user',  { 
+//   client.get('/user',  {
 //     username: "A",
 //     id: "1",
 //     list: [0,1,2]
@@ -25,7 +25,7 @@
 // checkApiGetUser();
 
 // const checkApiGetUserWithArrayParamsBracket = async() => {
-//   client.get('/user',  { 
+//   client.get('/user',  {
 //     username: "A",
 //     id: "1",
 //     list: [0, null, 2],
@@ -44,7 +44,7 @@
 
 
 // const checkApiGetUserWithArrayParams = async() => {
-//   client.get('/user',  { 
+//   client.get('/user',  {
 //     username: "A",
 //     id: "1",
 //     list: [0,1,2],
@@ -66,7 +66,7 @@
 // newConfig.setHeader('Authorization', 'Bearer Token check')
 // const client1 = createAPIClient(newConfig);
 // const checkMergeHeader = async() => {
-//   client1.get('/user',  { 
+//   client1.get('/user',  {
 //     username: "A",
 //     id: "1",
 //   },
@@ -83,7 +83,7 @@
 
 // // Test api Retry
 // const retryApi = async() => {
-//   await client.get('/retry',  { 
+//   await client.get('/retry',  {
 //     username: "A",
 //     id: "1",
 //     list: [0,1,2]
@@ -98,7 +98,7 @@
 // }
 // retryApi()
 
-// //Test formData 
+// //Test formData
 // const formBasic = new FormData();
 // formBasic.append('userName', 'FORM');
 // client.post('/upload', formBasic)
@@ -132,6 +132,7 @@
 // }
 
 // testHandleRequestSuccess();
+import { AxiosError, AxiosResponse } from 'axios';
 import { createAPIClient, APIConfig } from '../src/index';
 import { CacheProvider, RefreshTokenConfig } from '../src/types';
 
@@ -277,3 +278,62 @@ async function testRetry() {
 }
 // eslint-disable-next-line unicorn/prefer-top-level-await
 testRetry();
+
+
+
+const hookConfig = new APIConfig({
+  baseURL: 'https://jsonplaceholder.typicode.com',
+  retry: {
+    attempts: 5,
+    delay: 1000,
+  },
+  hooks: {
+    beforeRequest: [
+      async (config) => {
+        console.log('Before request:', config.url);
+        return config;
+      }
+    ],
+    afterResponse: [
+      async (response) => {
+        /* With FETCH adapter
+          console.log('After response:', response);
+        */
+        console.log('After response:', response.data);
+        return response;
+      }
+    ],
+    beforeError: [
+      async (error) => {
+        console.log('Before error:', error.message);
+        return error;
+      }
+    ],
+    beforeRetry: [
+      async (attempt, error) => {
+        console.log(`Retrying ${attempt}:`, error.message);
+        return true;
+      }
+    ]
+  }
+});
+
+const hookClient = createAPIClient(hookConfig.getConfig(), 'axios');
+/* With FETCH adapter
+  const client = createAPIClient(config.getConfig(), 'fetch');
+*/
+const testHookAxios = async () => {
+  try {
+    const res: AxiosResponse = await hookClient.get('/todos/1');
+    console.log('Response:', res.data);
+    /* With FETCH adapter
+      console.log('Response:', res);
+    */
+  } catch (error: unknown) {
+    if (error instanceof AxiosError) {
+      console.log('Error message:', error.message);
+    }
+  }
+}
+
+testHookAxios();
